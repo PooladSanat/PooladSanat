@@ -1,0 +1,530 @@
+<script src="{{asset('/public/js/a1.js')}}" type="text/javascript"></script>
+<script src="{{asset('/public/js/a2.js')}}" type="text/javascript"></script>
+<meta name="_token" content="{{ csrf_token() }}"/>
+<script type="text/javascript">
+    $(function () {
+
+        var invoice_product = [];
+        @foreach($invoice_products as $invoice_product)
+        invoice_product.push({
+            'id': '{{$invoice_product->id}}',
+            'product_id': '{{$invoice_product->product_id}}',
+            'invoice_id': '{{$invoice_product->invoice_id}}'
+        });
+            @endforeach
+        var invoice = [];
+        @foreach($invoices as $invoice)
+        invoice.push({
+            'id': '{{$invoice->id}}',
+            'label': '{{$invoice->label}}',
+        });
+            @endforeach
+        var product = [];
+        @foreach($products as $product)
+        product.push({
+            'id': '{{$product->id}}',
+            'costumer': '{{$product->customer_id}}',
+        });
+        @endforeach
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        var table = $('#data-table').DataTable({
+            processing: true,
+            serverSide: true,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                if (parseInt(aData.barn) < parseInt(aData.salesNumber)) {
+                    $('td:eq(9)', nRow).css('color', '#fb8000');
+                } else if (parseInt(aData.barn) >= parseInt(aData.salesNumber)) {
+                    $('td:eq(9)', nRow).css('color', '#00d1fb');
+                } else {
+                    $('td', nRow).css('background-color', 'white');
+
+                }
+            },
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                ajax: "{{ route('admin.invoice.success') }}",
+            },
+            columns: [
+                {data: 'checkbox', orderable: false, searchable: false},
+
+                {data: 'id', name: 'id'},
+                {data: 'invoice', name: 'invoice'},
+                {data: 'user', name: 'user'},
+                {data: 'customer', name: 'customer'},
+                {data: 'product', name: 'product'},
+                {data: 'color', name: 'color'},
+                {data: 'salesNumber', name: 'salesNumber'},
+                {data: 'leftover', name: 'leftover'},
+                {data: 'barn', name: 'barn'},
+                {data: 'barnn', name: 'barnn'},
+                {data: 'action_success', name: 'action_success'},
+
+            ]
+        });
+
+        $('body').on('click', '.cancel', function () {
+            var id = $(this).data('id');
+            $('#cancelModel').modal('show');
+            $('#id_p').val(id);
+        });
+
+        $('#saveBtncancel').click(function (e) {
+            e.preventDefault();
+            $('#saveBtncancel').text('در حال ثبت اطلاعات...');
+            $('#saveBtncancel').prop("disabled", true);
+            $.ajax({
+                data: $('#cancelForm').serialize(),
+                url: "{{ route('admin.invoices.success.detail.cancel') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.errorr) {
+                        $('#schedulingModal').modal('hide');
+                        jQuery.each(data.errorr, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#saveBtncancel').text('ثبت');
+                        $('#saveBtncancel').prop("disabled", false);
+                    }
+
+                    if (data.error) {
+                        $('#cancelForm').trigger("reset");
+                        $('#cancelModel').modal('hide');
+                        Swal.fire({
+                            title: 'خطا!',
+                            text: 'تعداد ارسالی برای بارگیری نمیتواند بیشتر از تعداد درخواستی مشتری باشد!',
+                            icon: 'error',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveBtncancel').text('ثبت');
+                        $('#saveBtncancel').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#cancelForm').trigger("reset");
+                        $('#cancelModel').modal('hide');
+                        table.draw();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveBtncancel').text('ثبت');
+                        $('#saveBtncancel').prop("disabled", false);
+                    }
+                }
+            });
+        });
+
+        $('body').on('click', '.SendToListNumber', function () {
+            $('#saveToListd').prop("disabled", false);
+            var id = $(this).data('id');
+            $.get("{{ route('admin.invoice.payment.checked') }}" + '/' + id, function (data) {
+                $('#successdetailModal').modal('show');
+                $('#invoice_product').val(id);
+                $('#numbere').val(data.number - data.product);
+                $('#alertdetail').text('تعداد تولید شده برای این محصول' + " " + data.product + " " + 'عدد میباشد');
+                $('#alertdetail').show();
+                if (data.number <= data.product) {
+                    $('#saveToListd').prop("disabled", true);
+                }
+
+            })
+
+        });
+
+        $('body').on('click', '.scheduling', function () {
+            var id = $(this).data('id');
+            $('#schedulingModal').modal('show');
+            $('#scheduling').val(id);
+        });
+
+        $('#saveToscheduling').click(function (e) {
+            e.preventDefault();
+            $('#saveToscheduling').text('در حال ثبت اطلاعات...');
+            $('#saveToscheduling').prop("disabled", true);
+            $.ajax({
+                data: $('#schedulingform').serialize(),
+                url: "{{ route('admin.invoices.success.detail.scheduling') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.errorr) {
+                        $('#schedulingModal').modal('hide');
+                        jQuery.each(data.errorr, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#saveToscheduling').text('ثبت');
+                        $('#saveToscheduling').prop("disabled", false);
+                    }
+
+
+                    if (data.erro) {
+                        $('#schedulingform').trigger("reset");
+                        $('#schedulingModal').modal('hide');
+                        Swal.fire({
+                            title: 'خطا!',
+                            text: 'تعداد درخواستی شما بیشتر از موجودی انبار میباشد!',
+                            icon: 'error',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveToscheduling').text('ثبت');
+                        $('#saveToscheduling').prop("disabled", false);
+                    }
+
+                    if (data.error) {
+                        $('#schedulingform').trigger("reset");
+                        $('#schedulingModal').modal('hide');
+                        Swal.fire({
+                            title: 'خطا!',
+                            text: 'تعداد ارسالی برای بارگیری نمیتواند بیشتر از تعداد درخواستی مشتری باشد!',
+                            icon: 'error',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveToscheduling').text('ثبت');
+                        $('#saveToscheduling').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#schedulingform').trigger("reset");
+                        $('#schedulingModal').modal('hide');
+                        table.draw();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveToscheduling').text('ثبت');
+                        $('#saveToscheduling').prop("disabled", false);
+                    }
+                }
+            });
+        });
+
+        $('#saveToListd').click(function (e) {
+            e.preventDefault();
+            $('#saveToListd').text('در حال ثبت اطلاعات...');
+            $('#saveToListd').prop("disabled", true);
+            $.ajax({
+                data: $('#successdetailinvoices').serialize(),
+                url: "{{ route('admin.invoices.success.detail.store') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.errorr) {
+                        $('#successdetailModal').modal('hide');
+                        jQuery.each(data.errorr, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#saveToListd').text('ثبت');
+                        $('#saveToListd').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#successdetailinvoices').trigger("reset");
+                        $('#successdetailModal').modal('hide');
+                        table.draw();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveToListd').text('ثبت');
+                        $('#saveToListd').prop("disabled", false);
+                    }
+                }
+            });
+        });
+
+        $('body').on('click', '.SendToList', function () {
+            var id = $(this).data('id');
+            $('#successModal').modal('show');
+            $('#id_success').val(id);
+        });
+
+        $('body').on('click', '.Confirmpayment', function () {
+            var id = $(this).data("id");
+            $('#Confirmpayment').modal('show');
+            $('#invoice_id_payment').val(id);
+        });
+
+        $('#savePaymentConfirm').click(function (e) {
+            e.preventDefault();
+            $('#savePaymentConfirm').text('در حال ثبت اطلاعات...');
+            $('#savePaymentConfirm').prop("disabled", true);
+            var form = $('#PaymentConfirm')[0];
+            var data = new FormData(form);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "{{ route('admin.invoice.payment.confrim.store') }}",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                success: function (data) {
+                    if (data.errors) {
+                        $('#Confirmpayment').modal('hide');
+                        jQuery.each(data.errors, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#savePaymentConfirm').text('ثبت');
+                        $('#savePaymentConfirm').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#PaymentConfirm').trigger("reset");
+                        $('#Confirmpayment').modal('hide');
+                        table.draw();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#savePaymentConfirm').text('ثبت');
+                        $('#savePaymentConfirm').prop("disabled", false);
+                    }
+                }
+            });
+        });
+
+        $('#saveToList').click(function (e) {
+            e.preventDefault();
+            $('#saveToList').text('در حال ثبت اطلاعات...');
+            $('#saveToList').prop("disabled", true);
+            $.ajax({
+                data: $('#successinvoices').serialize(),
+                url: "{{ route('admin.invoices.success.store') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.errors) {
+                        $('#successModal').modal('hide');
+                        jQuery.each(data.errors, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#saveToList').text('ثبت');
+                        $('#saveToList').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#successinvoices').trigger("reset");
+                        $('#successModal').modal('hide');
+                        table.draw();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                    }
+                }
+            });
+        });
+
+        $('body').on('click', '.deleteProduct', function () {
+            $('#id_delete').val('');
+            $('#description_c').val('');
+            var id = $(this).data("id");
+            $('#id_delete').val(id);
+            $('#ajaxModelDelete').modal('show');
+
+            $('#saveCancel').click(function (e) {
+                e.preventDefault();
+
+                var form = $('#CustomerCanceled')[0];
+                var data = new FormData(form);
+
+                $('#ajaxModelDelete').modal('hide');
+
+                Swal.fire({
+                    title: 'لغو پیش فاکتور؟',
+                    text: "مشخصات پیش فاکتور لغو شده فقط توسط مدیریت قابل بازیابی میباشد!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'حذف',
+                    cancelButtonText: 'انصراف',
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            type: "POST",
+                            enctype: 'multipart/form-data',
+                            data: data,
+                            url: "{{ route('admin.invoice.delete') }}",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            method: 'POST',
+                            type: 'POST',
+                            success: function (data) {
+                                table.draw();
+                                Swal.fire({
+                                    title: 'موفق',
+                                    text: 'مشخصات پیش فاکتور با موفقیت از لیست شما حذف شد',
+                                    icon: 'success',
+                                    confirmButtonText: 'تایید'
+                                });
+
+                            }
+                        });
+                        $('#id_delete').val('');
+                        $('#description').val('');
+                    }
+
+                });
+
+
+            });
+
+        });
+
+        $("#select_all").change(function () {
+            $(".student_checkbox").prop('checked', $(this).prop('checked'));
+        });
+
+        $("#show").click(function () {
+
+            if ($('input:checkbox').prop("checked", true)) {
+                alert(selectedIds)
+            }
+            var ids = '';
+            $('input:checked:checked').each(function () {
+                ids = selectedIds + ','
+            });
+            alert(ids);
+
+        });
+
+        $(document).on('click', '#bulk_delete', function () {
+            var test = null;
+            $('#productlistForm').trigger("reset");
+            $('.ffff').remove();
+            $('.ddddd').remove();
+            var id = [];
+            $('.student_checkbox:checked').each(function () {
+                id.push($(this).val());
+            });
+            $.ajax({
+                url: "{{ route('admin.invoice.success.list.time')}}",
+                method: "get",
+                data: {id: id},
+                success: function (data) {
+                    data.forEach(function (item) {
+                        for (var i in invoice_product) {
+                            if (invoice_product[i].id == item) {
+
+
+                                for (var d in invoice) {
+                                    if (invoice_product[i].product_id == invoice[d].id) {
+                                        $('#ajaxModel').modal('show');
+                                        var counter = 2;
+                                        var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv' + counter);
+                                        newTextBoxDiv.after().html('<div class="col-md-12">' +
+                                            '<label class="ffff">' + invoice[d].label + '</label>' +
+                                            '<input type="hidden" name="id_product[]" id="id_product" value="' + invoice_product[i].id + '">' +
+                                            '<input placeholder="لطفا مقدار بارگیری را وارد کنید" class="form-control ddddd"' +
+                                            'type="number" name="product_name[]" id="product_name" value="" >' +
+                                            '</div>');
+                                        newTextBoxDiv.appendTo("#TextBoxesGroup");
+                                        counter++;
+                                    }
+                                }
+
+                            }
+                        }
+                    });
+
+                }
+
+            });
+
+
+        });
+
+        $('#saveBtnListS').click(function (e) {
+            e.preventDefault();
+            $('#saveBtnListS').text('در حال ثبت اطلاعات...');
+            $('#saveBtnListS').prop("disabled", true);
+            $.ajax({
+                data: $('#productlistForm').serialize(),
+                url: "{{ route('admin.invoices.success.list.store') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.error) {
+                        $('#ajaxModel').modal('hide');
+                        jQuery.each(data.error, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#saveBtnListS').text('ثبت');
+                        $('#saveBtnListS').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#productlistForm').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        table.draw();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                    }
+                }
+            });
+        });
+
+    });
+
+    $('#sell').addClass('active');
+
+
+</script>
+

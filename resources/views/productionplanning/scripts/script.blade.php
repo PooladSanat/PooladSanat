@@ -38,44 +38,44 @@
             ]
         });
 
-        var devicefalse1 = $('.devicefalse1').DataTable({
-            processing: true,
-            serverSide: true,
-            rowreorder: true,
-            retrieve: true,
-            aaSorting: [],
-            "searching": false,
-            "lengthChange": false,
-            "info": false,
-            "bPaginate": false,
-            "bSort": false,
-            "language": {
-                "search": "جستجو:",
-                "lengthMenu": "نمایش _MENU_",
-                "zeroRecords": "موردی یافت نشد!",
-                "info": "نمایش _PAGE_ از _PAGES_",
-                "infoEmpty": "موردی یافت نشد",
-                "infoFiltered": "(جستجو از _MAX_ مورد)",
-                "processing": "در حال پردازش اطلاعات"
-            },
-            ajax: "{{ route('admin.device1.list') }}",
-            columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'product', name: 'product'},
-                {data: 'color', name: 'color'},
-                {data: 'number', name: 'number'},
-                {data: 'format', name: 'format'},
-                {data: 'insert', name: 'insert'},
-                {data: 'cycletime', name: 'cycletime'},
-                {data: 'size', name: 'size'},
-                {data: 'productiontime', name: 'productiontime'},
-                {data: 'productionqueue', name: 'productionqueue'},
-                {data: 'numberproduced', name: 'numberproduced'},
-                {data: 'Productionbalance', name: 'Productionbalance'},
-                {data: 'remainingtime', name: 'remainingtime'},
-                {data: 'deleteINdevice1', name: 'deleteINdevice1', orderable: false, searchable: false},
-            ]
-        });
+        {{--var devicefalse1 = $('.devicefalse1').DataTable({--}}
+        {{--    processing: true,--}}
+        {{--    serverSide: true,--}}
+        {{--    rowreorder: true,--}}
+        {{--    retrieve: true,--}}
+        {{--    aaSorting: [],--}}
+        {{--    "searching": false,--}}
+        {{--    "lengthChange": false,--}}
+        {{--    "info": false,--}}
+        {{--    "bPaginate": false,--}}
+        {{--    "bSort": false,--}}
+        {{--    "language": {--}}
+        {{--        "search": "جستجو:",--}}
+        {{--        "lengthMenu": "نمایش _MENU_",--}}
+        {{--        "zeroRecords": "موردی یافت نشد!",--}}
+        {{--        "info": "نمایش _PAGE_ از _PAGES_",--}}
+        {{--        "infoEmpty": "موردی یافت نشد",--}}
+        {{--        "infoFiltered": "(جستجو از _MAX_ مورد)",--}}
+        {{--        "processing": "در حال پردازش اطلاعات"--}}
+        {{--    },--}}
+        {{--    ajax: "{{ route('admin.device1.list') }}",--}}
+        {{--    columns: [--}}
+        {{--        {data: 'DT_RowIndex', name: 'DT_RowIndex'},--}}
+        {{--        {data: 'product', name: 'product'},--}}
+        {{--        {data: 'color', name: 'color'},--}}
+        {{--        {data: 'number', name: 'number'},--}}
+        {{--        {data: 'format', name: 'format'},--}}
+        {{--        {data: 'insert', name: 'insert'},--}}
+        {{--        {data: 'cycletime', name: 'cycletime'},--}}
+        {{--        {data: 'size', name: 'size'},--}}
+        {{--        {data: 'productiontime', name: 'productiontime'},--}}
+        {{--        {data: 'productionqueue', name: 'productionqueue'},--}}
+        {{--        {data: 'numberproduced', name: 'numberproduced'},--}}
+        {{--        {data: 'Productionbalance', name: 'Productionbalance'},--}}
+        {{--        {data: 'remainingtime', name: 'remainingtime'},--}}
+        {{--        {data: 'deleteINdevice1', name: 'deleteINdevice1', orderable: false, searchable: false},--}}
+        {{--    ]--}}
+        {{--});--}}
 
         var deviceproduct1 = $('.listdevice1').DataTable({
             processing: true,

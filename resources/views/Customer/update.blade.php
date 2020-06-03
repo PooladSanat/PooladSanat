@@ -1335,57 +1335,22 @@
                                                                                             <td>عملیات</td>
                                                                                         </tr>
                                                                                         </thead>
-
                                                                                         <tbody
                                                                                             id="TextBoxContainerbank">
-                                                                                        @if(!empty($customer_banks))
-                                                                                            @foreach($customer_banks as $customer_bank)
-
-                                                                                                <tr>
-
-                                                                                                    <td><input
-                                                                                                            name="name_bank_company[]"
-                                                                                                            type="text"
-                                                                                                            value="{{$customer_bank->name_bank_company}}"
-                                                                                                            class="form-control"/>
-                                                                                                    </td>
-                                                                                                    <td><input
-                                                                                                            name="branch_bank_company[]"
-                                                                                                            type="text"
-                                                                                                            value="{{$customer_bank->branch_bank_company}}"
-                                                                                                            class="form-control"/>
-                                                                                                    </td>
-                                                                                                    <td><input
-                                                                                                            name="account_bank_company[]"
-                                                                                                            type="text"
-                                                                                                            value="{{$customer_bank->account_bank_company}}"
-                                                                                                            class="form-control"/>
-                                                                                                    </td>
-                                                                                                    <td><input
-                                                                                                            name="date_bank_company[]"
-                                                                                                            type="text"
-                                                                                                            value="{{$customer_bank->date_bank_company}}"
-                                                                                                            class="form-control"/>
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        <button
-                                                                                                            type="button"
-                                                                                                            data-original-title="حذف پرسنل"
-                                                                                                            class="btn btn-danger remove">
-                                                                                                            <i class="fa fa-remove"></i>
-                                                                                                        </button>
-                                                                                                    </td>
-                                                                                                </tr>
-
-                                                                                            @endforeach
-                                                                                        @endif
+                                                                                        <tr>
+                                                                                            <td id="namee"></td>
+                                                                                            <td id="shobee"></td>
+                                                                                            <td id="shomaree"></td>
+                                                                                            <td id="tarikhh"></td>
+                                                                                            <td id="actiont"></td>
+                                                                                        </tr>
                                                                                         </tbody>
-
                                                                                         <tfoot>
                                                                                         <tr>
-                                                                                            <th colspan="5">
+                                                                                            <th colspan="1">
                                                                                                 <button id="btnAddbank"
                                                                                                         type="button"
+                                                                                                        onclick="addInput10()"
                                                                                                         class="btn btn-primary"
                                                                                                         data-toggle="tooltip">
                                                                                                     <i class="fa fa-plus"></i>
@@ -1394,7 +1359,9 @@
                                                                                         </tr>
                                                                                         </tfoot>
                                                                                     </table>
+
                                                                                 </div>
+
 
                                                                             </div>
                                                                         </div>

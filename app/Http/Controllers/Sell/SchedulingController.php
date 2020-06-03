@@ -10,6 +10,7 @@ use App\Product;
 use App\Scheduling;
 use App\User;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 use Morilog\Jalali\Jalalian;
@@ -22,61 +23,137 @@ class SchedulingController extends Controller
 
     public function list(Request $request)
     {
-
-        if ($request->ajax()) {
-            $data = Scheduling::where('date', $this->convert2english($request->from_date))
-                ->orderBy('id', 'desc')
-                ->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('product', function ($row) {
-                    $product_id = \DB::table('invoice_product')
-                        ->where('id', $row->detail_id)
-                        ->first();
-                    $name = Product::where('id', $product_id->product_id)->first();
-                    return $name->label;
-                })
-                ->addColumn('user', function ($row) {
-                    $product_id = \DB::table('invoice_product')
-                        ->where('id', $row->detail_id)
-                        ->first();
-                    $name = Invoice::where('id', $product_id->invoice_id)->first();
-                    $username = User::where('id', $name->user_id)->first();
-                    return $username->name;
-                })
-                ->addColumn('customer_id', function ($row) {
-                    $product_id = \DB::table('invoice_product')
-                        ->where('id', $row->detail_id)
-                        ->first();
-                    $name = Invoice::where('id', $product_id->invoice_id)->first();
-                    $username = Customer::where('id', $name->customer_id)->first();
-                    return $username->name;
-                })
-                ->addColumn('status', function ($row) {
-                    if ($row->status == 0) {
-                        return 'ثبت اولیه';
-                    } elseif ($row->status == 1) {
-                        return 'تایید ثبت';
-                    } elseif ($row->status == 2) {
-                        return 'تایید حواله';
-                    } elseif ($row->status == 3) {
-                        return 'خروج کامل';
-                    } elseif ($row->status == 4) {
-                        return 'خروج ناقص';
-                    } elseif ($row->status == 5) {
-                        return 'عدم خروج';
-                    } elseif ($row->status == 6) {
-                        return 'اتمام یافته';
-                    }
-                })
-                ->addColumn('action', function ($row) {
-                    return $this->actions($row);
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        $id = auth()->user()->id;
+        $role_id = \DB::table('role_user')
+            ->where('user_id', $id)->first();
+        $role = DB::table('roles')
+            ->where('id', $role_id->role_id)
+            ->first();
+        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی") {
+            if ($request->ajax()) {
+                $data = Scheduling::where('date', $this->convert2english($request->from_date))
+                    ->orderBy('id', 'desc')
+                    ->get();
+                return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('product', function ($row) {
+                        $product_id = \DB::table('invoice_product')
+                            ->where('id', $row->detail_id)
+                            ->first();
+                        $name = Product::where('id', $product_id->product_id)->first();
+                        return $name->label;
+                    })
+                    ->addColumn('color', function ($row) {
+                        $product_id = \DB::table('invoice_product')
+                            ->where('id', $row->detail_id)
+                            ->first();
+                        $name = Color::where('id', $product_id->color_id)->first();
+                        return $name->name;
+                    })
+                    ->addColumn('user', function ($row) {
+                        $product_id = \DB::table('invoice_product')
+                            ->where('id', $row->detail_id)
+                            ->first();
+                        $name = Invoice::where('id', $product_id->invoice_id)->first();
+                        $username = User::where('id', $name->user_id)->first();
+                        return $username->name;
+                    })
+                    ->addColumn('customer_id', function ($row) {
+                        $product_id = \DB::table('invoice_product')
+                            ->where('id', $row->detail_id)
+                            ->first();
+                        $name = Invoice::where('id', $product_id->invoice_id)->first();
+                        $username = Customer::where('id', $name->customer_id)->first();
+                        return $username->name;
+                    })
+                    ->addColumn('status', function ($row) {
+                        if ($row->status == 0) {
+                            return 'ثبت اولیه';
+                        } elseif ($row->status == 1) {
+                            return 'تایید ثبت';
+                        } elseif ($row->status == 2) {
+                            return 'تایید حواله';
+                        } elseif ($row->status == 3) {
+                            return 'خروج کامل';
+                        } elseif ($row->status == 4) {
+                            return 'خروج ناقص';
+                        } elseif ($row->status == 5) {
+                            return 'عدم خروج';
+                        } elseif ($row->status == 6) {
+                            return 'اتمام یافته';
+                        }
+                    })
+                    ->addColumn('action', function ($row) {
+                        return $this->actions($row);
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+            return view('Scheduling.list');
         }
-        return view('Scheduling.list');
-
+        if ($role->name == "کارشناس فروش") {
+            if ($request->ajax()) {
+                $data = Scheduling::where('user_id', $id)
+                    ->where('date', $this->convert2english($request->from_date))
+                    ->orderBy('id', 'desc')
+                    ->get();
+                return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('product', function ($row) {
+                        $product_id = \DB::table('invoice_product')
+                            ->where('id', $row->detail_id)
+                            ->first();
+                        $name = Product::where('id', $product_id->product_id)->first();
+                        return $name->label;
+                    })
+                    ->addColumn('color', function ($row) {
+                        $product_id = \DB::table('invoice_product')
+                            ->where('id', $row->detail_id)
+                            ->first();
+                        $name = Color::where('id', $product_id->color_id)->first();
+                        return $name->name;
+                    })
+                    ->addColumn('user', function ($row) {
+                        $product_id = \DB::table('invoice_product')
+                            ->where('id', $row->detail_id)
+                            ->first();
+                        $name = Invoice::where('id', $product_id->invoice_id)->first();
+                        $username = User::where('id', $name->user_id)->first();
+                        return $username->name;
+                    })
+                    ->addColumn('customer_id', function ($row) {
+                        $product_id = \DB::table('invoice_product')
+                            ->where('id', $row->detail_id)
+                            ->first();
+                        $name = Invoice::where('id', $product_id->invoice_id)->first();
+                        $username = Customer::where('id', $name->customer_id)->first();
+                        return $username->name;
+                    })
+                    ->addColumn('status', function ($row) {
+                        if ($row->status == 0) {
+                            return 'ثبت اولیه';
+                        } elseif ($row->status == 1) {
+                            return 'تایید ثبت';
+                        } elseif ($row->status == 2) {
+                            return 'تایید حواله';
+                        } elseif ($row->status == 3) {
+                            return 'خروج کامل';
+                        } elseif ($row->status == 4) {
+                            return 'خروج ناقص';
+                        } elseif ($row->status == 5) {
+                            return 'عدم خروج';
+                        } elseif ($row->status == 6) {
+                            return 'اتمام یافته';
+                        }
+                    })
+                    ->addColumn('action', function ($row) {
+                        return $this->actions($row);
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+            return view('Scheduling.list');
+        }
 
     }
 
@@ -92,6 +169,7 @@ class SchedulingController extends Controller
     public function update($id)
     {
 
+
         $product = \DB::table('_success_number_invoice')
             ->where('scheduling_id', $id)
             ->first();
@@ -101,9 +179,9 @@ class SchedulingController extends Controller
     public function StoreExit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'number' => 'required',
+            'numberr' => 'required',
         ], [
-            'number.required' => 'لطفا مقدار خارج شده از انبار را وارد کنید',
+            'numberr.required' => 'لطفا مقدار خارج شده از انبار را وارد کنید',
         ]);
         $id = Scheduling::where('id', $request->prod)->first();
         $id_p = \DB::table('invoice_product')
@@ -112,67 +190,146 @@ class SchedulingController extends Controller
             ->where('product_id', $request->namee)
             ->where('color_id', $request->colorr)
             ->first();
-        $total = $request->n - $request->number;
-        $min = $id->number - $request->number;
+        $exitproductbarn = \DB::table('exitproductbarn')
+            ->where('id', $request->id_exit)
+            ->first();
+        $min = $id->number - $request->numberr;
         if ($validator->passes()) {
-            \DB::beginTransaction();
-            try {
-
-                \DB::table('exitproductbarn')
-                    ->insert([
-                        'detail_id' => $request->prod,
-                        'number' => $request->number,
-                    ]);
-
-                if ($request->number == $request->n) {
-                    Scheduling::find($request->prod)->update([
-                        'status' => 3,
-                        'total' => $request->number,
-                    ]);
+            if (!empty($request->id_exit)) {
+                \DB::beginTransaction();
+                try {
+                    \DB::table('exitproductbarn')
+                        ->where('id', $request->id_exit)
+                        ->update([
+                            'number' => $request->numberr,
+                        ]);
                     \DB::table('barns_products')
                         ->where('product_id', $request->namee)
                         ->where('color_id', $request->colorr)
                         ->update([
-                            'Inventory' => $barn->Inventory - $request->number,
-                            'NumberSold' => $barn->NumberSold - $request->number,
+                            'Inventory' => $barn->Inventory + $exitproductbarn->number,
                         ]);
                     \DB::table('invoice_product')
                         ->where('id', $id->detail_id)
                         ->update([
-                            'leftover' => $id->number - $request->number + $id_p->leftover,
+                            'leftover' => $id_p->leftover + $exitproductbarn->number,
                         ]);
-                } elseif ($request->number < $request->n and $request->number > 0) {
 
-                    \DB::table('invoice_product')
-                        ->where('id', $id->detail_id)
-                        ->update([
-                            'leftover' => $min + $id_p->leftover,
-                        ]);
-                    Scheduling::find($request->prod)->update([
-                        'status' => 4,
-                        'total' => $request->number,
-                    ]);
-
-                    \DB::table('barns_products')
+                    $idd = Scheduling::where('id', $request->prod)->first();
+                    $id_pp = \DB::table('invoice_product')
+                        ->where('id', $id->detail_id)->first();
+                    $barnn = \DB::table('barns_products')
                         ->where('product_id', $request->namee)
                         ->where('color_id', $request->colorr)
-                        ->update([
-                            'Inventory' => $barn->Inventory - $request->number,
-                            'NumberSold' => $barn->NumberSold - $id->number,
+                        ->first();
+                    $minn = $idd->number - $request->numberr;
+
+
+                    if ($request->numberr == $request->n) {
+                        Scheduling::find($request->prod)->update([
+                            'status' => 3,
+                            'total' => $request->numberr,
                         ]);
+                        \DB::table('barns_products')
+                            ->where('product_id', $request->namee)
+                            ->where('color_id', $request->colorr)
+                            ->update([
+                                'Inventory' => $barnn->Inventory - $request->numberr,
+                                'NumberSold' => $barnn->NumberSold - $request->numberr,
+                            ]);
+                        \DB::table('invoice_product')
+                            ->where('id', $idd->detail_id)
+                            ->update([
+                                'leftover' => $id_pp->leftover - $minn,
+                            ]);
+                    } elseif ($request->numberr < $request->n and $request->numberr > 0) {
+                        \DB::table('invoice_product')
+                            ->where('id', $idd->detail_id)
+                            ->update([
+                                'leftover' => $id_pp->leftover - $request->numberr,
+                            ]);
+                        Scheduling::find($request->prod)->update([
+                            'status' => 4,
+                            'total' => $request->numberr,
+                        ]);
+                        \DB::table('barns_products')
+                            ->where('product_id', $request->namee)
+                            ->where('color_id', $request->colorr)
+                            ->update([
+                                'Inventory' => $barnn->Inventory - $request->numberr,
+//                                'NumberSold' => $barnn->NumberSold - $idd->number,
+                            ]);
+
+                    } elseif ($request->numberr == 0) {
+                        Scheduling::find($request->prod)->update([
+                            'status' => 5,
+                            'end' => 2,
+                            'total' => $request->numberr,
+                        ]);
+                    }
 
 
-                } elseif ($request->number == 0) {
-                    Scheduling::find($request->prod)->update([
-                        'status' => 5,
-                        'end' => 2,
-                        'total' => $request->number,
-                    ]);
+                    \DB::commit();
+                    return response()->json(['success' => 'success']);
+                } catch (Exception $exception) {
+                    \DB::rollBack();
                 }
-                \DB::commit();
-                return response()->json(['success' => 'success']);
-            } catch (Exception $exception) {
-                \DB::rollBack();
+
+            } else {
+                \DB::beginTransaction();
+                try {
+                    \DB::table('exitproductbarn')
+                        ->insert([
+                            'detail_id' => $request->prod,
+                            'number' => $request->numberr,
+                        ]);
+                    if ($request->numberr == $request->n) {
+                        Scheduling::find($request->prod)->update([
+                            'status' => 3,
+                            'total' => $request->numberr,
+                        ]);
+                        \DB::table('barns_products')
+                            ->where('product_id', $request->namee)
+                            ->where('color_id', $request->colorr)
+                            ->update([
+                                'Inventory' => $barn->Inventory - $request->numberr,
+                                'NumberSold' => $barn->NumberSold - $request->numberr,
+                            ]);
+                        \DB::table('invoice_product')
+                            ->where('id', $id->detail_id)
+                            ->update([
+                                'leftover' => $id->number - $request->numberr + $id_p->leftover,
+                            ]);
+                    } elseif ($request->numberr < $request->n and $request->numberr > 0) {
+                        \DB::table('invoice_product')
+                            ->where('id', $id->detail_id)
+                            ->update([
+                                'leftover' => $min + $id_p->leftover,
+                            ]);
+                        Scheduling::find($request->prod)->update([
+                            'status' => 4,
+                            'total' => $request->numberr,
+                        ]);
+                        \DB::table('barns_products')
+                            ->where('product_id', $request->namee)
+                            ->where('color_id', $request->colorr)
+                            ->update([
+                                'Inventory' => $barn->Inventory - $request->numberr,
+                                'NumberSold' => $barn->NumberSold - $id->number,
+                            ]);
+
+                    } elseif ($request->numberr == 0) {
+                        Scheduling::find($request->prod)->update([
+                            'status' => 5,
+                            'end' => 2,
+                            'total' => $request->numberr,
+                        ]);
+                    }
+                    \DB::commit();
+                    return response()->json(['success' => 'success']);
+                } catch (Exception $exception) {
+                    \DB::rollBack();
+                }
             }
         }
         return Response::json(['errors' => $validator->errors()]);
@@ -240,8 +397,13 @@ class SchedulingController extends Controller
             ->first();
         $product_id = Product::find($product->product_id);
         $color_id = Color::find($product->color_id);
-        return response()->json(['product_id' => $product_id, 'color_id' => $color_id, 'data' => $data]);
-
+        $exitproductbarn = \DB::table('exitproductbarn')
+            ->where('detail_id', $id)
+            ->first();
+        return response()->json(['product_id' => $product_id,
+            'color_id' => $color_id,
+            'data' => $data,
+            'exitt' => $exitproductbarn]);
     }
 
     public function store(Request $request)

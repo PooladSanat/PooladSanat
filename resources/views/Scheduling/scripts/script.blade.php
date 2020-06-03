@@ -22,15 +22,15 @@
                 serverSide: true,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     if (aData.status == 'عدم خروج') {
-                        $('td:eq(10)', nRow).css('background-color', '#fb4e08');
+                        $('td:eq(11)', nRow).css('background-color', '#fb4e08');
                     } else if (aData.status == 'خروج کامل') {
-                        $('td:eq(10)', nRow).css('background-color', '#84fb03');
+                        $('td:eq(11)', nRow).css('background-color', '#84fb03');
                     } else if (aData.status == 'خروج ناقص') {
-                        $('td:eq(10)', nRow).css('background-color', '#fbea04');
+                        $('td:eq(11)', nRow).css('background-color', '#fbea04');
                     } else if (aData.status == 'اتمام یافته') {
-                        $('td:eq(10)', nRow).css('background-color', '#fba6ec');
+                        $('td:eq(11)', nRow).css('background-color', '#fba6ec');
                     } else if (aData.status == 'تایید حواله') {
-                        $('td:eq(10)', nRow).css('background-color', '#0080fb');
+                        $('td:eq(11)', nRow).css('background-color', '#0080fb');
                     } else {
                         $('td', nRow).css('background-color', 'white');
                     }
@@ -53,6 +53,7 @@
                     {data: 'user', name: 'user'},
                     {data: 'customer_id', name: 'customer_id'},
                     {data: 'product', name: 'product'},
+                    {data: 'color', name: 'color'},
                     {data: 'number', name: 'number'},
                     {data: 'total', name: 'total'},
                     {data: 'type', name: 'type'},
@@ -148,6 +149,8 @@
 
         $('body').on('click', '.plus-exit', function () {
             var product_id = $(this).data('id');
+            $('#numberr').val('');
+            $('#id_exit').val('');
             $.get("{{ route('admin.scheduling.exit') }}" + '/' + product_id, function (data) {
                 $('#ajaxModelExit').modal('show');
                 $('#captioon').text('ثبت خروج از انبار');
@@ -158,6 +161,8 @@
                 $('#colorr').val(data.color_id.id);
                 $('#n').val(data.data.number);
                 $('#prod').val(product_id);
+                $('#numberr').val(data.exitt.number);
+                $('#id_exit').val(data.exitt.id);
             })
         });
 

@@ -9,6 +9,8 @@
         invoice_product.push({
             'id': '{{$invoice_product->id}}',
             'product_id': '{{$invoice_product->product_id}}',
+            'color_id': '{{$invoice_product->color_id}}',
+            'leftover': '{{$invoice_product->leftover}}',
             'invoice_id': '{{$invoice_product->invoice_id}}'
         });
             @endforeach
@@ -25,6 +27,13 @@
             'id': '{{$product->id}}',
             'costumer': '{{$product->customer_id}}',
         });
+            @endforeach
+        var color = [];
+        @foreach($colors as $color)
+        color.push({
+            'id': '{{$color->id}}',
+            'name': '{{$color->name}}',
+        });
         @endforeach
 
         $.ajaxSetup({
@@ -32,7 +41,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
         var table = $('#data-table').DataTable({
             processing: true,
             serverSide: true,
@@ -55,12 +63,12 @@
                 "infoFiltered": "(جستجو از _MAX_ مورد)",
                 "processing": "در حال پردازش اطلاعات"
             },
+
             ajax: {
                 ajax: "{{ route('admin.invoice.success') }}",
             },
             columns: [
                 {data: 'checkbox', orderable: false, searchable: false},
-
                 {data: 'id', name: 'id'},
                 {data: 'invoice', name: 'invoice'},
                 {data: 'user', name: 'user'},
@@ -72,9 +80,10 @@
                 {data: 'barn', name: 'barn'},
                 {data: 'barnn', name: 'barnn'},
                 {data: 'action_success', name: 'action_success'},
+            ],
 
-            ]
-        });
+
+    });
 
         $('body').on('click', '.cancel', function () {
             var id = $(this).data('id');
@@ -454,21 +463,23 @@
                     data.forEach(function (item) {
                         for (var i in invoice_product) {
                             if (invoice_product[i].id == item) {
-
-
                                 for (var d in invoice) {
                                     if (invoice_product[i].product_id == invoice[d].id) {
-                                        $('#ajaxModel').modal('show');
-                                        var counter = 2;
-                                        var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv' + counter);
-                                        newTextBoxDiv.after().html('<div class="col-md-12">' +
-                                            '<label class="ffff">' + invoice[d].label + '</label>' +
-                                            '<input type="hidden" name="id_product[]" id="id_product" value="' + invoice_product[i].id + '">' +
-                                            '<input placeholder="لطفا مقدار بارگیری را وارد کنید" class="form-control ddddd"' +
-                                            'type="number" name="product_name[]" id="product_name" value="" >' +
-                                            '</div>');
-                                        newTextBoxDiv.appendTo("#TextBoxesGroup");
-                                        counter++;
+                                        for (var e in color) {
+                                            if (invoice_product[i].color_id == color[e].id) {
+                                                $('#ajaxModel').modal('show');
+                                                var counter = 2;
+                                                var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv' + counter);
+                                                newTextBoxDiv.after().html('<div class="col-md-12">' +
+                                                    '<label class="ffff">' + invoice[d].label + '' + ' - ' + '' + color[e].name + '</label>' +
+                                                    '<input type="hidden" name="id_product[]" id="id_product" value="' + invoice_product[i].id + '">' +
+                                                    '<input placeholder="لطفا مقدار بارگیری را وارد کنید" class="form-control ddddd"' +
+                                                    'type="number" name="product_name[]" id="product_name" value="' + invoice_product[i].leftover + '" >' +
+                                                    '</div>');
+                                                newTextBoxDiv.appendTo("#TextBoxesGroup");
+                                                counter++;
+                                            }
+                                        }
                                     }
                                 }
 
@@ -516,6 +527,31 @@
                             icon: 'success',
                             confirmButtonText: 'تایید',
                         });
+                    }
+                    if (data.erro) {
+                        $('#productlistForm').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        Swal.fire({
+                            title: 'خطا!',
+                            text: 'تعداد درخواستی شما بیشتر از موجودی انبار میباشد!',
+                            icon: 'error',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveBtnListS').text('ثبت');
+                        $('#saveBtnListS').prop("disabled", false);
+                    }
+
+                    if (data.errorr) {
+                        $('#productlistForm').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        Swal.fire({
+                            title: 'خطا!',
+                            text: 'تعداد ارسالی برای بارگیری نمیتواند بیشتر از تعداد درخواستی مشتری باشد!',
+                            icon: 'error',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveBtnListS').text('ثبت');
+                        $('#saveBtnListS').prop("disabled", false);
                     }
                 }
             });

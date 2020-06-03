@@ -1,8 +1,6 @@
 @extends('layouts.master')
 @section('content')
     @include('message.msg')
-
-
     <div class="row">
         <div class="col-md-12">
             <div class="portlet box blue">
@@ -39,9 +37,7 @@
                         </tbody>
                     </table>
                     <a class="btn btn-primary" href="javascript:void(0)" id="bulk_delete">ارسال برای زمان بندی بارگیری</a>
-
                 </div>
-
             </div>
         </div>
     </div>

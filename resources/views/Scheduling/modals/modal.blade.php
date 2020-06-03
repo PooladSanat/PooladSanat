@@ -86,6 +86,7 @@
                                 <input type="hidden" name="prod" id="prod">
                                 <input type="hidden" name="namee" id="namee">
                                 <input type="hidden" name="colorr" id="colorr">
+                                <input type="hidden" name="id_exit" id="id_exit">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
@@ -135,7 +136,7 @@
                                                 style="color: red"
                                                 class="required-mark">*</span>
                                         </label>
-                                        <input type="text" id="number" name="number" class="form-control"
+                                        <input type="text" id="numberr" name="numberr" class="form-control"
                                                placeholder="لطفا تعداد خارج شده را وارد کنید"
                                                required>
 

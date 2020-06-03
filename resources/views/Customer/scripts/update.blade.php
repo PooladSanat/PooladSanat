@@ -190,9 +190,6 @@
         });
         $('#saveBtn').click(function (e) {
             e.preventDefault();
-
-            $('#saveBtn').text('در حال ثبت اطلاعات...');
-            $('#saveBtn').prop("disabled", true);
             var form = $('#productForm')[0];
             var data = new FormData(form);
             $.ajax({
@@ -238,6 +235,88 @@
     });
 
 </script>
+
+
+<script>
+    added_inputs1_array = [];
+        @foreach($customer_banks as $customer_bank)
+
+    var customer_bank = {
+            'name_bank_company': "{{$customer_bank->name_bank_company}}",
+            'branch_bank_company': "{{$customer_bank->branch_bank_company}}",
+            'account_bank_company': "{{$customer_bank->account_bank_company}}",
+            'date_bank_company': "{{$customer_bank->date_bank_company}}",
+        };
+    added_inputs1_array.push(customer_bank);
+    @endforeach
+    if (added_inputs1_array.length >= 1)
+        for (var a in added_inputs1_array)
+            added_inputs_array_table1(added_inputs1_array[a], a);
+
+
+    function added_inputs_array_table1(data, a) {
+
+        var myNode = document.createElement('div');
+        myNode.id = 'namee' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'name_bank_company" + a + "\'  name=\"name_bank_company[]\"\n" +
+            "class=\"form-control sell\"/>" +
+            "</div></div></div>";
+        document.getElementById('namee').appendChild(myNode);
+        $('#name_bank_company' + a + '').val(data.name_bank_company);
+        var myNode = document.createElement('div');
+        myNode.id = 'shobee' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'branch_bank_company" + a + "\'  name=\"branch_bank_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('shobee').appendChild(myNode);
+        $('#branch_bank_company' + a + '').val(data.branch_bank_company);
+        var myNode = document.createElement('div');
+        myNode.id = 'shomaree' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'account_bank_company" + a + "\'  name=\"account_bank_company[]\"\n" +
+            "class=\"form-control Price_Sell\"/>" +
+            "</div></div></div>";
+        document.getElementById('shomaree').appendChild(myNode);
+        $('#account_bank_company' + a + '').val(data.account_bank_company);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'tarikhh' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'date_bank_company" + a + "\'  name=\"date_bank_company[]\"\n" +
+            "class=\"form-control Weight\"/>" +
+            "</div></div></div>";
+        document.getElementById('tarikhh').appendChild(myNode);
+        $('#date_bank_company' + a + '').val(data.date_bank_company);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'actiont' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<button onclick='deleteService1(" + a + ", event)' class=\"form-control btn btn-danger\"><i class=\"fa fa-remove\"></button></div>";
+        document.getElementById('actiont').appendChild(myNode);
+    }
+
+    function deleteService1(id, event) {
+        event.preventDefault();
+        $('#namee' + id).remove();
+        $('#shobee' + id).remove();
+        $('#shomaree' + id).remove();
+        $('#tarikhh' + id).remove();
+        $('#actiont' + id).remove();
+    }
+
+
+    function addInput10() {
+        var data = {
+            'title': '',
+            'icon': '',
+        };
+        added_inputs1_array.push(data);
+        added_inputs_array_table1(data, added_inputs1_array.length - 1);
+    }
+</script>
+
 <script>
 
     $(function () {
@@ -266,30 +345,7 @@
     }
 
 </script>
-<script>
 
-    $(function () {
-        $("#btnAddbank").bind("click", function () {
-            var div = $("<tr />");
-            div.html(GetDynamicTextBoxx(""));
-            $("#TextBoxContainerbank").append(div);
-        });
-        $("body").on("click", ".remove", function () {
-            $(this).closest("tr").remove();
-        });
-    });
-
-    function GetDynamicTextBoxx(value) {
-
-
-        return '<td><input name = "name_bank_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "branch_bank_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "account_bank_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "date_bank_company[]" type="text" value = "' + value + '" class="form-control example1" /></td>' +
-            '<td><button type="button" data-original-title="حذف پرسنل" class="btn btn-danger remove"><i class="fa fa-remove"></i></button></td>'
-    }
-
-</script>
 <script>
 
     $(function () {

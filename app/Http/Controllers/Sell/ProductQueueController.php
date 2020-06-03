@@ -120,40 +120,66 @@ class ProductQueueController extends Controller
 
     public function Liststore(Request $request)
     {
+
+
         $validator = Validator::make($request->all(), [
             'product_name.*' => 'required',
+            'date' => 'required',
         ], [
             'product_name.*.required' => 'لطفا مقدار بارگیری را مشخص کنید',
+            'date.required' => 'لطفا تاریخ را مشخص کنید',
         ]);
         if ($validator->passes()) {
             try {
-                $number = count(collect($request)->get('id_product'));
-                for ($i = 0; $i <= $number; $i++) {
-                    Scheduling::create([
-                        'detail_id' => $request->get('id_product')[$i],
-                        'number' => $request->get('product_name')[$i],
-                        'type' => $request->type,
-                        'Carry' => $request->Carry,
-                        'date' => $this->convert2english($request->date),
-                        'time' => $request->time,
-                        'status' => 0,
-                        'description' => $request->description,
-                    ]);
+                $number = count(collect($request)->get('product_name'));
+                for ($i = 0; $i < $number; $i++) {
+
+                    $numbr = DB::table('invoice_product')
+                        ->where('id', $request->get('id_product')[$i])->first();
+                    $barn = DB::table('barns_products')
+                        ->where('product_id', $numbr->product_id)
+                        ->where('color_id', $numbr->color_id)
+                        ->first();
+                    $total = $barn->Inventory - $barn->NumberSold;
+                    if ($request->get('product_name')[$i] > $total) {
+                        return response()->json(['erro' => 'erro']);
+                    }
+                    if ($numbr->leftover < $request->get('product_name')[$i]) {
+                        return response()->json(['errorr' => 'errorr']);
+                    } else {
+                        Scheduling::create([
+                            'detail_id' => $request->get('id_product')[$i],
+                            'number' => $request->get('product_name')[$i],
+                            'type' => $request->type,
+                            'Carry' => $request->Carry,
+                            'date' => $this->convert2english($request->date),
+                            'time' => $request->time,
+                            'status' => 0,
+                            'description' => $request->description,
+                        ]);
+                        DB::table('invoice_product')
+                            ->where('id', $request->get('id_product')[$i])
+                            ->update([
+                                'leftover' => $numbr->leftover - $request->get('product_name')[$i],
+                            ]);
+                        if ($numbr->leftover == $request->get('product_name')[$i]) {
+                            DB::table('invoice_product')
+                                ->where('id', $request->get('id_product')[$i])->update([
+                                    'end' => 1,
+                                ]);
+                        }
+                        DB::table('barns_products')
+                            ->where('product_id', $numbr->product_id)
+                            ->where('color_id', $numbr->color_id)
+                            ->update([
+                                'NumberSold' => $barn->NumberSold + $request->get('product_name')[$i],
+                                'Numbernotsold' => $barn->NumberSold - $barn->Inventory,
+                            ]);
+                    }
                 }
-            } catch (Exception $exception) {
-                $number = count(collect($request)->get('id_product'));
-                for ($i = 0; $i <= $number; $i++) {
-                    Scheduling::create([
-                        'detail_id' => $request->get('id_product')[$i],
-                        'number' => $request->get('product_name')[$i],
-                        'type' => $request->type,
-                        'Carry' => $request->Carry,
-                        'date' => $this->convert2english($request->date),
-                        'time' => $request->time,
-                        'status' => 0,
-                        'description' => $request->description,
-                    ]);
-                }
+            } catch
+            (Exception $exception) {
+                return response()->json(['success' => 'success']);
             }
 
             return response()->json(['success' => 'success']);
@@ -164,7 +190,8 @@ class ProductQueueController extends Controller
     }
 
 
-    public function wizard($id)
+    public
+    function wizard($id)
     {
         $products = \DB::table('detail_invoice_list')
             ->where('id', $id)
@@ -181,7 +208,8 @@ class ProductQueueController extends Controller
         return view('productlist.wizard', compact('polymerics', 'products', 'namec', 'namep'));
     }
 
-    public function actions($row)
+    public
+    function actions($row)
     {
 
         $btn = '<a href="' . route('admin.product.list.wizard', $row->id) . '" data-toggle="tooltip"

@@ -91,6 +91,7 @@
 </style>
 
 <script src="{{asset('/public/js/2.js')}}"></script>
+
 <script>
 
 
@@ -137,8 +138,6 @@
                 $("#city").empty();
             }
         });
-
-
         $('#city').change(function () {
             var commodityID = $(this).val();
             if (commodityID) {
@@ -165,6 +164,7 @@
     });
 
 </script>
+
 <script>
     function numberOnly(input) {
         var regex = /[^0-9]/gi;
@@ -215,6 +215,7 @@
     });
 
 </script>
+
 <script type="text/javascript">
     $(function () {
         $.ajaxSetup({
@@ -273,80 +274,233 @@
     });
 
 </script>
+
 <script>
-
-    $(function () {
-        $("#btnAdd").bind("click", function () {
-            var div = $("<tr />");
-            div.html(GetDynamicTextBox(""));
-            $("#TextBoxContainer").append(div);
-        });
-        $("body").on("click", ".remove", function () {
-            $(this).closest("tr").remove();
-        });
-    });
-
-    function GetDynamicTextBox(value) {
+    added_inputs1_array = [];
+    if (added_inputs1_array.length >= 1)
+        for (var a in added_inputs1_array)
+            added_inputs_array_table2(added_inputs1_array[a], a);
 
 
-        return '<td><input name = "per_side_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><select name="per_sex_company[]" class="form-control"><option>انتخاب کنید</option><option value="1"> مرد</option><option  value="2"> زن</option></select></td>' +
-            '<td><input name = "per_title_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "per_name_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "per_phone_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "per_inside_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "per_email_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "per_tel_company_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><button type="button" data-original-title="حذف پرسنل" class="btn btn-danger remove"><i class="fa fa-remove"></i></button></td>'
+    function added_inputs_array_table1(data, a) {
+
+        var myNode = document.createElement('div');
+        myNode.id = 'namee' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'name_bank_company" + a + "\'  name=\"name_bank_company[]\"\n" +
+            "class=\"form-control sell\"/>" +
+            "</div></div></div>";
+        document.getElementById('namee').appendChild(myNode);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'shobee' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'branch_bank_company" + a + "\'  name=\"branch_bank_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('shobee').appendChild(myNode);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'shomaree' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'account_bank_company" + a + "\'  name=\"account_bank_company[]\"\n" +
+            "class=\"form-control Price_Sell\"/>" +
+            "</div></div></div>";
+        document.getElementById('shomaree').appendChild(myNode);
+
+
+        var myNode = document.createElement('div');
+        myNode.id = 'tarikhh' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'date_bank_company" + a + "\'  name=\"date_bank_company[]\"\n" +
+            "class=\"form-control Weight\"/>" +
+            "</div></div></div>";
+        document.getElementById('tarikhh').appendChild(myNode);
+
+
+        var myNode = document.createElement('div');
+        myNode.id = 'actiont' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<button onclick='deleteService1(" + a + ", event)' class=\"form-control btn btn-danger\"><i class=\"fa fa-remove\"></button></div>";
+        document.getElementById('actiont').appendChild(myNode);
     }
 
-</script>
-<script>
-
-    $(function () {
-        $("#btnAddbank").bind("click", function () {
-            var div = $("<tr />");
-            div.html(GetDynamicTextBoxx(""));
-            $("#TextBoxContainerbank").append(div);
-        });
-        $("body").on("click", ".remove", function () {
-            $(this).closest("tr").remove();
-        });
-    });
-
-    function GetDynamicTextBoxx(value) {
-
-
-        return '<td><input name = "name_bank_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "branch_bank_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "account_bank_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "date_bank_company[]" type="text" value = "' + value + '" class="form-control example1" /></td>' +
-            '<td><button type="button" data-original-title="حذف پرسنل" class="btn btn-danger remove"><i class="fa fa-remove"></i></button></td>'
+    function deleteService1(id, event) {
+        event.preventDefault();
+        $('#namee' + id).remove();
+        $('#shobee' + id).remove();
+        $('#shomaree' + id).remove();
+        $('#tarikhh' + id).remove();
+        $('#actiont' + id).remove();
     }
 
+
+    function addInput10() {
+        var data = {
+            'title': '',
+            'icon': '',
+        };
+        added_inputs1_array.push(data);
+        added_inputs_array_table1(data, added_inputs1_array.length - 1);
+    }
 </script>
 <script>
-
-    $(function () {
-        $("#btnAddtamin").bind("click", function () {
-            var div = $("<tr />");
-            div.html(GetDynamicTextBoxxx(""));
-            $("#TextBoxContainertamin").append(div);
-        });
-        $("body").on("click", ".remove", function () {
-            $(this).closest("tr").remove();
-        });
-    });
-
-    function GetDynamicTextBoxxx(value) {
+    added_inputs2_array = [];
+    if (added_inputs2_array.length >= 1)
+        for (var a in added_inputs2_array)
+            added_inputs_array_table2(added_inputs2_array[a], a);
 
 
-        return '<td><input name = "name_securing_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "date_securing_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><button type="button" data-original-title="حذف پرسنل" class="btn btn-danger remove"><i class="fa fa-remove"></i></button></td>'
+    function added_inputs_array_table2(data, a) {
+
+        var myNode = document.createElement('div');
+        myNode.id = 'nameee' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'name_securing_company" + a + "\'  name=\"name_securing_company[]\"\n" +
+            "class=\"form-control sell\"/>" +
+            "</div></div></div>";
+        document.getElementById('nameee').appendChild(myNode);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'shobeee' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'date_securing_company" + a + "\'  name=\"date_securing_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('shobeee').appendChild(myNode);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'actiontt' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<button onclick='deleteService2(" + a + ", event)' class=\"form-control btn btn-danger\"><i class=\"fa fa-remove\"></button></div>";
+        document.getElementById('actiontt').appendChild(myNode);
     }
 
+    function deleteService2(id, event) {
+        event.preventDefault();
+        $('#nameee' + id).remove();
+        $('#shobeee' + id).remove();
+        $('#actiontt' + id).remove();
+    }
+
+
+    function addInput11() {
+        var data = {
+            'title': '',
+            'icon': '',
+        };
+        added_inputs2_array.push(data);
+        added_inputs_array_table2(data, added_inputs2_array.length - 1);
+    }
 </script>
+<script>
+    added_inputs3_array = [];
+    if (added_inputs3_array.length >= 1)
+        for (var a in added_inputs3_array)
+            added_inputs_array_table2(added_inputs3_array[a], a);
+
+
+    function added_inputs_array_table3(data, a) {
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_side' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_side_company" + a + "\'  name=\"per_side_company[]\"\n" +
+            "class=\"form-control sell\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_side').appendChild(myNode);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_sex' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_sex_company" + a + "\'  name=\"per_sex_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_sex').appendChild(myNode);
+
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_title' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_title_company" + a + "\'  name=\"per_title_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_title').appendChild(myNode);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_name' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_name_company" + a + "\'  name=\"per_name_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_name').appendChild(myNode);
+
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_phone' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_phone_company" + a + "\'  name=\"per_phone_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_phone').appendChild(myNode);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_inside' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_inside_company" + a + "\'  name=\"per_inside_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_inside').appendChild(myNode);
+
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_email' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_email_company" + a + "\'  name=\"per_email_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_email').appendChild(myNode);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_tel' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_tel_company_company" + a + "\'  name=\"per_tel_company_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_tel').appendChild(myNode);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'actiontt' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<button onclick='deleteService3(" + a + ", event)' class=\"form-control btn btn-danger\"><i class=\"fa fa-remove\"></button></div>";
+        document.getElementById('actionttt').appendChild(myNode);
+    }
+
+    function deleteService3(id, event) {
+        event.preventDefault();
+        $('#per_side' + id).remove();
+        $('#per_sex' + id).remove();
+        $('#per_title' + id).remove();
+        $('#per_name' + id).remove();
+        $('#per_phone' + id).remove();
+        $('#per_inside' + id).remove();
+        $('#per_email' + id).remove();
+        $('#per_tel' + id).remove();
+        $('#actionttt' + id).remove();
+    }
+
+
+    function addInput12() {
+        var data = {
+            'title': '',
+            'icon': '',
+        };
+        added_inputs3_array.push(data);
+        added_inputs_array_table3(data, added_inputs3_array.length - 1);
+    }
+</script>
+
+
 <style>
     .vertical {
         border-left: 1px solid black;

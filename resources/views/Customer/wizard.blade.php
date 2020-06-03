@@ -41,7 +41,6 @@
                             <div class="row setup-content" id="step-1" style="display: block;">
                                 <br/>
                                 <hr/>
-
                                 <div class="col-md-12">
                                     <div class="col-md-6 form-group">
                                         <div class="col-md-12">
@@ -54,7 +53,6 @@
                                                            placeholder="لطفا کد مشتری را وارد کنید">
                                                 </div>
                                             </div>
-
                                             <div class="form-group field ">
                                                 <label class="control-label main col-md-4"> نحوه اشنایی <span
                                                         style="color: red" class="required-mark">*</span></label>
@@ -71,8 +69,6 @@
                                                     <div class="help-block with-errors"></div>
                                                 </div>
                                             </div>
-
-
                                             <div class="form-group field ">
                                                 <label class="control-label main col-md-4"> کشور <span
                                                         style="color: red" class="required-mark">*</span></label>
@@ -89,7 +85,6 @@
                                                     <div class="help-block with-errors"></div>
                                                 </div>
                                             </div>
-
                                             <div class="form-group field ">
                                                 <label for="sel1" class="control-label main col-md-4"> نوع مشتری <span
                                                         style="color: red" class="required-mark">*</span></label>
@@ -103,7 +98,6 @@
                                                     </select>
                                                 </div>
                                             </div>
-
                                             <div class="form-group field ">
                                                 <label for="sel1" class="control-label main col-md-4"> منطقه <span
                                                         style="color: red" class="required-mark">*</span></label>
@@ -112,15 +106,8 @@
                                                     </select>
                                                 </div>
                                             </div>
-
-
-
-
                                         </div>
-
                                     </div>
-
-
                                     <div class="col-md-6 form-group">
                                         <div class="col-md-12">
                                             <div class="form-group field ">
@@ -134,7 +121,6 @@
                                                     <div class="help-block with-errors"></div>
                                                 </div>
                                             </div>
-
                                             <div class="form-group field ">
                                                 <label class="control-label main col-md-4"> تاریخ اشنایی <span
                                                         style="color: red" class="required-mark">*</span></label>
@@ -146,8 +132,6 @@
                                                     <div class="help-block with-errors"></div>
                                                 </div>
                                             </div>
-
-
                                             <div class="form-group field ">
                                                 <label class="control-label main col-md-4"> استان <span
                                                         style="color: red"
@@ -159,8 +143,6 @@
                                                     <div class="help-block with-errors"></div>
                                                 </div>
                                             </div>
-
-
                                             <div class="form-group field ">
                                                 <label class="control-label main col-md-4"> کارشناس <span
                                                         style="color: red"
@@ -179,39 +161,27 @@
                                                     <div class="help-block with-errors"></div>
                                                 </div>
                                             </div>
-
-
                                         </div>
                                     </div>
-
-
-
-                                        <div class="form-group col-md-12">
-                                            <label class="control-label col-md-2">توضیحات</label>
-                                            <div class="col-md-10">
-                                                <div class="help-block with-errors"></div>
-                                                <textarea name="description" id="description" class="form-control"
-                                                          rows="2" cols="50"
-                                                          placeholder="توضیحات در مورد مشتری">
+                                    <div class="form-group col-md-12">
+                                        <label class="control-label col-md-2">توضیحات</label>
+                                        <div class="col-md-10">
+                                            <div class="help-block with-errors"></div>
+                                            <textarea name="description" id="description" class="form-control"
+                                                      rows="2" cols="50"
+                                                      placeholder="توضیحات در مورد مشتری">
 
                                                 </textarea>
 
 
-                                            </div>
                                         </div>
-
-                                        <button class="btn btn-primary nextBtn pull-right" id="nextBtn"
-                                                type="button">
-                                            ادامه
-                                        </button>
-
-
                                     </div>
+                                    <button class="btn btn-primary nextBtn pull-right" id="nextBtn"
+                                            type="button">
+                                        ادامه
+                                    </button>
                                 </div>
-
-
                             </div>
-
 
                             <div class="row setup-content" id="step-2" style="display: block;">
                                 <br/>
@@ -1030,6 +1000,8 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div class="portlet-body">
+
+
                                                                                 <div class="table table-responsive">
                                                                                     <table
                                                                                         class="table table-responsive table-striped table-bordered">
@@ -1044,12 +1016,20 @@
                                                                                         </thead>
                                                                                         <tbody
                                                                                             id="TextBoxContainerbank">
+                                                                                        <tr>
+                                                                                            <td id="namee"></td>
+                                                                                            <td id="shobee"></td>
+                                                                                            <td id="shomaree"></td>
+                                                                                            <td id="tarikhh"></td>
+                                                                                            <td id="actiont"></td>
+                                                                                        </tr>
                                                                                         </tbody>
                                                                                         <tfoot>
                                                                                         <tr>
-                                                                                            <th colspan="5">
+                                                                                            <th colspan="1">
                                                                                                 <button id="btnAddbank"
                                                                                                         type="button"
+                                                                                                        onclick="addInput10()"
                                                                                                         class="btn btn-primary"
                                                                                                         data-toggle="tooltip">
                                                                                                     <i class="fa fa-plus"></i>
@@ -1058,7 +1038,9 @@
                                                                                         </tr>
                                                                                         </tfoot>
                                                                                     </table>
+
                                                                                 </div>
+
 
                                                                             </div>
                                                                         </div>
@@ -1080,6 +1062,11 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div class="portlet-body">
+
+
+
+
+
                                                                                 <div class="table table-responsive">
                                                                                     <table
                                                                                         class="table table-responsive table-striped table-bordered">
@@ -1091,13 +1078,19 @@
                                                                                         </tr>
                                                                                         </thead>
                                                                                         <tbody
-                                                                                            id="TextBoxContainertamin">
+                                                                                            id="TextBoxContainerbankk">
+                                                                                        <tr>
+                                                                                            <td id="nameee"></td>
+                                                                                            <td id="shobeee"></td>
+                                                                                            <td id="actiontt"></td>
+                                                                                        </tr>
                                                                                         </tbody>
                                                                                         <tfoot>
                                                                                         <tr>
-                                                                                            <th colspan="5">
-                                                                                                <button id="btnAddtamin"
+                                                                                            <th colspan="1">
+                                                                                                <button id="btnAddbank"
                                                                                                         type="button"
+                                                                                                        onclick="addInput11()"
                                                                                                         class="btn btn-primary"
                                                                                                         data-toggle="tooltip">
                                                                                                     <i class="fa fa-plus"></i>
@@ -1106,7 +1099,9 @@
                                                                                         </tr>
                                                                                         </tfoot>
                                                                                     </table>
+
                                                                                 </div>
+
 
                                                                             </div>
                                                                         </div>
@@ -1297,6 +1292,8 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div class="portlet-body">
+
+
                                                                                 <div class="table table-responsive">
                                                                                     <table
                                                                                         class="table table-responsive table-striped table-bordered">
@@ -1313,13 +1310,26 @@
                                                                                             <td>عملیات</td>
                                                                                         </tr>
                                                                                         </thead>
-                                                                                        <tbody id="TextBoxContainer">
+                                                                                        <tbody
+                                                                                            id="TextBoxContainerbankkk">
+                                                                                        <tr>
+                                                                                            <td id="per_side"></td>
+                                                                                            <td id="per_sex"></td>
+                                                                                            <td id="per_title"></td>
+                                                                                            <td id="per_name"></td>
+                                                                                            <td id="per_phone"></td>
+                                                                                            <td id="per_inside"></td>
+                                                                                            <td id="per_email"></td>
+                                                                                            <td id="per_tel"></td>
+                                                                                            <td id="actionttt"></td>
+                                                                                        </tr>
                                                                                         </tbody>
                                                                                         <tfoot>
                                                                                         <tr>
-                                                                                            <th colspan="5">
-                                                                                                <button id="btnAdd"
+                                                                                            <th colspan="1">
+                                                                                                <button id="btnAddbank"
                                                                                                         type="button"
+                                                                                                        onclick="addInput12()"
                                                                                                         class="btn btn-primary"
                                                                                                         data-toggle="tooltip">
                                                                                                     <i class="fa fa-plus"></i>
@@ -1328,7 +1338,9 @@
                                                                                         </tr>
                                                                                         </tfoot>
                                                                                     </table>
+
                                                                                 </div>
+
 
                                                                             </div>
                                                                         </div>

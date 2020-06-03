@@ -532,9 +532,16 @@
                                     class="fa fa-circle-o"></i>پیش فاکتورهای تایید نشده</a>
                         </li>
 
-                        <li><a href="{{route('admin.invoice.success')}}"><i
-                                    class="fa fa-circle-o"></i>پیش فاکتور های تایید شده</a>
+
+                        <li>
+                            <a href="{{route('admin.invoice.success')}}">
+                                <i class="fa fa-circle-o"></i> <span>پیش فاکتور های تایید شده</span>
+                                <span class="pull-left-container">
+              <small class="label pull-left bg-red">0</small>
+            </span>
+                            </a>
                         </li>
+
 
                         <li><a href="{{route('admin.invoice.trash')}}"><i
                                     class="fa fa-circle-o"></i>پیش فاکتور های لغو شده</a>
@@ -591,8 +598,6 @@
                         <li><a href="{{route('admin.Reasonstostop.list')}}"><i
                                     class="fa fa-circle-o"></i>توقفات ماشین</a>
                         </li>
-
-
 
 
                     </ul>

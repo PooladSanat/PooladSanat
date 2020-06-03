@@ -100,7 +100,7 @@
 <br/>
 <div class="container-fluid">
     <div class="container-fluid">
-        <img width="130" src="{{asset('/public/icon/logo-poolad-website.png')}}">
+        <img width="130" src="{{asset('/public/icon/logo.jpeg')}}">
         <br/>
         <strong>
             <center>بسمه تعالی</center>
@@ -249,14 +249,12 @@
                     <p style="font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;با
                         تشکر</p>
                     <p style="font-size: 20px">شرکت ماشین های تزریق پلاستیک پولاد</p>
-                    <p>
+
                         @if(!empty($user_id->sign))
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;
-                            &nbsp;&nbsp;&nbsp;<img src="{{url($user_id->sign)}}" width="100" class="user-image"
-                                                   alt="User Image">
+
+                            <img src="{{url($user_id->sign)}}" width="270">
                         @endif
-                    </p>
+
                     <p style="font-size: 11px">تهران ، تهرانپارس ، خیابان ناهــید ، خیابان میوه ، خیابان صـــبوری ،
                         شماره
                         1</p>

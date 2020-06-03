@@ -37,8 +37,11 @@ class InvoiceController extends Controller
     {
 
         $id = auth()->user()->id;
-        $role = \DB::table('role_user')
+        $role_id = \DB::table('role_user')
             ->where('user_id', $id)->first();
+        $role = DB::table('roles')
+            ->where('id', $role_id->role_id)
+            ->first();
         $invoices = \DB::table('invoice_customer')->get();
         $banks = Bank::where('status', 1)->get();
         $selectstores = SelectStore::where('status', 1)->get();
@@ -46,154 +49,309 @@ class InvoiceController extends Controller
         $invoicePrints = \DB::table('invoice_print')
             ->get();
 
-        if ($request->ajax()) {
-            $data = Invoice::where('state', '!=', 4)
-                ->where('state', '!=', 5)
-                ->orderBy('id', 'desc')->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('invoiceNumber', function ($row) {
-                    $invoiceNumber = $row->invoiceNumber;
-                    $btn = '<a href="' . route('admin.invoice.detail', $row->id) . '">
+        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی") {
+            if ($request->ajax()) {
+                $data = Invoice::where('state', '!=', 3)
+                    ->where('state', '!=', 5)
+                    ->orderBy('id', 'desc')->get();
+                return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('invoiceNumber', function ($row) {
+                        $invoiceNumber = $row->invoiceNumber;
+                        $btn = '<a href="' . route('admin.invoice.detail', $row->id) . '">
                      ' . $invoiceNumber . '
                       </a>';
-                    return $btn;
-                })
-                ->addColumn('created_at', function ($row) {
-                    $created_at = Jalalian::forge($row->created_at)->format('Y/m/d');
-                    return $created_at;
-                })
-                ->addColumn('status', function ($row) {
-                    if ($row->state == 0) {
-                        return 'در انتظار بررسی سوابق مالی';
-                    } elseif ($row->state == 1) {
-                        return 'در انتظار تایید مدیریت';
-                    } elseif ($row->state == 2) {
-                        return 'تکمیل شده';
-                    } elseif ($row->state == 3) {
-                        return 'تایید شده';
-                    } elseif ($row->state == 4) {
-                        return 'تایید شده';
-                    }
-                })
-                ->addColumn('user_id', function ($row) {
-                    return $row->user->name;
-                })
-                ->addColumn('customer_id', function ($row) {
-                    $btn = '<a href="' . route('admin.customers.list.detail', $row->customer_id) . '">
+                        return $btn;
+                    })
+                    ->addColumn('created_at', function ($row) {
+                        $created_at = Jalalian::forge($row->created_at)->format('Y/m/d');
+                        return $created_at;
+                    })
+                    ->addColumn('status', function ($row) {
+                        if ($row->state == 0) {
+                            return 'در انتظار بررسی سوابق مالی';
+                        } elseif ($row->state == 1) {
+                            return 'در انتظار تایید مدیریت';
+                        } elseif ($row->state == 2) {
+                            return 'تکمیل شده';
+                        } elseif ($row->state == 3) {
+                            return 'تایید شده';
+                        } elseif ($row->state == 4) {
+                            return 'تایید شده';
+                        }
+                    })
+                    ->addColumn('user_id', function ($row) {
+                        return $row->user->name;
+                    })
+                    ->addColumn('customer_id', function ($row) {
+                        $btn = '<a href="' . route('admin.customers.list.detail', $row->customer_id) . '">
                      ' . $row->customer->name . '
                       </a>';
-                    return $btn;
+                        return $btn;
 
-                })
-                ->addColumn('number_sell', function ($row) {
-                    return number_format($row->number_sell) . 'عدد';
-                })
-                ->addColumn('sum_sell', function ($row) {
-                    return number_format($row->sum_sell) . 'ریال';
-                })
-                ->addColumn('price_sell', function ($row) {
-                    return number_format($row->totalfinal) . 'ریال';
-                })
-                ->addColumn('paymentMethod', function ($row) {
+                    })
+                    ->addColumn('number_sell', function ($row) {
+                        return number_format($row->number_sell) . 'عدد';
+                    })
+                    ->addColumn('sum_sell', function ($row) {
+                        return number_format($row->sum_sell) . 'ریال';
+                    })
+                    ->addColumn('price_sell', function ($row) {
+                        return number_format($row->totalfinal) . 'ریال';
+                    })
+                    ->addColumn('paymentMethod', function ($row) {
 
-                    return $row->paymentMethod;
-                })
-                ->addColumn('invoiceType', function ($row) {
-                    if ($row->invoiceType == 1) {
-                        return 'رسمی';
+                        return $row->paymentMethod;
+                    })
+                    ->addColumn('invoiceType', function ($row) {
+                        if ($row->invoiceType == 1) {
+                            return 'رسمی';
 
-                    } else
-                        return 'غیر رسمی';
-                })
-                ->addColumn('action', function ($row) {
-                    return $this->actions($row);
-                })
-                ->rawColumns(['action', 'invoiceNumber', 'customer_id'])
-                ->make(true);
+                        } else
+                            return 'غیر رسمی';
+                    })
+                    ->addColumn('action', function ($row) {
+                        return $this->actions($row);
+                    })
+                    ->rawColumns(['action', 'invoiceNumber', 'customer_id'])
+                    ->make(true);
+            }
+            return view('sell.list', compact('invoices', 'invoicePrints', 'banks', 'users', 'selectstores'));
+
         }
-        return view('sell.list', compact('invoices', 'invoicePrints', 'banks', 'users', 'selectstores'));
+        if ($role->name == "کارشناس فروش") {
+            if ($request->ajax()) {
+                $data = Invoice::where('user_id', $id)
+                    ->where('state', '!=', 3)
+                    ->where('state', '!=', 5)
+                    ->orderBy('id', 'desc')->get();
+                return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('invoiceNumber', function ($row) {
+                        $invoiceNumber = $row->invoiceNumber;
+                        $btn = '<a href="' . route('admin.invoice.detail', $row->id) . '">
+                     ' . $invoiceNumber . '
+                      </a>';
+                        return $btn;
+                    })
+                    ->addColumn('created_at', function ($row) {
+                        $created_at = Jalalian::forge($row->created_at)->format('Y/m/d');
+                        return $created_at;
+                    })
+                    ->addColumn('status', function ($row) {
+                        if ($row->state == 0) {
+                            return 'در انتظار بررسی سوابق مالی';
+                        } elseif ($row->state == 1) {
+                            return 'در انتظار تایید مدیریت';
+                        } elseif ($row->state == 2) {
+                            return 'تکمیل شده';
+                        } elseif ($row->state == 3) {
+                            return 'تایید شده';
+                        } elseif ($row->state == 4) {
+                            return 'تایید شده';
+                        }
+                    })
+                    ->addColumn('user_id', function ($row) {
+                        return $row->user->name;
+                    })
+                    ->addColumn('customer_id', function ($row) {
+                        $btn = '<a href="' . route('admin.customers.list.detail', $row->customer_id) . '">
+                     ' . $row->customer->name . '
+                      </a>';
+                        return $btn;
+
+                    })
+                    ->addColumn('number_sell', function ($row) {
+                        return number_format($row->number_sell) . 'عدد';
+                    })
+                    ->addColumn('sum_sell', function ($row) {
+                        return number_format($row->sum_sell) . 'ریال';
+                    })
+                    ->addColumn('price_sell', function ($row) {
+                        return number_format($row->totalfinal) . 'ریال';
+                    })
+                    ->addColumn('paymentMethod', function ($row) {
+
+                        return $row->paymentMethod;
+                    })
+                    ->addColumn('invoiceType', function ($row) {
+                        if ($row->invoiceType == 1) {
+                            return 'رسمی';
+
+                        } else
+                            return 'غیر رسمی';
+                    })
+                    ->addColumn('action', function ($row) {
+                        return $this->actions($row);
+                    })
+                    ->rawColumns(['action', 'invoiceNumber', 'customer_id'])
+                    ->make(true);
+            }
+            return view('sell.list', compact('invoices', 'invoicePrints', 'banks', 'users', 'selectstores'));
+
+        }
+
 
     }
 
     public function trash(Request $request)
     {
         $id = auth()->user()->id;
-        $role = \DB::table('role_user')
+        $role_id = \DB::table('role_user')
             ->where('user_id', $id)->first();
+        $role = DB::table('roles')
+            ->where('id', $role_id->role_id)
+            ->first();
         $invoices = \DB::table('invoice_customer')->get();
 
-        if (request()->ajax()) {
-            if (!empty($request->from_date)) {
-                $data = Invoice::onlyTrashed()
-                    ->whereBetween('date', array($request->from_date, $request->to_date))
-                    ->get();
-            } else {
-                $data = Invoice::onlyTrashed()->get();
-            }
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('invoiceNumber', function ($row) {
-                    $invoiceNumber = $row->invoiceNumber;
-                    $btn = '<a href="' . route('admin.invoice.detailTrash', $row->id) . '">
+        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی") {
+            if (request()->ajax()) {
+                if (!empty($request->from_date)) {
+                    $data = Invoice::onlyTrashed()
+                        ->whereBetween('date', array($request->from_date, $request->to_date))
+                        ->get();
+                } else {
+                    $data = Invoice::onlyTrashed()->get();
+                }
+                return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('invoiceNumber', function ($row) {
+                        $invoiceNumber = $row->invoiceNumber;
+                        $btn = '<a href="' . route('admin.invoice.detailTrash', $row->id) . '">
                      ' . $invoiceNumber . '
                       </a>';
-                    return $btn;
-                })
-                ->addColumn('created_at', function ($row) {
-                    $created_at = Jalalian::forge($row->created_at)->format('Y/m/d');
-                    return $created_at;
-                })
-                ->addColumn('checkbox', function ($row) {
-                    $btn = ' <input type="checkbox" id="checkbox"
+                        return $btn;
+                    })
+                    ->addColumn('created_at', function ($row) {
+                        $created_at = Jalalian::forge($row->created_at)->format('Y/m/d');
+                        return $created_at;
+                    })
+                    ->addColumn('checkbox', function ($row) {
+                        $btn = ' <input type="checkbox" id="checkbox"
                         name="student_checkbox[]"
                         value=' . $row->id . '
                        class="student_checkbox">';
 
-                    return $btn;
+                        return $btn;
 
 
-                })
-                ->addColumn('status', function ($row) {
+                    })
+                    ->addColumn('status', function ($row) {
 
-                    return 'تایید نشده';
+                        return 'تایید نشده';
 
-                })
-                ->addColumn('user_id', function ($row) {
-                    return $row->user->name;
-                })
-                ->addColumn('customer_id', function ($row) {
-                    return $row->customer->name;
-                })
-                ->addColumn('number_sell', function ($row) {
-                    return number_format($row->number_sell) . 'عدد';
-                })
-                ->addColumn('sum_sell', function ($row) {
-                    return number_format($row->sum_sell) . 'ریال';
-                })
-                ->addColumn('price_sell', function ($row) {
-                    return number_format($row->price_sell) . 'ریال';
-                })
-                ->addColumn('paymentMethod', function ($row) {
-                    if ($row->paymentMethod == "0") {
-                        return 'نقدی';
-                    } else
-                        return $row->paymentMethod . 'روز ';
-                })
-                ->addColumn('invoiceType', function ($row) {
-                    if ($row->invoiceType == 1) {
-                        return 'رسمی';
+                    })
+                    ->addColumn('user_id', function ($row) {
+                        return $row->user->name;
+                    })
+                    ->addColumn('customer_id', function ($row) {
+                        return $row->customer->name;
+                    })
+                    ->addColumn('number_sell', function ($row) {
+                        return number_format($row->number_sell);
+                    })
+                    ->addColumn('sum_sell', function ($row) {
+                        return number_format($row->sum_sell);
+                    })
+                    ->addColumn('price_sell', function ($row) {
+                        return number_format($row->price_sell);
+                    })
+                    ->addColumn('paymentMethod', function ($row) {
+                        if ($row->paymentMethod == "0") {
+                            return 'نقدی';
+                        } else
+                            return $row->paymentMethod;
+                    })
+                    ->addColumn('invoiceType', function ($row) {
+                        if ($row->invoiceType == 1) {
+                            return 'رسمی';
 
-                    } else
-                        return 'غیر رسمی';
-                })
-                ->addColumn('action', function ($row) {
-                    return $this->action($row);
-                })
-                ->rawColumns(['action', 'invoiceNumber', 'checkbox'])
-                ->make(true);
+                        } else
+                            return 'غیر رسمی';
+                    })
+                    ->addColumn('action', function ($row) {
+                        return $this->action($row);
+                    })
+                    ->rawColumns(['action', 'invoiceNumber', 'checkbox'])
+                    ->make(true);
+            }
+            return view('sell.trash', compact('invoices'));
         }
-        return view('sell.trash', compact('invoices'));
+        if ($role->name == "کارشناس فروش") {
+            if (request()->ajax()) {
+                if (!empty($request->from_date)) {
+                    $data = Invoice::onlyTrashed()
+                        ->where('user_id', $id)
+                        ->whereBetween('date', array($request->from_date, $request->to_date))
+                        ->get();
+                } else {
+                    $data = Invoice::onlyTrashed()->get();
+                }
+                return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('invoiceNumber', function ($row) {
+                        $invoiceNumber = $row->invoiceNumber;
+                        $btn = '<a href="' . route('admin.invoice.detailTrash', $row->id) . '">
+                     ' . $invoiceNumber . '
+                      </a>';
+                        return $btn;
+                    })
+                    ->addColumn('created_at', function ($row) {
+                        $created_at = Jalalian::forge($row->created_at)->format('Y/m/d');
+                        return $created_at;
+                    })
+                    ->addColumn('checkbox', function ($row) {
+                        $btn = ' <input type="checkbox" id="checkbox"
+                        name="student_checkbox[]"
+                        value=' . $row->id . '
+                       class="student_checkbox">';
+
+                        return $btn;
+
+
+                    })
+                    ->addColumn('status', function ($row) {
+
+                        return 'تایید نشده';
+
+                    })
+                    ->addColumn('user_id', function ($row) {
+                        return $row->user->name;
+                    })
+                    ->addColumn('customer_id', function ($row) {
+                        return $row->customer->name;
+                    })
+                    ->addColumn('number_sell', function ($row) {
+                        return number_format($row->number_sell);
+                    })
+                    ->addColumn('sum_sell', function ($row) {
+                        return number_format($row->sum_sell);
+                    })
+                    ->addColumn('price_sell', function ($row) {
+                        return number_format($row->price_sell);
+                    })
+                    ->addColumn('paymentMethod', function ($row) {
+                        if ($row->paymentMethod == "0") {
+                            return 'نقدی';
+                        } else
+                            return $row->paymentMethod;
+                    })
+                    ->addColumn('invoiceType', function ($row) {
+                        if ($row->invoiceType == 1) {
+                            return 'رسمی';
+
+                        } else
+                            return 'غیر رسمی';
+                    })
+                    ->addColumn('action', function ($row) {
+                        return $this->action($row);
+                    })
+                    ->rawColumns(['action', 'invoiceNumber', 'checkbox'])
+                    ->make(true);
+            }
+            return view('sell.trash', compact('invoices'));
+
+        }
 
 
 //        $id = auth()->user()->id;
@@ -731,6 +889,7 @@ class InvoiceController extends Controller
                     for ($i = 0; $i <= $number; $i++) {
                         \DB::table('invoice_product')->insert([
                             'invoice_id' => $invoice->id,
+                            'user_id' => $request->user_id,
                             'product_id' => $request->get('product')[$i],
                             'color_id' => $request->get('color')[$i],
                             'salesNumber' => $request->get('number')[$i],
@@ -840,6 +999,11 @@ class InvoiceController extends Controller
                 Invoice::find($request->id_in)->update([
                     'state' => 3,
                 ]);
+                DB::table('invoice_product')
+                    ->where('invoice_id', $request->id_in)
+                    ->update([
+                        'state' => 1,
+                    ]);
                 DB::commit();
             } catch (Exception $exception) {
                 DB::rollBack();
@@ -1112,80 +1276,165 @@ class InvoiceController extends Controller
     public function success(Request $request)
     {
         $id = auth()->user()->id;
+        $role_id = \DB::table('role_user')
+            ->where('user_id', $id)->first();
+        $role = DB::table('roles')
+            ->where('id', $role_id->role_id)
+            ->first();
         $invoice_products = DB::table('invoice_product')->get();
         $invoices = Product::all();
         $products = Invoice::all();
-        if ($request->ajax()) {
-            $data = DB::table('invoice_product')
-                ->where('state', 1)
-                ->whereNull('end')
-                ->orderBy('id', 'desc')->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('checkbox', function ($row) {
-                    $btn = '<input type="checkbox" id="checkbox"
+        $colors = Color::all();
+        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی") {
+            if ($request->ajax()) {
+                $data = DB::table('invoice_product')
+                    ->where('state', 1)
+                    ->whereNull('end')
+                    ->orderBy('id', 'desc')->get();
+                return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('checkbox', function ($row) {
+                        $btn = '<input type="checkbox" id="checkbox"
                         name="student_checkbox[]"
                         value=' . $row->id . '
                        class="student_checkbox">';
 
-                    return $btn;
+                        return $btn;
 
 
-                })
-                ->addColumn('invoice', function ($row) {
-                    $customer = Invoice::where('id', $row->invoice_id)->first();
-                    return $customer->invoiceNumber;
-                })
-                ->addColumn('user', function ($row) {
-                    $customer = Invoice::where('id', $row->invoice_id)->first();
-                    $name = User::where('id', $customer->user_id)->first();
-                    return $name->name;
-                })
-                ->addColumn('customer', function ($row) {
-                    $customer = Invoice::where('id', $row->invoice_id)->first();
-                    $name = Customer::where('id', $customer->customer_id)->first();
-                    return $name->name;
-                })
-                ->addColumn('product', function ($row) {
-                    $name = Product::where('id', $row->product_id)->first();
-                    return $name->label;
-                })
-                ->addColumn('color', function ($row) {
-                    $name = Color::where('id', $row->color_id)->first();
-                    return $name->name;
-                })
-                ->addColumn('barn', function ($row) {
-                    $name = DB::table('barns_products')
-                        ->where('product_id', $row->product_id)
-                        ->where('color_id', $row->color_id)
-                        ->first();
-                    if (!empty($name)) {
-                        return $name->Inventory;
-                    } else {
-                        return '0';
-                    }
+                    })
+                    ->addColumn('invoice', function ($row) {
+                        $customer = Invoice::where('id', $row->invoice_id)->first();
+                        return $customer->invoiceNumber;
+                    })
+                    ->addColumn('user', function ($row) {
+                        $customer = Invoice::where('id', $row->invoice_id)->first();
+                        $name = User::where('id', $customer->user_id)->first();
+                        return $name->name;
+                    })
+                    ->addColumn('customer', function ($row) {
+                        $customer = Invoice::where('id', $row->invoice_id)->first();
+                        $name = Customer::where('id', $customer->customer_id)->first();
+                        return $name->name;
+                    })
+                    ->addColumn('product', function ($row) {
+                        $name = Product::where('id', $row->product_id)->first();
+                        return $name->label;
+                    })
+                    ->addColumn('color', function ($row) {
+                        $name = Color::where('id', $row->color_id)->first();
+                        return $name->name;
+                    })
+                    ->addColumn('barn', function ($row) {
+                        $name = DB::table('barns_products')
+                            ->where('product_id', $row->product_id)
+                            ->where('color_id', $row->color_id)
+                            ->first();
+                        if (!empty($name)) {
+                            return $name->Inventory;
+                        } else {
+                            return '0';
+                        }
 
-                })
-                ->addColumn('barnn', function ($row) {
-                    $name = DB::table('barns_products')
-                        ->where('product_id', $row->product_id)
-                        ->where('color_id', $row->color_id)
-                        ->first();
-                    if (!empty($name)) {
-                        return $name->NumberSold;
-                    } else {
-                        return '0';
-                    }
+                    })
+                    ->addColumn('barnn', function ($row) {
+                        $name = DB::table('barns_products')
+                            ->where('product_id', $row->product_id)
+                            ->where('color_id', $row->color_id)
+                            ->first();
+                        if (!empty($name)) {
+                            return $name->NumberSold;
+                        } else {
+                            return '0';
+                        }
 
-                })
-                ->addColumn('action_success', function ($row) {
-                    return $this->action_success($row);
-                })
-                ->rawColumns(['action_success', 'checkbox'])
-                ->make(true);
+                    })
+                    ->addColumn('action_success', function ($row) {
+                        return $this->action_success($row);
+                    })
+                    ->rawColumns(['action_success', 'checkbox'])
+                    ->make(true);
+            }
+            return view('sell.success',
+                compact('invoice_products', 'invoices', 'products', 'colors'));
+
         }
-        return view('sell.success',
-            compact('invoice_products', 'invoices', 'products'));
+        if ($role->name == "کارشناس فروش") {
+            if ($request->ajax()) {
+                $data = DB::table('invoice_product')
+                    ->where('user_id', $id)
+                    ->where('state', 1)
+                    ->whereNull('end')
+                    ->orderBy('id', 'desc')->get();
+                return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('checkbox', function ($row) {
+                        $btn = '<input type="checkbox" id="checkbox"
+                        name="student_checkbox[]"
+                        value=' . $row->id . '
+                       class="student_checkbox">';
+
+                        return $btn;
+
+
+                    })
+                    ->addColumn('invoice', function ($row) {
+                        $customer = Invoice::where('id', $row->invoice_id)->first();
+                        return $customer->invoiceNumber;
+                    })
+                    ->addColumn('user', function ($row) {
+                        $customer = Invoice::where('id', $row->invoice_id)->first();
+                        $name = User::where('id', $customer->user_id)->first();
+                        return $name->name;
+                    })
+                    ->addColumn('customer', function ($row) {
+                        $customer = Invoice::where('id', $row->invoice_id)->first();
+                        $name = Customer::where('id', $customer->customer_id)->first();
+                        return $name->name;
+                    })
+                    ->addColumn('product', function ($row) {
+                        $name = Product::where('id', $row->product_id)->first();
+                        return $name->label;
+                    })
+                    ->addColumn('color', function ($row) {
+                        $name = Color::where('id', $row->color_id)->first();
+                        return $name->name;
+                    })
+                    ->addColumn('barn', function ($row) {
+                        $name = DB::table('barns_products')
+                            ->where('product_id', $row->product_id)
+                            ->where('color_id', $row->color_id)
+                            ->first();
+                        if (!empty($name)) {
+                            return $name->Inventory;
+                        } else {
+                            return '0';
+                        }
+
+                    })
+                    ->addColumn('barnn', function ($row) {
+                        $name = DB::table('barns_products')
+                            ->where('product_id', $row->product_id)
+                            ->where('color_id', $row->color_id)
+                            ->first();
+                        if (!empty($name)) {
+                            return $name->NumberSold;
+                        } else {
+                            return '0';
+                        }
+
+                    })
+                    ->addColumn('action_success', function ($row) {
+                        return $this->action_success($row);
+                    })
+                    ->rawColumns(['action_success', 'checkbox'])
+                    ->make(true);
+            }
+            return view('sell.success',
+                compact('invoice_products', 'invoices', 'products', 'colors'));
+
+        }
+
 
     }
 
@@ -1261,6 +1510,10 @@ class InvoiceController extends Controller
                     'product_id' => $id->product_id,
                     'created_at' => $created_at,
                 ]);
+                DB::table('invoice_product')
+                    ->where('id', $request->invoice_product)->update([
+                        'leftover' => $id->leftover - $request->numbere,
+                    ]);
                 DB::commit();
                 return response()->json(['success' => 'success']);
             } catch (Exception $exception) {
@@ -1315,6 +1568,7 @@ class InvoiceController extends Controller
                 try {
                     Scheduling::create([
                         'detail_id' => $request->scheduling,
+                        'user_id' => $number->user_id,
                         'number' => $request->number,
                         'type' => $request->type,
                         'Carry' => $request->Carry,
@@ -1339,7 +1593,7 @@ class InvoiceController extends Controller
                         ->where('color_id', $number->color_id)
                         ->update([
                             'NumberSold' => $barn->NumberSold + $request->number,
-                            'Numbernotsold' => $request->NumberSold - $request->Inventory,
+                            'Numbernotsold' => $barn->NumberSold - $barn->Inventory,
                         ]);
                     DB::commit();
                 } catch (Exception $exception) {
@@ -1446,11 +1700,11 @@ class InvoiceController extends Controller
 //                       <img src="' . $many . '" width="20" title="سابقه پرداخت مشتری"></a>';
 
 
-        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="تایید پرداخت"
-                       class="Confirmpayment">
-                       <i class="fa fa-dollar fa-lg" title="تایید پرداخت"></i>
-                       </a>&nbsp;&nbsp;';
+//        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+//                      data-id="' . $row->id . '" data-original-title="تایید پرداخت"
+//                       class="Confirmpayment">
+//                       <i class="fa fa-dollar fa-lg" title="تایید پرداخت"></i>
+//                       </a>&nbsp;&nbsp;';
 
 
         $btn = $btn . '<a href="' . route('admin.print.detail', $row->id) . '">
@@ -1488,9 +1742,9 @@ class InvoiceController extends Controller
         $btn = null;
 
         $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="انصراف از تولید"
+                      data-id="' . $row->id . '" data-original-title="انصراف از فروش"
                        class="cancel">
-                       <i class="fa fa-remove fa-lg" title="انصراف از تولید"></i>
+                       <i class="fa fa-remove fa-lg" title="انصراف از فروش"></i>
                        </a>&nbsp;&nbsp;';
 
         $btn = $btn . '<a href="' . route('admin.invoice.product.update', $row->invoice_id) . '">

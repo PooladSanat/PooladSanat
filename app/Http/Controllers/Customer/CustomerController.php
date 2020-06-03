@@ -284,6 +284,7 @@ class CustomerController extends Controller
         } else {
             $final_documents_company = null;
         }
+
         if ($validator->passes()) {
             $customer = \App\Customer::create(
                 [
@@ -337,30 +338,6 @@ class CustomerController extends Controller
                     'addersstore_work_company' => $request->addersstore_work_company,
 
                 ]);
-                try {
-                    $bank = count(collect($request)->get('name_bank_company'));
-                    for ($i = 0; $i <= $bank; $i++) {
-                        \DB::table('customer_bank')->insert([
-                            'customer_id' => $customer->id,
-                            'name_bank_company' => $request->get('name_bank_company')[$i],
-                            'branch_bank_company' => $request->get('branch_bank_company')[$i],
-                            'account_bank_company' => $request->get('account_bank_company')[$i],
-                            'date_bank_company' => $request->get('date_bank_company')[$i],
-                        ]);
-                    }
-                } catch (\Exception $e) {
-                }
-                try {
-                    $securing = count(collect($request)->get('name_securing_company'));
-                    for ($i = 0; $i <= $securing; $i++) {
-                        \DB::table('customer_securing')->insert([
-                            'customer_id' => $customer->id,
-                            'name_securing_company' => $request->get('name_securing_company')[$i],
-                            'date_securing_company' => $request->get('date_securing_company')[$i],
-                        ]);
-                    }
-                } catch (\Exception $e) {
-                }
                 \DB::table('customer_documents')->insert([
                     'customer_id' => $customer->id,
                     'certificate_documents_company' => $certificate_documents_company,
@@ -373,26 +350,58 @@ class CustomerController extends Controller
                     'pstore_documents_company' => $pstore_documents_company,
                     'final_documents_company' => $final_documents_company,
                 ]);
-                try {
-                    $size = count(collect($request)->get('per_side_company'));
-                    for ($i = 0; $i <= $size; $i++) {
-                        \DB::table('company_personal')->insert([
-                            'customer_id' => $customer->id,
-                            'per_side_company' => $request->get('per_side_company')[$i],
-                            'per_sex_company' => $request->get('per_sex_company')[$i],
-                            'per_title_company' => $request->get('per_title_company')[$i],
-                            'per_name_company' => $request->get('per_name_company')[$i],
-                            'per_phone_company' => $request->get('per_phone_company')[$i],
-                            'per_inside_company' => $request->get('per_inside_company')[$i],
-                            'per_email_company' => $request->get('per_email_company')[$i],
-                            'per_tel_company_company' => $request->get('per_tel_company_company')[$i],
-                        ]);
+                if (!empty($request->name_bank_company)) {
+                    try {
+                        $bank = count(collect($request)->get('name_bank_company'));
+                        for ($i = 0; $i < $bank; $i++) {
+                            \DB::table('customer_bank')->insert([
+                                'customer_id' => $customer->id,
+                                'name_bank_company' => $request->get('name_bank_company')[$i],
+                                'branch_bank_company' => $request->get('branch_bank_company')[$i],
+                                'account_bank_company' => $request->get('account_bank_company')[$i],
+                                'date_bank_company' => $request->get('date_bank_company')[$i],
+                            ]);
+                        }
+                    } catch (Exception $e) {
                     }
-                    return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
-                } catch (\Exception $e) {
-                    return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
                 }
-            } else
+                if (!empty($request->name_securing_company)) {
+                    try {
+                        $securing = count(collect($request)->get('name_securing_company'));
+                        for ($t = 0; $t < $securing; $t++) {
+                            \DB::table('customer_securing')->insert([
+                                'customer_id' => $customer->id,
+                                'name_securing_company' => $request->get('name_securing_company')[$t],
+                                'date_securing_company' => $request->get('date_securing_company')[$t],
+                            ]);
+                        }
+                    } catch (Exception $e) {
+                    }
+                }
+
+                if (!empty($request->per_side_company)) {
+                    try {
+                        $size = count(collect($request)->get('per_side_company'));
+                        for ($c = 0; $c < $size; $c++) {
+                            \DB::table('company_personal')->insert([
+                                'customer_id' => $customer->id,
+                                'per_side_company' => $request->get('per_side_company')[$c],
+                                'per_sex_company' => $request->get('per_sex_company')[$c],
+                                'per_title_company' => $request->get('per_title_company')[$c],
+                                'per_name_company' => $request->get('per_name_company')[$c],
+                                'per_phone_company' => $request->get('per_phone_company')[$c],
+                                'per_inside_company' => $request->get('per_inside_company')[$c],
+                                'per_email_company' => $request->get('per_email_company')[$c],
+                                'per_tel_company_company' => $request->get('per_tel_company_company')[$c],
+                            ]);
+                        }
+                        return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
+                    } catch (Exception $e) {
+                    }
+                }
+
+                return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
+            } else {
                 \DB::table('customer_personal')->insert([
                     'customer_id' => $customer->id,
                     'sex' => $request->sex_personel,
@@ -405,7 +414,9 @@ class CustomerController extends Controller
                     'text_personel' => $request->text_personel,
                     'fax_personel' => $request->fax_personel,
                 ]);
-            return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
+                return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
+            }
+
         }
         return Response::json(['errors' => $validator->errors()]);
     }
@@ -415,6 +426,7 @@ class CustomerController extends Controller
      */
     public function edit(Request $request)
     {
+        return response()->json($request->all());
         $id = Customer::where('id', $request->id)->first();
         $document = \DB::table('customer_documents')
             ->where('customer_id', $request->id)
@@ -426,7 +438,6 @@ class CustomerController extends Controller
             if ($type->type == 1) {
                 if ($id->code != $request->code) {
                     $validator = Validator::make($request->all(), [
-
                         'name' => 'required',
                         'methodd' => 'required',
                         'date' => 'required',
@@ -564,8 +575,6 @@ class CustomerController extends Controller
 
             }
         }
-
-
         if ($validator->passes()) {
             try {
                 $customer = \App\Customer::find($request->id)->update(

@@ -183,7 +183,7 @@
                         ثبت
                     </button>
                     &nbsp;&nbsp;
-                    <a href="{{route('admin.invoice.index')}}" style="width: 130px" type="submit" class="btn btn-danger">
+                    <a href="{{route('admin.invoice.success')}}" style="width: 130px" type="submit" class="btn btn-danger">
                         برگشت
                     </a>
                 </div>

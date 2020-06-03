@@ -79,10 +79,17 @@
                                     </label>
                                     <select id="paymentMethod" name="paymentMethod" class="form-control"
                                             required>
-                                        <option value="نقدی">نقدی</option>
-                                        <option value="بصورت چک 1 ماهه">بصورت چک 1 ماهه</option>
-                                        <option value="بصورت چک 2 ماهه">بصورت چک 2 ماهه</option>
-                                        <option value="بصورت چک 3 ماهه">بصورت چک 3 ماهه</option>
+                                        <option value="نقدی" @if($id->paymentMethod == "نقدی") selected @endif>نقدی
+                                        </option>
+                                        <option value="بصورت چک 1 ماهه"
+                                                @if($id->paymentMethod == "بصورت چک 1 ماهه") selected @endif>بصورت چک 1 ماهه
+                                        </option>
+                                        <option value="بصورت چک 2 ماهه"
+                                                @if($id->paymentMethod == "بصورت چک 2 ماهه") selected @endif>بصورت چک 2 ماهه
+                                        </option>
+                                        <option value="بصورت چک 3 ماهه"
+                                                @if($id->paymentMethod == "بصورت چک 3 ماهه") selected @endif>بصورت چک 3 ماهه
+                                        </option>
                                     </select>
 
                                 </div>
@@ -92,7 +99,8 @@
                                 <div class="form-group">
                                     <label>تخفیف
                                     </label>
-                                    <input type="text" value="{{$id->takhfif}}" name="takhfif" id="takhfif" class="form-control">
+                                    <input type="text" value="{{$id->takhfif}}" name="takhfif" id="takhfif"
+                                           class="form-control">
                                 </div>
                             </div>
 
@@ -100,7 +108,8 @@
                                 <div class="form-group">
                                     <label>سایر هزینه ها
                                     </label>
-                                    <input type="text" value="{{$id->expenses}}" name="expenses" id="expenses" class="form-control">
+                                    <input type="text" value="{{$id->expenses}}" name="expenses" id="expenses"
+                                           class="form-control">
                                 </div>
                             </div>
 
@@ -108,7 +117,8 @@
                                 <div class="form-group">
                                     <label>هزینه حمل
                                     </label>
-                                    <input type="text" value="{{$id->Carry}}" name="Carry" id="Carry" class="form-control">
+                                    <input type="text" value="{{$id->Carry}}" name="Carry" id="Carry"
+                                           class="form-control">
                                 </div>
                             </div>
 
@@ -130,19 +140,19 @@
                                 </thead>
                                 <tbody
                                     id="TextBoxContainerbank">
-                                    <tr>
-                                        <td id="productt"></td>
-                                        <td id="colorr"></td>
-                                        <td id="selll"></td>
-                                        <td id="numberr">
-                                        </td>
-                                        <td id="Price_Selll">
-                                        </td>
+                                <tr>
+                                    <td id="productt"></td>
+                                    <td id="colorr"></td>
+                                    <td id="selll"></td>
+                                    <td id="numberr">
+                                    </td>
+                                    <td id="Price_Selll">
+                                    </td>
 
-                                        <td id="Weightt"></td>
-                                        <td id="Taxx"></td>
-                                        <td id="actiont"></td>
-                                    </tr>
+                                    <td id="Weightt"></td>
+                                    <td id="Taxx"></td>
+                                    <td id="actiont"></td>
+                                </tr>
                                 </tbody>
                                 <tfoot>
                                 <tr>
@@ -175,11 +185,15 @@
                                     </th>
                                 </tr>
                                 <tr>
-                                    <th colspan="6"><center>تخفیف</center></th>
+                                    <th colspan="6">
+                                        <center>تخفیف</center>
+                                    </th>
                                     <th id="ta"></th>
                                 </tr>
                                 <tr>
-                                    <th colspan="6"><center>جمع نهایی</center></th>
+                                    <th colspan="6">
+                                        <center>جمع نهایی</center>
+                                    </th>
                                     <th id="totalfinal"></th>
                                 </tr>
                                 </tfoot>
@@ -194,7 +208,8 @@
                         ثبت
                     </button>
                     &nbsp;&nbsp;
-                    <a href="{{route('admin.invoice.index')}}" style="width: 130px" type="submit" class="btn btn-danger">
+                    <a href="{{route('admin.invoice.index')}}" style="width: 130px" type="submit"
+                       class="btn btn-danger">
                         برگشت
                     </a>
                 </div>

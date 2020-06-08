@@ -1548,7 +1548,12 @@ class InvoiceController extends Controller
             'number.required' => 'لطفا مقدار بارگیری را مشخص کنید',
             'date.required' => 'لطفا تاریخ بارگیری را وارد کنید',
         ]);
-
+        $packs = DB::table('schedulings')->latest('id')->first();
+        if (!empty($packs)) {
+            $pack = $packs->id;
+        } else {
+            $pack = 1;
+        }
         $number = DB::table('invoice_product')
             ->where('id', $request->scheduling)
             ->first();
@@ -1576,6 +1581,7 @@ class InvoiceController extends Controller
                         'time' => $request->time,
                         'status' => 0,
                         'description' => $request->description,
+                        'pack' => $pack,
                     ]);
                     DB::table('invoice_product')
                         ->where('id', $request->scheduling)->update([

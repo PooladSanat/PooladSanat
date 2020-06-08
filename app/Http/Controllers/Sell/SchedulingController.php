@@ -18,6 +18,7 @@ use Response;
 use Validator;
 use Yajra\DataTables\DataTables;
 
+
 class SchedulingController extends Controller
 {
 
@@ -43,6 +44,13 @@ class SchedulingController extends Controller
                         $name = Product::where('id', $product_id->product_id)->first();
                         return $name->label;
                     })
+                    ->addColumn('invoice', function ($row) {
+                        $product_id = \DB::table('invoice_product')
+                            ->where('id', $row->detail_id)
+                            ->first();
+                        $name = Invoice::where('id', $product_id->invoice_id)->first();
+                        return $name->invoiceNumber;
+                    })
                     ->addColumn('color', function ($row) {
                         $product_id = \DB::table('invoice_product')
                             ->where('id', $row->detail_id)
@@ -67,21 +75,35 @@ class SchedulingController extends Controller
                         return $username->name;
                     })
                     ->addColumn('status', function ($row) {
-                        if ($row->status == 0) {
-                            return 'ثبت اولیه';
-                        } elseif ($row->status == 1) {
-                            return 'تایید ثبت';
-                        } elseif ($row->status == 2) {
-                            return 'تایید حواله';
-                        } elseif ($row->status == 3) {
-                            return 'خروج کامل';
-                        } elseif ($row->status == 4) {
-                            return 'خروج ناقص';
-                        } elseif ($row->status == 5) {
-                            return 'عدم خروج';
-                        } elseif ($row->status == 6) {
+                        if ($row->status != 6) {
+                            if (!empty($row->statusfull)) {
+                                if ($row->statusfull == 8) {
+                                    return 'خروج کامل';
+                                } elseif ($row->statusfull == 9) {
+                                    return 'خروج ناقص';
+                                }
+                            } else {
+                                if ($row->status == 0) {
+                                    return 'ثبت اولیه';
+                                } elseif ($row->status == 1) {
+                                    return 'تایید ثبت';
+                                } elseif ($row->status == 2) {
+                                    return 'تایید حواله';
+                                } elseif ($row->status == 3) {
+                                    return 'خروج کامل';
+                                } elseif ($row->status == 4) {
+                                    return 'خروج ناقص';
+                                } elseif ($row->status == 5) {
+                                    return 'عدم خروج';
+                                } elseif ($row->status == 6) {
+                                    return 'اتمام یافته';
+                                }
+                            }
+
+                        } else {
                             return 'اتمام یافته';
                         }
+
                     })
                     ->addColumn('action', function ($row) {
                         return $this->actions($row);
@@ -106,6 +128,13 @@ class SchedulingController extends Controller
                         $name = Product::where('id', $product_id->product_id)->first();
                         return $name->label;
                     })
+                    ->addColumn('invoice', function ($row) {
+                        $product_id = \DB::table('invoice_product')
+                            ->where('id', $row->detail_id)
+                            ->first();
+                        $name = Invoice::where('id', $product_id->invoice_id)->first();
+                        return $name->invoiceNumber;
+                    })
                     ->addColumn('color', function ($row) {
                         $product_id = \DB::table('invoice_product')
                             ->where('id', $row->detail_id)
@@ -130,21 +159,31 @@ class SchedulingController extends Controller
                         return $username->name;
                     })
                     ->addColumn('status', function ($row) {
-                        if ($row->status == 0) {
-                            return 'ثبت اولیه';
-                        } elseif ($row->status == 1) {
-                            return 'تایید ثبت';
-                        } elseif ($row->status == 2) {
-                            return 'تایید حواله';
-                        } elseif ($row->status == 3) {
-                            return 'خروج کامل';
-                        } elseif ($row->status == 4) {
-                            return 'خروج ناقص';
-                        } elseif ($row->status == 5) {
-                            return 'عدم خروج';
-                        } elseif ($row->status == 6) {
-                            return 'اتمام یافته';
+
+                        if (!empty($row->statusfull)) {
+                            if ($row->statusfull == 8) {
+                                return 'خروج کامل';
+                            } elseif ($row->statusfull == 9) {
+                                return 'خروج ناقص';
+                            }
+                        } else {
+                            if ($row->status == 0) {
+                                return 'ثبت اولیه';
+                            } elseif ($row->status == 1) {
+                                return 'تایید ثبت';
+                            } elseif ($row->status == 2) {
+                                return 'تایید حواله';
+                            } elseif ($row->status == 3) {
+                                return 'خروج کامل';
+                            } elseif ($row->status == 4) {
+                                return 'خروج ناقص';
+                            } elseif ($row->status == 5) {
+                                return 'عدم خروج';
+                            } elseif ($row->status == 6) {
+                                return 'اتمام یافته';
+                            }
                         }
+
                     })
                     ->addColumn('action', function ($row) {
                         return $this->actions($row);
@@ -157,9 +196,40 @@ class SchedulingController extends Controller
 
     }
 
-    public function success(Scheduling $id)
+    public function detaillist(Request $request)
     {
-        $data = Scheduling::find($id->id)->update([
+        if ($request->ajax()) {
+            $dataa = Scheduling::where('pack', $request->product_id)
+                ->orderBy('id', 'desc')->get();
+            return Datatables::of($dataa)
+                ->addIndexColumn()
+                ->addColumn('product', function ($row) {
+                    $product_id = \DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $name = Product::where('id', $product_id->product_id)->first();
+                    return $name->label;
+                })
+                ->addColumn('color', function ($row) {
+                    $product_id = \DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $name = Color::where('id', $product_id->color_id)->first();
+                    return $name->name;
+                })
+                ->addColumn('actionn', function ($row) {
+                    return $this->actionn($row);
+                })
+                ->rawColumns(['actionn'])
+                ->make(true);
+        }
+        return view('Scheduling.list');
+
+    }
+
+    public function success($id)
+    {
+        $data = Scheduling::where('pack', $id)->update([
             'status' => 1,
         ]);
         return response()->json($data);
@@ -179,33 +249,33 @@ class SchedulingController extends Controller
     public function StoreExit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'numberr' => 'required',
+            'numberrr' => 'required',
         ], [
-            'numberr.required' => 'لطفا مقدار خارج شده از انبار را وارد کنید',
+            'numberrr.required' => 'لطفا مقدار خارج شده از انبار را وارد کنید',
         ]);
-        $id = Scheduling::where('id', $request->prod)->first();
+        $id = Scheduling::where('id', $request->proder)->first();
         $id_p = \DB::table('invoice_product')
             ->where('id', $id->detail_id)->first();
         $barn = \DB::table('barns_products')
-            ->where('product_id', $request->namee)
-            ->where('color_id', $request->colorr)
+            ->where('product_id', $id_p->product_id)
+            ->where('color_id', $id_p->color_id)
             ->first();
         $exitproductbarn = \DB::table('exitproductbarn')
-            ->where('id', $request->id_exit)
+            ->where('id', $request->id_exittt)
             ->first();
-        $min = $id->number - $request->numberr;
+        $min = $id->number - $request->numberrr;
         if ($validator->passes()) {
-            if (!empty($request->id_exit)) {
+            if (!empty($request->id_exittt)) {
                 \DB::beginTransaction();
                 try {
                     \DB::table('exitproductbarn')
-                        ->where('id', $request->id_exit)
+                        ->where('id', $request->id_exittt)
                         ->update([
-                            'number' => $request->numberr,
+                            'number' => $request->numberrr,
                         ]);
                     \DB::table('barns_products')
-                        ->where('product_id', $request->namee)
-                        ->where('color_id', $request->colorr)
+                        ->where('product_id', $id_p->product_id)
+                        ->where('color_id', $id_p->color_id)
                         ->update([
                             'Inventory' => $barn->Inventory + $exitproductbarn->number,
                         ]);
@@ -215,56 +285,77 @@ class SchedulingController extends Controller
                             'leftover' => $id_p->leftover + $exitproductbarn->number,
                         ]);
 
-                    $idd = Scheduling::where('id', $request->prod)->first();
+                    $idd = Scheduling::where('id', $request->proder)->first();
                     $id_pp = \DB::table('invoice_product')
                         ->where('id', $id->detail_id)->first();
                     $barnn = \DB::table('barns_products')
-                        ->where('product_id', $request->namee)
-                        ->where('color_id', $request->colorr)
+                        ->where('product_id', $id_p->product_id)
+                        ->where('color_id', $id_p->color_id)
                         ->first();
-                    $minn = $idd->number - $request->numberr;
+                    $minn = $idd->number - $request->numberrr;
 
 
-                    if ($request->numberr == $request->n) {
-                        Scheduling::find($request->prod)->update([
-                            'status' => 3,
-                            'total' => $request->numberr,
+                    if ($request->numberr == $id_p->salesNumber) {
+                        Scheduling::find($request->proder)->update([
+                            'total' => $request->numberrr,
                         ]);
                         \DB::table('barns_products')
-                            ->where('product_id', $request->namee)
-                            ->where('color_id', $request->colorr)
+                            ->where('product_id', $id_p->product_id)
+                            ->where('color_id', $id_p->color_id)
                             ->update([
-                                'Inventory' => $barnn->Inventory - $request->numberr,
-                                'NumberSold' => $barnn->NumberSold - $request->numberr,
+                                'Inventory' => $barnn->Inventory - $request->numberrr,
+                                'NumberSold' => $barnn->NumberSold - $request->numberrr,
                             ]);
                         \DB::table('invoice_product')
                             ->where('id', $idd->detail_id)
                             ->update([
                                 'leftover' => $id_pp->leftover - $minn,
                             ]);
-                    } elseif ($request->numberr < $request->n and $request->numberr > 0) {
+                        if (!empty($id->statusfull)) {
+                            if ($id->statusfull == 8) {
+                                Scheduling::where('pack', $id->pack)->update([
+                                    'statusfull' => 8,
+                                ]);
+                            }
+                        } else {
+                            Scheduling::where('pack', $id->pack)->update([
+                                'statusfull' => 8,
+                            ]);
+                        }
+                    } elseif ($request->numberrr < $id_p->salesNumber and $request->numberrr > 0) {
                         \DB::table('invoice_product')
                             ->where('id', $idd->detail_id)
                             ->update([
-                                'leftover' => $id_pp->leftover - $request->numberr,
+                                'leftover' => $id_pp->leftover - $request->numberrr,
                             ]);
-                        Scheduling::find($request->prod)->update([
-                            'status' => 4,
-                            'total' => $request->numberr,
+                        Scheduling::find($request->proder)->update([
+                            'total' => $request->numberrr,
                         ]);
                         \DB::table('barns_products')
-                            ->where('product_id', $request->namee)
-                            ->where('color_id', $request->colorr)
+                            ->where('product_id', $id_p->product_id)
+                            ->where('color_id', $id_p->color_id)
                             ->update([
-                                'Inventory' => $barnn->Inventory - $request->numberr,
+                                'Inventory' => $barnn->Inventory - $request->numberrr,
 //                                'NumberSold' => $barnn->NumberSold - $idd->number,
                             ]);
+                        if (!empty($id->statusfull)) {
+                            if ($id->statusfull == 8) {
+                                Scheduling::where('pack', $id->pack)->update([
+                                    'statusfull' => 9,
+                                ]);
+                            }
+                        } else {
+                            Scheduling::where('pack', $id->pack)->update([
+                                'statusfull' => 9,
+                            ]);
+                        }
 
-                    } elseif ($request->numberr == 0) {
-                        Scheduling::find($request->prod)->update([
+                    } elseif ($request->numberrr == 0) {
+                        Scheduling::find($request->proder)->update([
                             'status' => 5,
+                            'statusfull' => null,
                             'end' => 2,
-                            'total' => $request->numberr,
+                            'total' => $request->numberrr,
                         ]);
                     }
 
@@ -280,50 +371,74 @@ class SchedulingController extends Controller
                 try {
                     \DB::table('exitproductbarn')
                         ->insert([
-                            'detail_id' => $request->prod,
-                            'number' => $request->numberr,
+                            'detail_id' => $request->proder,
+                            'number' => $request->numberrr,
                         ]);
-                    if ($request->numberr == $request->n) {
-                        Scheduling::find($request->prod)->update([
-                            'status' => 3,
-                            'total' => $request->numberr,
+                    if ($request->numberrr == $id_p->salesNumber) {
+                        Scheduling::find($request->proder)->update([
+                            'total' => $request->numberrr,
                         ]);
                         \DB::table('barns_products')
-                            ->where('product_id', $request->namee)
-                            ->where('color_id', $request->colorr)
+                            ->where('product_id', $id_p->product_id)
+                            ->where('color_id', $id_p->color_id)
                             ->update([
-                                'Inventory' => $barn->Inventory - $request->numberr,
-                                'NumberSold' => $barn->NumberSold - $request->numberr,
+                                'Inventory' => $barn->Inventory - $request->numberrr,
+                                'NumberSold' => $barn->NumberSold - $request->numberrr,
                             ]);
                         \DB::table('invoice_product')
                             ->where('id', $id->detail_id)
                             ->update([
-                                'leftover' => $id->number - $request->numberr + $id_p->leftover,
+                                'leftover' => $id->number - $request->numberrr + $id_p->leftover,
                             ]);
-                    } elseif ($request->numberr < $request->n and $request->numberr > 0) {
+                        if (!empty($id->statusfull)) {
+                            if ($id->statusfull == 8) {
+                                Scheduling::where('pack', $id->pack)->update([
+                                    'statusfull' => 8,
+                                ]);
+                            }
+                        } else {
+                            Scheduling::where('pack', $id->pack)->update([
+                                'statusfull' => 8,
+                            ]);
+                        }
+                    } elseif ($request->numberrr < $id_p->salesNumber and $request->numberrr > 0) {
                         \DB::table('invoice_product')
                             ->where('id', $id->detail_id)
                             ->update([
                                 'leftover' => $min + $id_p->leftover,
                             ]);
-                        Scheduling::find($request->prod)->update([
-                            'status' => 4,
-                            'total' => $request->numberr,
+                        Scheduling::find($request->proder)->update([
+                            'total' => $request->numberrr,
                         ]);
                         \DB::table('barns_products')
-                            ->where('product_id', $request->namee)
-                            ->where('color_id', $request->colorr)
+                            ->where('product_id', $id_p->product_id)
+                            ->where('color_id', $id_p->color_id)
                             ->update([
-                                'Inventory' => $barn->Inventory - $request->numberr,
+                                'Inventory' => $barn->Inventory - $request->numberrr,
                                 'NumberSold' => $barn->NumberSold - $id->number,
                             ]);
 
-                    } elseif ($request->numberr == 0) {
-                        Scheduling::find($request->prod)->update([
+                        if (!empty($id->statusfull)) {
+                            if ($id->statusfull == 8) {
+                                Scheduling::where('pack', $id->pack)->update([
+                                    'statusfull' => 9,
+                                ]);
+                            }
+                        } else {
+                            Scheduling::where('pack', $id->pack)->update([
+                                'statusfull' => 9,
+                            ]);
+                        }
+
+
+                    } elseif ($request->numberrr == 0) {
+                        Scheduling::find($request->proder)->update([
                             'status' => 5,
+                            'statusfull' => null,
                             'end' => 2,
-                            'total' => $request->numberr,
+                            'total' => $request->numberrr,
                         ]);
+
                     }
                     \DB::commit();
                     return response()->json(['success' => 'success']);
@@ -344,10 +459,11 @@ class SchedulingController extends Controller
         ], [
             'number.required' => 'لطفا شماره فاکتور را وارد کنید',
         ]);
-        $id = Scheduling::where('id', $request->produc)->first();
-        $detai = \DB::table('invoice_product')
-            ->where('id', $id->detail_id)
-            ->first();
+        $ids = Scheduling::where('pack', $request->produc)->get();
+        foreach ($ids as $id)
+            $detai = \DB::table('invoice_product')
+                ->where('id', $id->detail_id)
+                ->first();
         $details = \DB::table('invoice_product')
             ->where('id', $id->detail_id)
             ->where('status', null)
@@ -360,7 +476,7 @@ class SchedulingController extends Controller
                         'detail_id' => $request->produc,
                         'number_fac' => $request->number,
                     ]);
-                Scheduling::find($request->produc)->update([
+                Scheduling::where('pack', $request->produc)->update([
                     'status' => 6,
                     'end' => 1,
                 ]);
@@ -391,10 +507,14 @@ class SchedulingController extends Controller
 
     public function exit($id)
     {
-        $data = Scheduling::find($id);
-        $product = \DB::table('invoice_product')
-            ->where('id', $data->detail_id)
-            ->first();
+        $data = Scheduling::where('pack', $id)->get();
+        foreach ($data as $datum) {
+            $product = \DB::table('invoice_product')
+                ->where('id', $datum->detail_id)
+                ->get();
+        }
+        return response()->json($product);
+
         $product_id = Product::find($product->product_id);
         $color_id = Color::find($product->color_id);
         $exitproductbarn = \DB::table('exitproductbarn')
@@ -424,7 +544,7 @@ class SchedulingController extends Controller
                             'scheduling_id' => $request->product_id,
                             'created_at' => $data,
                         ]);
-                    Scheduling::find($request->product_id)->update([
+                    Scheduling::where('pack', $request->product_id)->update([
                         'status' => 2,
                     ]);
                     \DB::commit();
@@ -441,7 +561,7 @@ class SchedulingController extends Controller
                             'number' => $request->number,
                             'created_at' => $data,
                         ]);
-                    Scheduling::find($request->product_id)->update([
+                    Scheduling::where('pack', $request->product_id)->update([
                         'status' => 2,
                     ]);
                     \DB::commit();
@@ -510,13 +630,13 @@ class SchedulingController extends Controller
         $btn = null;
         if ($row->status == 5 and $row->end == 2) {
             $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="تغیر تاریخ بارگیری"
+                      data-id="' . $row->pack . '" data-original-title="تغیر تاریخ بارگیری"
                        class="change-date">
                   <i class="fa fa-history fa-lg" title="تغیر تاریخ بارگیری"></i>
                        </a>&nbsp;&nbsp;';
 
             $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="انصراف فروش"
+                      data-id="' . $row->pack . '" data-original-title="انصراف فروش"
                        class="cancel">
                   <i class="fa fa-times fa-lg" title="انصراف فروش"></i>
                        </a>&nbsp;&nbsp;';
@@ -524,25 +644,25 @@ class SchedulingController extends Controller
         }
         if ($row->end == null) {
             $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                      data-id="' . $row->pack . '" data-original-title="ویرایش"
                        class="success-plus">
                   <i class="fa fa-check fa-lg" title="تایید و ثبت"></i>
                        </a>&nbsp;&nbsp;';
 
             $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                      data-id="' . $row->pack . '" data-original-title="ویرایش"
                        class="plus-number">
                   <i class="fa fa-exchange fa-lg" title="ثبت شماره حواله حسابداری"></i>
                        </a>&nbsp;&nbsp;';
 
             $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                      data-id="' . $row->pack . '" data-original-title="ویرایش"
                        class="plus-exit">
                   <i class="fa fa-send fa-lg" title="ثبت اطلاعات خروج"></i>
                        </a>&nbsp;&nbsp;';
 
             $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                      data-id="' . $row->pack . '" data-original-title="ویرایش"
                        class="send-fac">
                   <i class="fa fa-plus fa-lg" title="ثبت شماره فاکتور"></i>
                        </a>&nbsp;&nbsp;';
@@ -552,6 +672,20 @@ class SchedulingController extends Controller
         return $btn;
 
     }
+
+
+    public function actionn($row)
+    {
+        $btn = null;
+        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="ثبت تعداد خروجی"
+                       class="plus-number-exit">
+                  <i class="fa fa-plus fa-lg" title="ثبت تعداد خروجی"></i>
+                       </a>&nbsp;&nbsp;';
+        return $btn;
+
+    }
+
 
     public function convert2english($string)
     {

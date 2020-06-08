@@ -426,7 +426,6 @@ class CustomerController extends Controller
      */
     public function edit(Request $request)
     {
-        return response()->json($request->all());
         $id = Customer::where('id', $request->id)->first();
         $document = \DB::table('customer_documents')
             ->where('customer_id', $request->id)

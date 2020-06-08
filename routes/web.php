@@ -338,6 +338,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/Scheduling/store', 'SchedulingController@store')->name('admin.scheduling.store');
         Route::post('/Scheduling/StoreExit', 'SchedulingController@StoreExit')->name('admin.scheduling.store.exit');
         Route::post('/Scheduling/ExitFac', 'SchedulingController@ExitFac')->name('admin.scheduling.store.exit.fac');
+        Route::get('/Scheduling/detail/list', 'SchedulingController@detaillist')->name('admin.scheduling.detail.list');
 
 
 
@@ -501,6 +502,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
 
     Route::get('/testttt', 'TestController@testttt');
+    Route::get('/table', 'TestController@table');
     Route::get('/showDatatable', 'TestController@showDatatable')->name('showDatatable');
     Route::get('/refresh', 'TestController@refresh')->name('admin.table.refresh');
     Route::post('/updateOrder', 'TestController@updateOrder')->name('updateOrder');

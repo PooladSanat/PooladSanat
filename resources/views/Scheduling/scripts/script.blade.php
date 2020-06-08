@@ -1,5 +1,16 @@
 <script src="{{asset('/public/js/a1.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/js/a2.js')}}" type="text/javascript"></script>
+<script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
+<script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script>
+<script src="//cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+
+<style>
+
+
+    .as-console-wrapper {
+        display: none !important;
+    }
+</style>
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
     @php
@@ -20,6 +31,7 @@
             $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
+                "ordering": false,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     if (aData.status == 'عدم خروج') {
                         $('td:eq(11)', nRow).css('background-color', '#fb4e08');
@@ -33,6 +45,14 @@
                         $('td:eq(11)', nRow).css('background-color', '#0080fb');
                     } else {
                         $('td', nRow).css('background-color', 'white');
+                    }
+
+                    if (parseInt(aData.total) == parseInt(aData.number)) {
+                        $('td:eq(6)', nRow).css('background-color', '#0080fb');
+                    } else if (parseInt(aData.total) < parseInt(aData.number)) {
+                        $('td:eq(6)', nRow).css('background-color', '#fbea04');
+                    } else {
+                        $('td:eq(6)', nRow).css('background-color', 'white');
                     }
                 },
                 "language": {
@@ -50,6 +70,7 @@
                 },
                 columns: [
                     {data: 'detail_id', name: 'detail_id'},
+                    {data: 'pack', name: 'pack', visible: false},
                     {data: 'user', name: 'user'},
                     {data: 'customer_id', name: 'customer_id'},
                     {data: 'product', name: 'product'},
@@ -62,8 +83,13 @@
                     {data: 'description', name: 'description'},
                     {data: 'status', name: 'status'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
-                ]
+                ],
+                rowsGroup: [
+                    1, 2, 3, 8, 9, 10, 11, 12, 13,
+                ],
+
             });
+
         }
 
         $('#filter').click(function () {
@@ -148,22 +174,51 @@
         });
 
         $('body').on('click', '.plus-exit', function () {
+            $('#detail-table').DataTable().destroy();
             var product_id = $(this).data('id');
-            $('#numberr').val('');
-            $('#id_exit').val('');
             $.get("{{ route('admin.scheduling.exit') }}" + '/' + product_id, function (data) {
                 $('#ajaxModelExit').modal('show');
                 $('#captioon').text('ثبت خروج از انبار');
-                $('#product_id').val(product_id);
-                $('#name').val(data.product_id.label);
-                $('#namee').val(data.product_id.id);
-                $('#color').val(data.color_id.name);
-                $('#colorr').val(data.color_id.id);
-                $('#n').val(data.data.number);
-                $('#prod').val(product_id);
-                $('#numberr').val(data.exitt.number);
-                $('#id_exit').val(data.exitt.id);
+
+                var tablee = $('.detail-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    "ordering": false,
+                    "searching": false, "bPaginate": false,
+                    "bLengthChange": false,
+                    "bFilter": true,
+                    "bInfo": false,
+                    "bAutoWidth": false,
+                    "language": {
+                        "search": "جستجو:",
+                        "lengthMenu": "نمایش _MENU_",
+                        "zeroRecords": "موردی یافت نشد!",
+                        "info": "نمایش _PAGE_ از _PAGES_",
+                        "infoEmpty": "موردی یافت نشد",
+                        "infoFiltered": "(جستجو از _MAX_ مورد)",
+                        "processing": "در حال پردازش اطلاعات"
+                    },
+                    ajax: {
+                        url: "{{ route('admin.scheduling.detail.list') }}",
+                        data: {product_id: product_id}
+                    },
+
+                    columns: [
+                        {data: 'product', name: 'product', orderable: false, searchable: false},
+                        {data: 'color', name: 'color', orderable: false, searchable: false},
+                        {data: 'number', name: 'number', orderable: false, searchable: false},
+                        {data: 'actionn', name: 'actionn', orderable: false, searchable: false},
+                    ],
+                });
+
             })
+        });
+
+        $('body').on('click', '.plus-number-exit', function () {
+            var product_id = $(this).data('id');
+            $('#ajaxModelExitDetail').modal('show');
+            $('#captionEx').text('خروج از انبار');
+            $('#proder').val(product_id);
         });
 
         $('#saveBtn').click(function (e) {
@@ -211,7 +266,7 @@
             $('#exitBtn').text('در حال ثبت اطلاعات...');
             $('#exitBtn').prop("disabled", true);
             $.ajax({
-                data: $('#productFormm').serialize(),
+                data: $('#productFormeeeeeee').serialize(),
                 url: "{{ route('admin.scheduling.store.exit') }}",
                 type: "POST",
                 dataType: 'json',
@@ -230,15 +285,10 @@
                         $('#exitBtn').prop("disabled", false);
                     }
                     if (data.success) {
-                        $('#productFormm').trigger("reset");
-                        $('#ajaxModelExit').modal('hide');
+                        $('#productFormeeeeeee').trigger("reset");
+                        $('#ajaxModelExitDetail').modal('hide');
+                        $('#detail-table') .DataTable().ajax.reload();
                         $('#data-table').DataTable().ajax.reload();
-                        Swal.fire({
-                            title: 'موفق',
-                            text: 'مشخصات سفارش با موفقیت در سیستم ثبت دشد',
-                            icon: 'success',
-                            confirmButtonText: 'تایید',
-                        });
                         $('#exitBtn').text('ثبت');
                         $('#exitBtn').prop("disabled", false);
                     }

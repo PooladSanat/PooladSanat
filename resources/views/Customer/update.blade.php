@@ -141,7 +141,7 @@
                                                     <input type="text" id="code"
                                                            name="code"
                                                            class="form-control"
-                                                           placeholder="لطفا کد مشتری را وارد کنید"
+                                                           placeholder="لطفا کد راهکاران را وارد کنید"
                                                            value="{{$id->code}}"
                                                     >
                                                     <div class="help-block with-errors"></div>

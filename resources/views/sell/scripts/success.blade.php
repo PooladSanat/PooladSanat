@@ -1,5 +1,16 @@
 <script src="{{asset('/public/js/a1.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/js/a2.js')}}" type="text/javascript"></script>
+<script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
+<script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script>
+<script src="//cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+<style>
+
+
+    .as-console-wrapper {
+        display: none !important;
+    }
+</style>
+
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
     $(function () {
@@ -41,6 +52,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         var table = $('#data-table').DataTable({
             processing: true,
             serverSide: true,
@@ -49,9 +61,9 @@
                     $('td:eq(9)', nRow).css('color', '#fb8000');
                 } else if (parseInt(aData.barn) >= parseInt(aData.salesNumber)) {
                     $('td:eq(9)', nRow).css('color', '#00d1fb');
+
                 } else {
                     $('td', nRow).css('background-color', 'white');
-
                 }
             },
             "language": {
@@ -63,7 +75,6 @@
                 "infoFiltered": "(جستجو از _MAX_ مورد)",
                 "processing": "در حال پردازش اطلاعات"
             },
-
             ajax: {
                 ajax: "{{ route('admin.invoice.success') }}",
             },
@@ -81,9 +92,11 @@
                 {data: 'barnn', name: 'barnn'},
                 {data: 'action_success', name: 'action_success'},
             ],
+            rowsGroup: [
+                2, 3, 4
+            ],
+        });
 
-
-    });
 
         $('body').on('click', '.cancel', function () {
             var id = $(this).data('id');

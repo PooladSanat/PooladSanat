@@ -129,6 +129,12 @@ class ProductQueueController extends Controller
             'product_name.*.required' => 'لطفا مقدار بارگیری را مشخص کنید',
             'date.required' => 'لطفا تاریخ را مشخص کنید',
         ]);
+        $packs = DB::table('schedulings')->latest('id')->first();
+        if (!empty($packs)) {
+            $pack = $packs->id;
+        } else {
+            $pack = 1;
+        }
         if ($validator->passes()) {
             try {
                 $number = count(collect($request)->get('product_name'));
@@ -156,6 +162,7 @@ class ProductQueueController extends Controller
                             'time' => $request->time,
                             'status' => 0,
                             'description' => $request->description,
+                            'pack' => $pack,
                         ]);
                         DB::table('invoice_product')
                             ->where('id', $request->get('id_product')[$i])

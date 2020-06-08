@@ -646,7 +646,10 @@
     </div>
 </div>
 
-<script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
+<!-- load jQuery 1.1.3 -->
+
+
+
 <script src="{{asset('/public/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
 <script>
     $.widget.bridge('uibutton', $.ui.button);

@@ -91,4 +91,11 @@ class TestController extends Controller
     }
 
 
+    public function table()
+    {
+        return view('table');
+
+    }
+
+
 }

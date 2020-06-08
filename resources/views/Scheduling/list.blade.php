@@ -26,10 +26,11 @@
                         </div>
                     </form>
 
-                    <table class="table table-striped table-bordered data-table" id="data-table">
+                    <table class="table table-striped table-bordered display data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
                             <th>کد</th>
+                            <th>شماره فاکتور</th>
                             <th>فروشنده</th>
                             <th>خریدار</th>
                             <th>محصول</th>

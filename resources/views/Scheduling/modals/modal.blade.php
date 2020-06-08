@@ -64,8 +64,8 @@
 
 
 <div class="modal fade" id="ajaxModelExit" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-body">
+    <div class="modal-dialog col-md-12">
+        <div class="modal-body col-md-12">
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption" id="captioon">
@@ -89,76 +89,19 @@
                                 <input type="hidden" name="id_exit" id="id_exit">
                                 @csrf
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <table class="table table-striped table-bordered detail-table" id="detail-table">
+                                        <thead style="background-color: #e8ecff">
+                                        <tr>
+                                            <th>محصول</th>
+                                            <th>رنگ</th>
+                                            <th>تعداد</th>
+                                            <th>عملیات</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
 
-                                        <label>نام محصول
-                                            <span
-                                                style="color: red"
-                                                class="required-mark">*</span>
-                                        </label>
-                                        <input type="text" id="name" name="name" class="form-control"
-                                               readonly
-                                               required>
-
-                                    </div>
-
-                                    <div class="col-md-12">
-
-                                        <label>رنگ محصول
-                                            <span
-                                                style="color: red"
-                                                class="required-mark">*</span>
-                                        </label>
-                                        <input type="text" id="color" name="color" class="form-control"
-                                               readonly
-                                               required>
-
-                                    </div>
-
-                                    <div class="col-md-12">
-
-                                        <label>تعداد درخواستی
-                                            <span
-                                                style="color: red"
-                                                class="required-mark">*</span>
-                                        </label>
-                                        <input type="text" id="n" name="n" class="form-control"
-                                               readonly
-                                               required>
-
-                                    </div>
-
-
-                                    <div class="col-md-12">
-
-                                        <label>تعداد خارج شده
-                                            <span
-                                                style="color: red"
-                                                class="required-mark">*</span>
-                                        </label>
-                                        <input type="text" id="numberr" name="numberr" class="form-control"
-                                               placeholder="لطفا تعداد خارج شده را وارد کنید"
-                                               required>
-
-                                    </div>
-
-
-                                </div>
-                                <br/>
-                                <hr/>
-                                <div class="modal-footer">
-                                    <div class="text-left">
-                                        <button style="width: 130px" type="submit" class="btn btn-success" id="exitBtn"
-                                                value="ثبت">
-                                            ثبت
-                                        </button>
-
-                                        <button style="width: 130px" type="button" class="btn btn-danger"
-                                                data-dismiss="modal">
-                                            انصراف
-                                        </button>
-
-                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -356,6 +299,70 @@
                                                 value="ثبت">
                                             ثبت
                                         </button>
+                                        <button style="width: 130px" type="button" class="btn btn-danger"
+                                                data-dismiss="modal">
+                                            انصراف
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="ajaxModelExitDetail" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption" id="captionEx">
+                    </div>
+                    <div class="caption pull-left">
+                        <a data-dismiss="modal">
+                            <i style="color: white" class="pull-left fa fa-close"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                        <div class="form-group">
+
+                            <form autocomplete="off" id="productFormeeeeeee" name="productFormeeeeeee" class="form-horizontal">
+                                <input type="hidden" name="id_exittt" id="id_exittt">
+                                <input type="hidden" name="proder" id="proder">
+                                @csrf
+                                <div class="row">
+
+                                    <div class="col-md-12">
+
+                                        <label>تعداد خروجی
+                                            <span
+                                                style="color: red"
+                                                class="required-mark">*</span>
+                                        </label>
+                                        <input type="text" id="numberrr" name="numberrr" class="form-control"
+                                               placeholder="لطفا تعداد خروج از انبار را وارد کنید"
+                                               required>
+
+                                    </div>
+
+                                </div>
+                                <br/>
+                                <hr/>
+                                <div class="modal-footer">
+                                    <div class="text-left">
+                                        <button style="width: 130px" type="submit" class="btn btn-success" id="exitBtn"
+                                                value="ثبت">
+                                            ثبت
+                                        </button>
+
                                         <button style="width: 130px" type="button" class="btn btn-danger"
                                                 data-dismiss="modal">
                                             انصراف

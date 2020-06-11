@@ -1,6 +1,8 @@
 <script src="{{asset('/public/js/a1.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/js/a2.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
+<link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
+<script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
@@ -32,7 +34,7 @@
             ajax: "{{ route('admin.invoice.index') }}",
             columns: [
                 {data: 'invoiceNumber', name: 'invoiceNumber'},
-                {data: 'created_at', name: 'created_at'},
+                {data: 'create', name: 'create'},
                 {data: 'user_id', name: 'user_id'},
                 {data: 'customer_id', name: 'customer_id'},
                 {data: 'number_sell', name: 'number_sell'},
@@ -44,6 +46,7 @@
             ],
             "order": [[0, 'desc']]
         });
+
         $('body').on('click', '.SuccessCustomer', function () {
             var id = $(this).data('id');
             $.get("{{ route('admin.invoice.update.confirm') }}" + '/' + id, function (data) {
@@ -268,7 +271,6 @@
             });
         });
 
-
         $('body').on('click', '.Confirmpayment', function () {
             var id = $(this).data("id");
             $('#Confirmpayment').modal('show');
@@ -470,6 +472,19 @@
         });
 
     });
+
+    kamaDatepicker('date',
+        {
+            buttonsColor: "red",
+            forceFarsiDigits: false,
+            sync: true,
+            gotoToday: true,
+            highlightSelectedDay: true,
+            markHolidays: true,
+            markToday: true,
+            previousButtonIcon: "fa fa-arrow-circle-left",
+            nextButtonIcon: "fa fa-arrow-circle-right",
+        });
 
     $('#sell').addClass('active');
 

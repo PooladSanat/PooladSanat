@@ -17,7 +17,7 @@
                         <div class="row">
                             <div class="col-md-4"></div>
                             <div class="col-md-3">
-                                <input type="text" name="from_date" id="from_date" class="form-control example1" placeholder="از تاریخ" />
+                                <input type="text" name="from_date" id="from_date" class="form-control" placeholder="از تاریخ" />
 
                             </div>
                             <div class="col-md-1">

@@ -89,7 +89,9 @@
         padding-top: 1.4rem;
     }
 </style>
-
+<script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
+<link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
+<script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 <script src="{{asset('/public/js/2.js')}}"></script>
 
 <script>
@@ -161,6 +163,78 @@
                 $("#staate").empty();
             }
         });
+        kamaDatepicker('date',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+        kamaDatepicker('date_work_company',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+        kamaDatepicker('date_personel',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+        kamaDatepicker('date_birth',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+        kamaDatepicker('credibilitylicense_work_company',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+        kamaDatepicker('Established_company',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
     });
 
 </script>

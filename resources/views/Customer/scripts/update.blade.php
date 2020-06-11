@@ -1,29 +1,167 @@
 <script src="{{asset('/public/js/1.js')}}"></script>
 <script src="{{asset('/public/assets/sweetalert.js')}}"></script>
+<link href="{{asset('/public/css/1.css')}}" rel="stylesheet" id="bootstrap-css">
+<link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
+<script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
+<script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
+
+<style>
+    .registercontpage {
+        position: relative;
+        z-index: 0;
+        background: #fff;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .btn-circle {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        padding: 10px;
+        font-size: 12px;
+        border-radius: 50px;
+    }
+
+    .btn-circle {
+        background: #000;
+    }
+
+    .btn-default[disabled] {
+        background-color: #cccccc;
+        border-color: #cccccc;
+    }
+
+    .stepwizard-step p {
+        margin-top: 10px;
+    }
+
+    .stepwizard-row {
+        display: table-row;
+    }
+
+    .stepwizard {
+        display: table;
+        width: 50%;
+        position: relative;
+    }
+
+    .stepwizard-step button[disabled] {
+        opacity: 1 !important;
+        filter: alpha(opacity=100) !important;
+    }
+
+    .stepwizard-row:before {
+        top: 14px;
+        bottom: 0;
+        position: absolute;
+        content: " ";
+        width: 100%;
+        height: 1px;
+        background-color: #ccc;
+        z-order: 0;
+    }
+
+    .stepwizard-step {
+        display: table-cell;
+        text-align: center;
+        position: relative;
+    }
+
+    .btn-circle {
+        width: 50px;
+        height: 30px;
+        text-align: center;
+        padding: 6px 0;
+        font-size: 12px;
+        line-height: 1.428571429;
+        border-radius: 15px;
+    }
+
+    .field {
+        position: relative;
+        float: left;
+        clear: both;
+        margin: .35em 0;
+        width: 100%;
+    }
+
+
+</style>
+<style>
+    .pt-3-half {
+        padding-top: 1.4rem;
+    }
+</style>
 <script type="text/javascript">
     $(window).bind("load", function () {
         var D_date = $('#D_date').val();
         $('#date').val(D_date);
+        $('#date').val($('#datew').val());
+        $('#Established_company').val($('#H_Established_companys').val());
+        $('#date_work_company').val($('#D_date_work_company').val());
+        $('#date_personel').val($('#D_date_personel').val());
+        $('#date_birth').val($('#D_date_birth').val());
+        $('#credibilitylicense_work_company').val($('#C_credibilitylicense_work_company').val());
+        added_inputs1_array = [];
+            @foreach($customer_banks as $customer_bank)
+        var customer_bank = {
+                'name_bank_company': "{{$customer_bank->name_bank_company}}",
+                'branch_bank_company': "{{$customer_bank->branch_bank_company}}",
+                'account_bank_company': "{{$customer_bank->account_bank_company}}",
+                'date_bank_company': "{{$customer_bank->date_bank_company}}",
+            };
+        added_inputs1_array.push(customer_bank);
+        @endforeach
+        if (added_inputs1_array.length >= 1)
+            for (var a in added_inputs1_array)
+                added_inputs_array_table1(added_inputs1_array[a], a);
+
+
+        added_inputs2_array = [];
+            @foreach($customer_securings as $customer_securing)
+        var customer_securing = {
+                'name_securing_company': "{{$customer_securing->name_securing_company}}",
+                'date_securing_company': "{{$customer_securing->date_securing_company}}",
+
+            };
+        added_inputs2_array.push(customer_securing);
+        @endforeach
+
+        if (added_inputs2_array.length >= 1)
+            for (var a in added_inputs2_array)
+                added_inputs_array_table2(added_inputs2_array[a], a);
+
+
+        added_inputs3_array = [];
+            @foreach($company_personals as $company_personal)
+        var company_personal = {
+                'per_side_company': "{{$company_personal->per_side_company}}",
+                'per_sex_company': "{{$company_personal->per_sex_company}}",
+                'per_title_company': "{{$company_personal->per_title_company}}",
+                'per_name_company': "{{$company_personal->per_name_company}}",
+                'per_phone_company': "{{$company_personal->per_phone_company}}",
+                'per_inside_company': "{{$company_personal->per_inside_company}}",
+                'per_email_company': "{{$company_personal->per_email_company}}",
+                'per_tel_company_company': "{{$company_personal->per_tel_company_company}}",
+
+            };
+        added_inputs3_array.push(company_personal);
+        @endforeach
+        if (added_inputs3_array.length >= 1)
+            for (var a in added_inputs3_array)
+                added_inputs_array_table3(added_inputs3_array[a], a);
+
+
     });
 </script>
 <script src="{{asset('/public/js/2.js')}}"></script>
+
 <script>
 
 
     $(document).ready(function () {
         $('#nextBtn').click(function () {
-            var H_Established_company = $('#H_Established_company').val();
-            var D_date_birth = $('#D_date_birth').val();
-            var D_date_work_company = $('#D_date_work_company').val();
-            var D_date_personel = $('#D_date_personel').val();
-            var C_credibilitylicense_work_company = $('#C_credibilitylicense_work_company').val();
-            $('#Established_company').val(H_Established_company);
-            $('#date_birth').val(D_date_birth);
-            $('#date_work_company').val(D_date_work_company);
-            $('#date_personel').val(D_date_personel);
-            $('#credibilitylicense_work_company').val(C_credibilitylicense_work_company);
-
-
             var type = $('#type').val();
             if (type) {
                 $.ajax({
@@ -38,7 +176,6 @@
                             $('#company').hide();
                             $('#personal').show();
                             $('#id').val('2');
-
                         }
                     }
                 });
@@ -80,8 +217,6 @@
                 }
             }
         });
-
-
         $('#country').change(function () {
             var commodityID = $(this).val();
             if (commodityID) {
@@ -112,10 +247,11 @@
                     url: "{{route('admin.list.check.state')}}?commodity_id=" + commodityID,
                     success: function (res) {
                         if (res) {
+                            console.log(res);
                             $("#staate").empty();
-                            $("#staate").append('<option>لطفا شهر را انتخاب کنید</option>');
-                            $.staate(res, function (key, value) {
-                                $("#staate").append('<option value="' + value.zone_id + '">' + value.name + '</option>');
+                            $("#staate").append('<option>لطفا منطقه را انتخاب کنید</option>');
+                            $.each(res, function (key, value) {
+                                $("#staate").append('<option value="' + value.id + '">' + value.areas + '</option>');
                             });
                         } else {
                             $("#staate").empty();
@@ -126,10 +262,81 @@
                 $("#staate").empty();
             }
         });
+        kamaDatepicker('date',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+        kamaDatepicker('date_work_company',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+        kamaDatepicker('date_personel',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+        kamaDatepicker('date_birth',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+        kamaDatepicker('credibilitylicense_work_company',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+        kamaDatepicker('Established_company',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
     });
 
 </script>
-
 
 <script>
     function numberOnly(input) {
@@ -181,6 +388,7 @@
     });
 
 </script>
+
 <script type="text/javascript">
     $(function () {
         $.ajaxSetup({
@@ -190,6 +398,8 @@
         });
         $('#saveBtn').click(function (e) {
             e.preventDefault();
+            $('#saveBtn').text('در حال ثبت اطلاعات...');
+            $('#saveBtn').prop("disabled", true);
             var form = $('#productForm')[0];
             var data = new FormData(form);
             $.ajax({
@@ -223,39 +433,23 @@
                             icon: 'success',
                             confirmButtonText: 'تایید'
                         }).then((result) => {
-                            window.history.back();
+
+                            location.reload();
+
                         });
                         $('#saveBtn').text('ثبت');
                         $('#saveBtn').prop("disabled", false);
+
                     }
                 }
             });
         });
-
     });
 
 </script>
 
-
-<script>
-    added_inputs1_array = [];
-        @foreach($customer_banks as $customer_bank)
-
-    var customer_bank = {
-            'name_bank_company': "{{$customer_bank->name_bank_company}}",
-            'branch_bank_company': "{{$customer_bank->branch_bank_company}}",
-            'account_bank_company': "{{$customer_bank->account_bank_company}}",
-            'date_bank_company': "{{$customer_bank->date_bank_company}}",
-        };
-    added_inputs1_array.push(customer_bank);
-    @endforeach
-    if (added_inputs1_array.length >= 1)
-        for (var a in added_inputs1_array)
-            added_inputs_array_table1(added_inputs1_array[a], a);
-
-
+<script language="javascript">
     function added_inputs_array_table1(data, a) {
-
         var myNode = document.createElement('div');
         myNode.id = 'namee' + a;
         myNode.innerHTML += "<div class='form-group'>" +
@@ -317,57 +511,155 @@
     }
 </script>
 
-<script>
-
-    $(function () {
-        $("#btnAdd").bind("click", function () {
-            var div = $("table tr:last");
-            div.html(GetDynamicTextBox(""));
-            $("#TextBoxContainer").append(div);
-        });
-        $("body").on("click", ".remove", function () {
-            $(this).closest("tr").remove();
-        });
-    });
-
-    function GetDynamicTextBox(value) {
+<script language="javascript">
 
 
-        return '<td><input name = "per_side_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><select name="per_sex_company[]" class="form-control"><option>انتخاب کنید</option><option value="1"> مرد</option><option  value="2"> زن</option></select></td>' +
-            '<td><input name = "per_title_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "per_name_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "per_phone_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "per_inside_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "per_email_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "per_tel_company_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><button type="button" data-original-title="حذف پرسنل" class="btn btn-danger remove"><i class="fa fa-remove"></i></button></td>'
+    function added_inputs_array_table2(data, a) {
+
+        var myNode = document.createElement('div');
+        myNode.id = 'nameee' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'name_securing_company" + a + "\'  name=\"name_securing_company[]\"\n" +
+            "class=\"form-control sell\"/>" +
+            "</div></div></div>";
+        document.getElementById('nameee').appendChild(myNode);
+        $('#name_securing_company' + a + '').val(data.name_securing_company);
+        var myNode = document.createElement('div');
+        myNode.id = 'shobeee' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'date_securing_company" + a + "\'  name=\"date_securing_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('shobeee').appendChild(myNode);
+        $('#date_securing_company' + a + '').val(data.date_securing_company);
+        var myNode = document.createElement('div');
+        myNode.id = 'actiontt' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<button onclick='deleteService2(" + a + ", event)' class=\"form-control btn btn-danger\"><i class=\"fa fa-remove\"></button></div>";
+        document.getElementById('actiontt').appendChild(myNode);
     }
 
-</script>
-
-<script>
-
-    $(function () {
-        $("#btnAddtamin").bind("click", function () {
-            var div = $("<tr />");
-            div.html(GetDynamicTextBoxxx(""));
-            $("#TextBoxContainertamin").append(div);
-        });
-        $("body").on("click", ".remove", function () {
-            $(this).closest("tr").remove();
-        });
-    });
-
-    function GetDynamicTextBoxxx(value) {
-
-
-        return '<td><input name = "name_securing_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><input name = "date_securing_company[]" type="text" value = "' + value + '" class="form-control" /></td>' +
-            '<td><button type="button" data-original-title="حذف پرسنل" class="btn btn-danger remove"><i class="fa fa-remove"></i></button></td>'
+    function deleteService2(id, event) {
+        event.preventDefault();
+        $('#nameee' + id).remove();
+        $('#shobeee' + id).remove();
+        $('#actiontt' + id).remove();
     }
 
+
+    function addInput11() {
+        var data = {
+            'title': '',
+            'icon': '',
+        };
+        added_inputs2_array.push(data);
+        added_inputs_array_table2(data, added_inputs2_array.length - 1);
+    }
 </script>
+
+<script language="javascript">
+
+    function added_inputs_array_table3(data, a) {
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_side' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_side_company" + a + "\'  name=\"per_side_company[]\"\n" +
+            "class=\"form-control sell\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_side').appendChild(myNode);
+        $('#per_side_company' + a + '').val(data.per_side_company);
+        var myNode = document.createElement('div');
+        myNode.id = 'per_sex' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_sex_company" + a + "\'  name=\"per_sex_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_sex').appendChild(myNode);
+        $('#per_sex_company' + a + '').val(data.per_sex_company);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_title' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_title_company" + a + "\'  name=\"per_title_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_title').appendChild(myNode);
+        $('#per_title_company' + a + '').val(data.per_title_company);
+        var myNode = document.createElement('div');
+        myNode.id = 'per_name' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_name_company" + a + "\'  name=\"per_name_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_name').appendChild(myNode);
+        $('#per_name_company' + a + '').val(data.per_name_company);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_phone' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_phone_company" + a + "\'  name=\"per_phone_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_phone').appendChild(myNode);
+        $('#per_phone_company' + a + '').val(data.per_phone_company);
+        var myNode = document.createElement('div');
+        myNode.id = 'per_inside' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_inside_company" + a + "\'  name=\"per_inside_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_inside').appendChild(myNode);
+        $('#per_inside_company' + a + '').val(data.per_inside_company);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'per_email' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_email_company" + a + "\'  name=\"per_email_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_email').appendChild(myNode);
+        $('#per_email_company' + a + '').val(data.per_email_company);
+        var myNode = document.createElement('div');
+        myNode.id = 'per_tel' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'per_tel_company_company" + a + "\'  name=\"per_tel_company_company[]\"\n" +
+            "class=\"form-control number\"/>" +
+            "</div></div></div>";
+        document.getElementById('per_tel').appendChild(myNode);
+        $('#per_tel_company_company' + a + '').val(data.per_tel_company_company);
+        var myNode = document.createElement('div');
+        myNode.id = 'actiontt' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<button onclick='deleteService3(" + a + ", event)' class=\"form-control btn btn-danger\"><i class=\"fa fa-remove\"></button></div>";
+        document.getElementById('actionttt').appendChild(myNode);
+    }
+
+    function deleteService3(id, event) {
+        event.preventDefault();
+        $('#per_side' + id).remove();
+        $('#per_sex' + id).remove();
+        $('#per_title' + id).remove();
+        $('#per_name' + id).remove();
+        $('#per_phone' + id).remove();
+        $('#per_inside' + id).remove();
+        $('#per_email' + id).remove();
+        $('#per_tel' + id).remove();
+        $('#actionttt' + id).remove();
+    }
+
+
+    function addInput12() {
+        var data = {
+            'title': '',
+            'icon': '',
+        };
+        added_inputs3_array.push(data);
+        added_inputs_array_table3(data, added_inputs3_array.length - 1);
+    }
+</script>
+
+
 <style>
     .vertical {
         border-left: 1px solid black;

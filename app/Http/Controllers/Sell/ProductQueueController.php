@@ -156,6 +156,7 @@ class ProductQueueController extends Controller
                         Scheduling::create([
                             'detail_id' => $request->get('id_product')[$i],
                             'number' => $request->get('product_name')[$i],
+                            'user_id' => auth()->user()->id,
                             'type' => $request->type,
                             'Carry' => $request->Carry,
                             'date' => $this->convert2english($request->date),

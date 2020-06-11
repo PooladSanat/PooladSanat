@@ -14,6 +14,8 @@
         <input type="hidden" name="taa" id="taa">
         <input type="hidden" name="price_f" id="price_f">
         <input type="hidden" name="ma" id="ma">
+        <input type="hidden" name="takhh" id="takhh" value="{{$id->takhfif}}">
+        <input type="hidden" name="createsa" id="createsa" value="{{$id->create}}">
         <div class="row">
             <div class="col-md-12">
                 <!-- BEGIN EXAMPLE TABLE PORTLET-->
@@ -82,13 +84,16 @@
                                         <option value="نقدی" @if($id->paymentMethod == "نقدی") selected @endif>نقدی
                                         </option>
                                         <option value="بصورت چک 1 ماهه"
-                                                @if($id->paymentMethod == "بصورت چک 1 ماهه") selected @endif>بصورت چک 1 ماهه
+                                                @if($id->paymentMethod == "بصورت چک 1 ماهه") selected @endif>بصورت چک 1
+                                            ماهه
                                         </option>
                                         <option value="بصورت چک 2 ماهه"
-                                                @if($id->paymentMethod == "بصورت چک 2 ماهه") selected @endif>بصورت چک 2 ماهه
+                                                @if($id->paymentMethod == "بصورت چک 2 ماهه") selected @endif>بصورت چک 2
+                                            ماهه
                                         </option>
                                         <option value="بصورت چک 3 ماهه"
-                                                @if($id->paymentMethod == "بصورت چک 3 ماهه") selected @endif>بصورت چک 3 ماهه
+                                                @if($id->paymentMethod == "بصورت چک 3 ماهه") selected @endif>بصورت چک 3
+                                            ماهه
                                         </option>
                                     </select>
 
@@ -99,7 +104,7 @@
                                 <div class="form-group">
                                     <label>تخفیف
                                     </label>
-                                    <input type="text" value="{{$id->takhfif}}" name="takhfif" id="takhfif"
+                                    <input type="text" name="takhfif" id="takhfif"
                                            class="form-control">
                                 </div>
                             </div>
@@ -121,6 +126,20 @@
                                            class="form-control">
                                 </div>
                             </div>
+
+
+
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>تاریخ صدور پیش فاکتور
+                                    </label>
+
+                                    <input type="text" name="created" id="created"
+                                           class="form-control">
+                                </div>
+                            </div>
+
 
                         </div>
                         <div class="table table-responsive">

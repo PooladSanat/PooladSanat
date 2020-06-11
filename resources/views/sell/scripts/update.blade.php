@@ -1,4 +1,6 @@
 <script src="{{asset('/public/js/2.js')}}"></script>
+<link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
+<script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 <script type="text/javascript">
     $(function () {
         $('#sell').addClass('active');
@@ -43,26 +45,28 @@
                 }
             });
         });
-        $('#paymentMethod')
-            .change(function () {
-                var t = $('#paymentMethod').val();
-                if (t == "نقدی") {
-                    $('#takhfif').val(23);
-                } else if (t == "بصورت چک 1 ماهه") {
-                    $('#takhfif').val(21);
-                } else if (t == "بصورت چک 2 ماهه") {
-                    $('#takhfif').val(19);
-                } else if (t == "بصورت چک 3 ماهه") {
-                    $('#takhfif').val(17);
-                }
 
-            })
-            .change();
     });
 
 </script>
+<script>
+    $('#paymentMethod')
+        .change(function () {
+            var t = $('#paymentMethod').val();
+            if (t == "نقدی") {
+                $('#takhfif').val(23);
+            } else if (t == "بصورت چک 1 ماهه") {
+                $('#takhfif').val(21);
+            } else if (t == "بصورت چک 2 ماهه") {
+                $('#takhfif').val(19);
+            } else if (t == "بصورت چک 3 ماهه") {
+                $('#takhfif').val(17);
+            }
+            totalfinal();
+        })
 
-
+        .change();
+</script>
 <script language="javascript">
     var all_modelProducts = [];
     var all_settings = [];
@@ -332,6 +336,7 @@
             })
             .keyup();
 
+
         $('#paymentMethod')
             .change(function () {
                 totalfinal();
@@ -472,4 +477,25 @@
 
     }
 
+    $(window).on("load", function () {
+        $('#takhfif').val($('#takhh').val());
+        totalfinal();
+        $('#created').val($('#createsa').val());
+    });
+
+</script>
+<script>
+    kamaDatepicker('created',
+        {
+            buttonsColor: "red",
+            forceFarsiDigits: false,
+            sync: true,
+            gotoToday: true,
+            highlightSelectedDay: true,
+            markHolidays: true,
+            markToday: true,
+            previousButtonIcon: "fa fa-arrow-circle-left",
+            nextButtonIcon: "fa fa-arrow-circle-right",
+
+        });
 </script>

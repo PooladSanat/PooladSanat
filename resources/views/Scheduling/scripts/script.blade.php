@@ -3,7 +3,8 @@
 <script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
 <script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script>
 <script src="//cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
-
+<link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
+<script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 <style>
 
 
@@ -17,6 +18,7 @@
         $dat = \Carbon\Carbon::now();
     $date = \Morilog\Jalali\Jalalian::forge($dat)->format('Y/m/d');
     @endphp
+    $('#from_date').val('{{$date}}');
     $(function () {
 
         $.ajaxSetup({
@@ -34,39 +36,53 @@
                 "ordering": false,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     if (aData.status == 'عدم خروج') {
-                        $('td:eq(11)', nRow).css('background-color', '#fb4e08');
+                        $('td:eq(11)', nRow).css('background-color', '#ff6a6b');
                     } else if (aData.status == 'خروج کامل') {
-                        $('td:eq(11)', nRow).css('background-color', '#84fb03');
+                        $('td:eq(11)', nRow).css('background-color', '#ccff8d');
                     } else if (aData.status == 'خروج ناقص') {
-                        $('td:eq(11)', nRow).css('background-color', '#fbea04');
+                        $('td:eq(11)', nRow).css('background-color', '#fffa81');
                     } else if (aData.status == 'اتمام یافته') {
-                        $('td:eq(11)', nRow).css('background-color', '#fba6ec');
+                        $('td:eq(11)', nRow).css('background-color', '#ec97dd');
                     } else if (aData.status == 'تایید حواله') {
-                        $('td:eq(11)', nRow).css('background-color', '#0080fb');
+                        $('td:eq(11)', nRow).css('background-color', '#90ddfb');
                     } else {
                         $('td', nRow).css('background-color', 'white');
                     }
 
                     if (parseInt(aData.total) == parseInt(aData.number)) {
-                        $('td:eq(6)', nRow).css('background-color', '#0080fb');
+                        $('td:eq(6)', nRow).css('background-color', '#ccff8d');
+                    } else if (parseInt(aData.total) == parseInt("0")) {
+                        $('td:eq(6)', nRow).css('background-color', '#ff6a6b');
                     } else if (parseInt(aData.total) < parseInt(aData.number)) {
-                        $('td:eq(6)', nRow).css('background-color', '#fbea04');
+                        $('td:eq(6)', nRow).css('background-color', '#fffa82');
                     } else {
                         $('td:eq(6)', nRow).css('background-color', 'white');
                     }
-                },
-                "language": {
-                    "search": "جستجو:",
-                    "lengthMenu": "نمایش _MENU_",
-                    "zeroRecords": "موردی یافت نشد!",
-                    "info": "نمایش _PAGE_ از _PAGES_",
-                    "infoEmpty": "موردی یافت نشد",
-                    "infoFiltered": "(جستجو از _MAX_ مورد)",
-                    "processing": "در حال پردازش اطلاعات"
-                },
+                }
+                ,
+                "language":
+                    {
+                        "search":
+                            "جستجو:",
+                        "lengthMenu":
+                            "نمایش _MENU_",
+                        "zeroRecords":
+                            "موردی یافت نشد!",
+                        "info":
+                            "نمایش _PAGE_ از _PAGES_",
+                        "infoEmpty":
+                            "موردی یافت نشد",
+                        "infoFiltered":
+                            "(جستجو از _MAX_ مورد)",
+                        "processing":
+                            "در حال پردازش اطلاعات"
+                    },
                 ajax: {
                     ajax: "{{ route('admin.scheduling.list') }}",
-                    data: {from_date: from_date}
+                    data:
+                        {
+                            from_date: from_date
+                        }
                 },
                 columns: [
                     {data: 'detail_id', name: 'detail_id'},
@@ -84,9 +100,10 @@
                     {data: 'status', name: 'status'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ],
-                rowsGroup: [
-                    1, 2, 3, 8, 9, 10, 11, 12, 13,
-                ],
+                rowsGroup:
+                    [
+                        1, 2, 3, 8, 9, 10, 11, 12, 13,
+                    ],
 
             });
 
@@ -287,7 +304,7 @@
                     if (data.success) {
                         $('#productFormeeeeeee').trigger("reset");
                         $('#ajaxModelExitDetail').modal('hide');
-                        $('#detail-table') .DataTable().ajax.reload();
+                        $('#detail-table').DataTable().ajax.reload();
                         $('#data-table').DataTable().ajax.reload();
                         $('#exitBtn').text('ثبت');
                         $('#exitBtn').prop("disabled", false);
@@ -438,4 +455,21 @@
     });
 
     $('#sell').addClass('active');
+
+</script>
+
+<script>
+    kamaDatepicker('from_date',
+        {
+            buttonsColor: "red",
+            forceFarsiDigits: false,
+            sync: true,
+            gotoToday: true,
+            highlightSelectedDay: true,
+            markHolidays: true,
+            markToday: true,
+            previousButtonIcon: "fa fa-arrow-circle-left",
+            nextButtonIcon: "fa fa-arrow-circle-right",
+
+        });
 </script>

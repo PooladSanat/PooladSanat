@@ -1,4 +1,6 @@
 <script src="{{asset('/public/js/2.js')}}"></script>
+<link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
+<script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 <script type="text/javascript">
     $(function () {
         $('#sell').addClass('active');
@@ -35,8 +37,7 @@
                             confirmButtonText: 'تایید'
                         }).then((result) => {
 
-                            window.location.replace('{{route('admin.invoice.success')}}');
-
+                            location.reload();
 
                         });
 
@@ -44,26 +45,28 @@
                 }
             });
         });
-        $('#paymentMethod')
-            .change(function () {
-                var t = $('#paymentMethod').val();
-                if (t == "نقدی") {
-                    $('#takhfif').val(23);
-                } else if (t == "بصورت چک 1 ماهه") {
-                    $('#takhfif').val(21);
-                } else if (t == "بصورت چک 2 ماهه") {
-                    $('#takhfif').val(19);
-                } else if (t == "بصورت چک 3 ماهه") {
-                    $('#takhfif').val(17);
-                }
 
-            })
-            .change();
     });
 
 </script>
+<script>
+    $('#paymentMethod')
+        .change(function () {
+            var t = $('#paymentMethod').val();
+            if (t == "نقدی") {
+                $('#takhfif').val(23);
+            } else if (t == "بصورت چک 1 ماهه") {
+                $('#takhfif').val(21);
+            } else if (t == "بصورت چک 2 ماهه") {
+                $('#takhfif').val(19);
+            } else if (t == "بصورت چک 3 ماهه") {
+                $('#takhfif').val(17);
+            }
+            totalfinal();
+        })
 
-
+        .change();
+</script>
 <script language="javascript">
     var all_modelProducts = [];
     var all_settings = [];
@@ -199,17 +202,20 @@
                 $('#Price_Sell' + a + '').val(selll * number);
                 if ($('#InvoiceType').val() == 1) {
 
-                    var sum = parseFloat(($('#Price_Sell' + a + '').val() * all_setting[i].Tax / 100) + parseFloat($('#Price_Sell' + a + '').val()));
-                    $('#Tax' + a + '').val(sum);
+                    var s = parseFloat($('#Price_Sell' + a + '').val() * all_setting[i].Tax / 100) + parseFloat($('#Price_Sell' + a + '').val());
+                    $('#Tax' + a + '').val(s - $('#Price_Sell' + a + '').val());
                     tax();
+                    totalfinal();
                 } else {
-                    var sum = parseFloat($('#Price_Sell' + a + '').val());
+                    var sum = parseFloat('0');
                     $('#Tax' + a + '').val(sum);
                     tax();
+                    totalfinal();
                 }
 
             })
             .keyup();
+
         $('#sell' + a + '')
             .keyup(function () {
                 $(".sell").each(function () {
@@ -222,6 +228,7 @@
                 });
             })
             .keyup();
+
         $('#number' + a + '')
             .keyup(function () {
                 $(".number").each(function () {
@@ -245,7 +252,6 @@
 
         $('#product' + a + '')
             .change(function () {
-
                 var id = $('#product' + a + '').val();
                 $.ajax({
                     type: "GET",
@@ -256,11 +262,23 @@
                             var selllll = parseInt($('#sell' + a + '').val());
                             var numberrr = parseInt($('#number' + a + '').val());
                             $('#Price_Sell' + a + '').val(selllll * numberrr);
-                            $('#Tax' + a + '').val(parseFloat($('#Price_Sell' + a + '').val() * all_setting[i].Tax / 100) + parseFloat($('#Price_Sell' + a + '').val()));
-                            tax();
-                            calculateSum();
-                            numberSum();
-                            Price_SellSum();
+                            if ($('#InvoiceType').val() == 1) {
+                                var s = parseFloat($('#Price_Sell' + a + '').val() * all_setting[i].Tax / 100) + parseFloat($('#Price_Sell' + a + '').val());
+                                $('#Tax' + a + '').val(s - $('#Price_Sell' + a + '').val());
+                                tax();
+                                calculateSum();
+                                numberSum();
+                                Price_SellSum();
+
+                            } else {
+                                var s = parseFloat($('#Price_Sell' + a + '').val() * all_setting[i].Tax / 100) + parseFloat($('#Price_Sell' + a + '').val());
+                                $('#Tax' + a + '').val('0');
+                                tax();
+                                calculateSum();
+                                numberSum();
+                                Price_SellSum();
+                            }
+
 
                         } else {
 
@@ -278,25 +296,22 @@
                         var number = parseInt($('#number' + a + '').val());
                         $('#Weight' + a + '').val(all_modelProducts[i].size * number);
                         Wigt();
-
-
                     }
-
-
                 }
-
-
             })
             .change();
 
         $('#InvoiceType')
             .change(function () {
                 if ($('#InvoiceType').val() == 1) {
-                    $('#Tax' + a + '').val(parseFloat($('#Price_Sell' + a + '').val() * all_setting[i].Tax / 100) + parseFloat($('#Price_Sell' + a + '').val()));
+                    var s = parseFloat($('#Price_Sell' + a + '').val() * all_setting[i].Tax / 100) + parseFloat($('#Price_Sell' + a + '').val());
+                    $('#Tax' + a + '').val(s - $('#Price_Sell' + a + '').val());
                     tax();
+                    totalfinal();
                 } else {
-                    $('#Tax' + a + '').val(parseFloat($('#Price_Sell' + a + '').val()));
+                    $('#Tax' + a + '').val('0');
                     tax();
+                    totalfinal();
                 }
 
             })
@@ -304,30 +319,32 @@
 
         $('#takhfif')
             .keyup(function () {
-                tax();
+                totalfinal();
             })
             .keyup();
 
 
         $('#expenses')
             .keyup(function () {
-                tax();
+                totalfinal();
             })
             .keyup();
 
         $('#Carry')
             .keyup(function () {
-                tax();
+                totalfinal();
             })
             .keyup();
+
+
         $('#paymentMethod')
             .change(function () {
-                tax();
+                totalfinal();
             })
             .change();
 
-    }
 
+    }
 
 
     function formatNumber(num) {
@@ -389,20 +406,40 @@
 
         var sum = 0;
         var t = 0;
-        var takhfif = $('#takhfif').val();
-        var expenses = $('#expenses').val();
-        var Carry = $('#Carry').val();
         $(".tax").each(function () {
             if (!isNaN(this.value) && this.value.length != 0) {
                 sum += parseInt(this.value);
             }
         });
-        var o = sum * takhfif / 100;
-        $("#tax").text(formatNumber(Number(sum) - Number(o) + Number(expenses) + Number(Carry)) + 'ریال');
-        $("#average_tax").text(formatNumber(sum / 2) + 'ریال');
+        $('#ma').val(sum);
+        $("#tax").text(formatNumber(sum) + 'ریال');
+        $("#average_tax").text(formatNumber(t / 2) + 'ریال');
         $("#price_full").val(sum);
     }
 
+    function totalfinal() {
+        var sum = 0;
+        var total = 0;
+        var takhfif = $('#takhfif').val();
+        var expenses = $('#expenses').val();
+        var Carry = $('#Carry').val();
+        $(".Price_Sell").each(function () {
+            if (!isNaN(this.value) && this.value.length != 0) {
+                total += parseFloat(this.value);
+            }
+        });
+        $(".tax").each(function () {
+            if (!isNaN(this.value) && this.value.length != 0) {
+                sum += parseInt(this.value);
+            }
+        });
+        var o = total * takhfif / 100;
+        var v = total - o;
+        $('#price_f').val(Number(v) + Number(sum) + Number(expenses) + Number(Carry));
+        $('#taa').val(o);
+        $('#ta').text(formatNumber(o) + ' ' + 'ریال');
+        $('#totalfinal').text(formatNumber(Number(v) + Number(sum) + Number(expenses) + Number(Carry)) + ' ' + ' ریال ');
+    }
 
     function addInput10() {
 
@@ -432,6 +469,7 @@
 
 
         tax();
+        totalfinal();
         calculateSum();
         numberSum();
         Price_SellSum();
@@ -439,4 +477,25 @@
 
     }
 
+    $(window).on("load", function () {
+        $('#takhfif').val($('#takhh').val());
+        totalfinal();
+        $('#created').val($('#createsa').val());
+    });
+
+</script>
+<script>
+    kamaDatepicker('created',
+        {
+            buttonsColor: "red",
+            forceFarsiDigits: false,
+            sync: true,
+            gotoToday: true,
+            highlightSelectedDay: true,
+            markHolidays: true,
+            markToday: true,
+            previousButtonIcon: "fa fa-arrow-circle-left",
+            nextButtonIcon: "fa fa-arrow-circle-right",
+
+        });
 </script>

@@ -714,6 +714,7 @@ class InvoiceController extends Controller
                     'ta' => $request->taa,
                     'totalfinal' => $request->price_f,
                     'ma' => $request->ma,
+                    'create' => $this->convert2english($request->created),
                 ]);
                 try {
                     \DB::table('invoice_product')
@@ -827,6 +828,7 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'Weight.*' => 'required|integer',
             'number.*' => 'required',
@@ -841,7 +843,6 @@ class InvoiceController extends Controller
             'Weight.*.required' => 'لطفا وزن محصول را وارد کنید برای اینکار به تعاریف پایه مراجعه کنید',
             'Weight.*.integer' => 'لطفا وزن محصول را وارد کنید برای اینکار به تعاریف پایه مراجعه کنید',
         ]);
-
         $tx = (int)$request->price_full - (int)$request->price_selll;
         if ($tx < 0) {
             $tax = 0;
@@ -883,6 +884,7 @@ class InvoiceController extends Controller
                     'ta' => $request->taa,
                     'totalfinal' => $request->price_f,
                     'ma' => $request->ma,
+                    'create' => $this->convert2english($request->created),
                 ]);
                 try {
                     $number = count(collect($request)->get('product'));
@@ -990,7 +992,7 @@ class InvoiceController extends Controller
                 $invoice_customer = \DB::table('invoice_customer')
                     ->updateOrInsert(['invoice_id' => $request->id_in],
                         [
-                            'date' => $request->date,
+                            'date' => $this->convert2english($request->date),
                             'HowConfirm' => $request->HowConfirm,
                             'file' => $request->file,
                             'description' => $request->description,
@@ -1275,6 +1277,8 @@ class InvoiceController extends Controller
 
     public function success(Request $request)
     {
+        $banks = Bank::where('status', 1)->get();
+        $selectstores = SelectStore::where('status', 1)->get();
         $id = auth()->user()->id;
         $role_id = \DB::table('role_user')
             ->where('user_id', $id)->first();
@@ -1305,7 +1309,12 @@ class InvoiceController extends Controller
                     })
                     ->addColumn('invoice', function ($row) {
                         $customer = Invoice::where('id', $row->invoice_id)->first();
-                        return $customer->invoiceNumber;
+                        $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->invoice_id . '" data-original-title="ثبت نهایی"
+                       class="Print">
+                       ' . $customer->invoiceNumber . '
+                       </a>';
+                        return $btn;
                     })
                     ->addColumn('user', function ($row) {
                         $customer = Invoice::where('id', $row->invoice_id)->first();
@@ -1352,11 +1361,11 @@ class InvoiceController extends Controller
                     ->addColumn('action_success', function ($row) {
                         return $this->action_success($row);
                     })
-                    ->rawColumns(['action_success', 'checkbox'])
+                    ->rawColumns(['action_success', 'checkbox', 'invoice'])
                     ->make(true);
             }
             return view('sell.success',
-                compact('invoice_products', 'invoices', 'products', 'colors'));
+                compact('invoice_products', 'banks', 'selectstores', 'invoices', 'products', 'colors'));
 
         }
         if ($role->name == "کارشناس فروش") {
@@ -1431,7 +1440,7 @@ class InvoiceController extends Controller
                     ->make(true);
             }
             return view('sell.success',
-                compact('invoice_products', 'invoices', 'products', 'colors'));
+                compact('invoice_products', 'banks', 'selectstores', 'invoices', 'products', 'colors'));
 
         }
 

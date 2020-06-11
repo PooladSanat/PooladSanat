@@ -11,6 +11,11 @@
         <input type="hidden" name="number_selll" id="number_selll">
         <input type="hidden" name="price_selll" id="price_selll">
         <input type="hidden" name="price_full" id="price_full">
+        <input type="hidden" name="taa" id="taa">
+        <input type="hidden" name="price_f" id="price_f">
+        <input type="hidden" name="ma" id="ma">
+        <input type="hidden" name="takhh" id="takhh" value="{{$id->takhfif}}">
+        <input type="hidden" name="createsa" id="createsa" value="{{$id->create}}">
         <div class="row">
             <div class="col-md-12">
                 <!-- BEGIN EXAMPLE TABLE PORTLET-->
@@ -76,10 +81,20 @@
                                     </label>
                                     <select id="paymentMethod" name="paymentMethod" class="form-control"
                                             required>
-                                        <option value="نقدی">نقدی</option>
-                                        <option value="بصورت چک 1 ماهه">بصورت چک 1 ماهه</option>
-                                        <option value="بصورت چک 2 ماهه">بصورت چک 2 ماهه</option>
-                                        <option value="بصورت چک 3 ماهه">بصورت چک 3 ماهه</option>
+                                        <option value="نقدی" @if($id->paymentMethod == "نقدی") selected @endif>نقدی
+                                        </option>
+                                        <option value="بصورت چک 1 ماهه"
+                                                @if($id->paymentMethod == "بصورت چک 1 ماهه") selected @endif>بصورت چک 1
+                                            ماهه
+                                        </option>
+                                        <option value="بصورت چک 2 ماهه"
+                                                @if($id->paymentMethod == "بصورت چک 2 ماهه") selected @endif>بصورت چک 2
+                                            ماهه
+                                        </option>
+                                        <option value="بصورت چک 3 ماهه"
+                                                @if($id->paymentMethod == "بصورت چک 3 ماهه") selected @endif>بصورت چک 3
+                                            ماهه
+                                        </option>
                                     </select>
 
                                 </div>
@@ -89,7 +104,8 @@
                                 <div class="form-group">
                                     <label>تخفیف
                                     </label>
-                                    <input type="text" value="{{$id->takhfif}}" name="takhfif" id="takhfif" class="form-control">
+                                    <input type="text" name="takhfif" id="takhfif"
+                                           class="form-control">
                                 </div>
                             </div>
 
@@ -97,7 +113,8 @@
                                 <div class="form-group">
                                     <label>سایر هزینه ها
                                     </label>
-                                    <input type="text" value="{{$id->expenses}}" name="expenses" id="expenses" class="form-control">
+                                    <input type="text" value="{{$id->expenses}}" name="expenses" id="expenses"
+                                           class="form-control">
                                 </div>
                             </div>
 
@@ -105,9 +122,24 @@
                                 <div class="form-group">
                                     <label>هزینه حمل
                                     </label>
-                                    <input type="text" value="{{$id->Carry}}" name="Carry" id="Carry" class="form-control">
+                                    <input type="text" value="{{$id->Carry}}" name="Carry" id="Carry"
+                                           class="form-control">
                                 </div>
                             </div>
+
+
+
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>تاریخ صدور پیش فاکتور
+                                    </label>
+
+                                    <input type="text" name="created" id="created"
+                                           class="form-control">
+                                </div>
+                            </div>
+
 
                         </div>
                         <div class="table table-responsive">
@@ -143,15 +175,6 @@
                                 </tbody>
                                 <tfoot>
                                 <tr>
-{{--                                    <th colspan="1">--}}
-{{--                                        <button id="btnAddbank"--}}
-{{--                                                type="button"--}}
-{{--                                                onclick="addInput10()"--}}
-{{--                                                class="btn btn-primary"--}}
-{{--                                                data-toggle="tooltip">--}}
-{{--                                            <i class="fa fa-plus"></i>--}}
-{{--                                        </button>--}}
-{{--                                    </th>--}}
                                     <th colspan="2">
                                         جمع
                                     </th>
@@ -171,6 +194,18 @@
                                         <label id="tax">0</label>
                                     </th>
                                 </tr>
+                                <tr>
+                                    <th colspan="6">
+                                        <center>تخفیف</center>
+                                    </th>
+                                    <th id="ta"></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="6">
+                                        <center>جمع نهایی</center>
+                                    </th>
+                                    <th id="totalfinal"></th>
+                                </tr>
                                 </tfoot>
                             </table>
 
@@ -183,7 +218,8 @@
                         ثبت
                     </button>
                     &nbsp;&nbsp;
-                    <a href="{{route('admin.invoice.success')}}" style="width: 130px" type="submit" class="btn btn-danger">
+                    <a href="{{route('admin.invoice.index')}}" style="width: 130px" type="submit"
+                       class="btn btn-danger">
                         برگشت
                     </a>
                 </div>

@@ -430,8 +430,6 @@ class CustomerController extends Controller
         $document = \DB::table('customer_documents')
             ->where('customer_id', $request->id)
             ->first();
-
-
         $types = \App\TypeCustomer::where('id', $request->type)->get();
         foreach ($types as $type)
             if ($type->type == 1) {

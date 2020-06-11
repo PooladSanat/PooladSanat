@@ -127,7 +127,7 @@
                                                 <div class="col-md-8">
                                                     <input type="text" id="date"
                                                            name="date"
-                                                           required="required" class="form-control example1"
+                                                           required="required" class="form-control"
                                                            placeholder="لطفا تاریخ اشنایی مشتری را وارد کنید">
                                                     <div class="help-block with-errors"></div>
                                                 </div>
@@ -276,7 +276,7 @@
                                                                 <input type="text"
                                                                        id="date_personel"
                                                                        name="date_personel"
-                                                                       required="required" class="form-control example1"
+                                                                       required="required" class="form-control"
                                                                        placeholder="لطفا تاریخ تولد را وارد کنید">
                                                                 <div class="help-block with-errors"></div>
                                                             </div>
@@ -426,7 +426,7 @@
                                                                                                 <input type="text"
                                                                                                        id="Established_company"
                                                                                                        name="Established_company"
-                                                                                                       class="form-control example1"
+                                                                                                       class="form-control"
                                                                                                 >
                                                                                                 <div
                                                                                                     class="help-block with-errors"></div>
@@ -480,7 +480,7 @@
                                                                                                 <input type="text"
                                                                                                        id="date_birth"
                                                                                                        name="date_birth"
-                                                                                                       class="form-control example1"
+                                                                                                       class="form-control"
                                                                                                 >
                                                                                                 <div
                                                                                                     class="help-block with-errors"></div>
@@ -610,7 +610,7 @@
                                                                                                        type="text"
                                                                                                        id="date_work_company"
                                                                                                        name="date_work_company"
-                                                                                                       class="form-control example1"
+                                                                                                       class="form-control"
                                                                                                        data-error="Minimum 3 character required">
                                                                                                 <div
                                                                                                     class="help-block with-errors"></div>
@@ -874,7 +874,7 @@
                                                                                                 <input type="text"
                                                                                                        id="credibilitylicense_work_company"
                                                                                                        name="credibilitylicense_work_company"
-                                                                                                       class="form-control example1"
+                                                                                                       class="form-control"
                                                                                                 >
                                                                                                 <div
                                                                                                     class="help-block with-errors"></div>
@@ -1062,9 +1062,6 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div class="portlet-body">
-
-
-
 
 
                                                                                 <div class="table table-responsive">

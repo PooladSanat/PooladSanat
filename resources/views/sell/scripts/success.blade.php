@@ -10,11 +10,12 @@
         display: none !important;
     }
 </style>
+<link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
+<script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
     $(function () {
-
         var invoice_product = [];
         @foreach($invoice_products as $invoice_product)
         invoice_product.push({
@@ -299,6 +300,53 @@
             $('#invoice_id_payment').val(id);
         });
 
+        $('body').on('click', '.Print', function () {
+            var id = $(this).data('id');
+            $.get("{{ route('admin.invoice.check.print') }}" + '/' + id, function (data) {
+                $('#ajaxModelPrint').modal('show');
+                $('#selectstoressss').val(data.selectstores_id);
+                $('#name_bankkk').val(data.bank_id);
+                $('#dateeee').val(data.date);
+                $('#timee').val(data.time);
+                $('#descriptionnn').val(data.description);
+            });
+            $('#PrintSell').click(function (e) {
+                var user = $('#CustomerPrint').serialize();
+                $.ajax({
+                    type: "GET",
+                    url: "{{route('admin.invoice.print')}}?id=" + id,
+                    data: user,
+                    dataType: 'html',
+                    success: function (res) {
+                        if (res.errors) {
+                            $('#ajaxModelPrint').modal('hide');
+                            jQuery.each(data.errors, function (key, value) {
+                                Swal.fire({
+                                    title: 'خطا!',
+                                    text: value,
+                                    icon: 'error',
+                                    confirmButtonText: 'تایید'
+                                })
+                            });
+                        }
+                        if (res) {
+                            w = window.open(window.location.href, "_blank");
+                            w.document.open();
+                            w.document.write(res);
+                            w.document.close();
+                            w.location.reload();
+                            $('#CustomerPrint').trigger("reset");
+                            id = null;
+                        } else {
+                            id = null;
+                        }
+                    }
+                });
+
+
+            });
+        });
+
         $('#savePaymentConfirm').click(function (e) {
             e.preventDefault();
             $('#savePaymentConfirm').text('در حال ثبت اطلاعات...');
@@ -570,7 +618,34 @@
             });
         });
 
+
+        kamaDatepicker('datev',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+        kamaDatepicker('dateu',
+            {
+                buttonsColor: "red",
+                forceFarsiDigits: false,
+                sync: true,
+                gotoToday: true,
+                highlightSelectedDay: true,
+                markHolidays: true,
+                markToday: true,
+                previousButtonIcon: "fa fa-arrow-circle-left",
+                nextButtonIcon: "fa fa-arrow-circle-right",
+            });
+
     });
+
 
     $('#sell').addClass('active');
 

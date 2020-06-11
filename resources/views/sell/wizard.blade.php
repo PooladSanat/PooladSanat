@@ -105,7 +105,13 @@
                                 </div>
                             </div>
 
-
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>تاریخ صدور پیش فاکتور
+                                    </label>
+                                    <input type="text" name="created" id="created" class="form-control">
+                                </div>
+                            </div>
 
 
 

@@ -30,7 +30,7 @@ class SchedulingController extends Controller
         $role = DB::table('roles')
             ->where('id', $role_id->role_id)
             ->first();
-        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی") {
+        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی" or $role->name == "مسئول حمل و نقل") {
             if ($request->ajax()) {
                 $data = Scheduling::where('date', $this->convert2english($request->from_date))
                     ->orderBy('id', 'desc')
@@ -283,6 +283,7 @@ class SchedulingController extends Controller
                         ->where('id', $id->detail_id)
                         ->update([
                             'leftover' => $id_p->leftover + $exitproductbarn->number,
+                            'end' => null,
                         ]);
 
                     $idd = Scheduling::where('id', $request->proder)->first();
@@ -327,6 +328,7 @@ class SchedulingController extends Controller
                             ->where('id', $idd->detail_id)
                             ->update([
                                 'leftover' => $id_pp->leftover - $request->numberrr,
+                                'end' => null,
                             ]);
                         Scheduling::find($request->proder)->update([
                             'total' => $request->numberrr,
@@ -406,6 +408,7 @@ class SchedulingController extends Controller
                             ->where('id', $id->detail_id)
                             ->update([
                                 'leftover' => $min + $id_p->leftover,
+                                'end' => null,
                             ]);
                         Scheduling::find($request->proder)->update([
                             'total' => $request->numberrr,
@@ -578,13 +581,34 @@ class SchedulingController extends Controller
 
     public function updatedate(Request $request)
     {
-        \DB::table('schedulings')
-            ->where('id', $request->id_d)
-            ->update([
+        $schedulings = DB::table('schedulings')->latest('id')->first();
+        $scheduling = DB::table('schedulings')
+            ->where('id', $request->id_d)->first();
+        try {
+            DB::beginTransaction();
+            Scheduling::create([
+                'detail_id' => $scheduling->detail_id,
+                'number' => $scheduling->number,
+                'type' => $scheduling->type,
+                'Carry' => $scheduling->Carry,
                 'date' => $this->convert2english($request->date),
-                'end' => null,
+                'time' => $scheduling->time,
+                'description' => $scheduling->description,
+                'pack' => '1000' . $schedulings->id,
                 'status' => '0',
             ]);
+            Scheduling::where('id', $request->id_d)
+                ->update([
+                    'end' => null,
+                    'total' => '0',
+                ]);
+            Scheduling::where('pack', $scheduling->pack)->update([
+                'statusfull' => '9',
+            ]);
+            DB::commit();
+        } catch (Exception $exception) {
+            DB::rollBack();
+        }
         return response()->json(['success' => 'success']);
     }
 
@@ -605,8 +629,9 @@ class SchedulingController extends Controller
                 'description' => $request->description,
 
             ]);
-        Scheduling::where('id', $request->id_p)->update([
-            'end' => 3,
+        Scheduling::where('pack', $id->pack)->update([
+            'statusfull' => '9',
+            'end' => null,
         ]);
         \DB::table('invoice_product')
             ->where('id', $id->detail_id)
@@ -630,13 +655,13 @@ class SchedulingController extends Controller
         $btn = null;
         if ($row->status == 5 and $row->end == 2) {
             $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->pack . '" data-original-title="تغیر تاریخ بارگیری"
+                      data-id="' . $row->id . '" data-original-title="تغیر تاریخ بارگیری"
                        class="change-date">
                   <i class="fa fa-history fa-lg" title="تغیر تاریخ بارگیری"></i>
                        </a>&nbsp;&nbsp;';
 
             $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->pack . '" data-original-title="انصراف فروش"
+                      data-id="' . $row->id . '" data-original-title="انصراف فروش"
                        class="cancel">
                   <i class="fa fa-times fa-lg" title="انصراف فروش"></i>
                        </a>&nbsp;&nbsp;';
@@ -673,7 +698,6 @@ class SchedulingController extends Controller
 
     }
 
-
     public function actionn($row)
     {
         $btn = null;
@@ -685,7 +709,6 @@ class SchedulingController extends Controller
         return $btn;
 
     }
-
 
     public function convert2english($string)
     {

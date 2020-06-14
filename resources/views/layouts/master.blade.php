@@ -442,6 +442,11 @@
                                     class="fa fa-circle-o"></i>انبار موقت</a>
                         </li>
 
+                        <li><a href="{{route('admin.barnreturn.list')}}"><i
+                                    class="fa fa-circle-o"></i>انبار ضایعات</a>
+                        </li>
+
+
                     </ul>
                 </li>
 
@@ -527,6 +532,9 @@
             </span>
                     </a>
                     <ul class="treeview-menu">
+                        <li><a href="{{route('admin.salesarchive.list')}}"><i
+                                    class="fa fa-circle-o"></i>آرشیو فروش</a>
+                        </li>
 
                         <li><a href="{{route('admin.invoice.index')}}"><i
                                     class="fa fa-circle-o"></i>پیش فاکتورهای تایید نشده</a>
@@ -551,7 +559,7 @@
                         <li><a href="{{route('admin.scheduling.list')}}"><i
                                     class="fa fa-circle-o"></i>زمان بندی بارگیری</a>
                         </li>
-                        <li><a href="#"><i
+                        <li><a href="{{route('admin.returns.list')}}"><i
                                     class="fa fa-circle-o"></i>مرجوعی ها</a>
                         </li>
 
@@ -647,7 +655,6 @@
 </div>
 
 <!-- load jQuery 1.1.3 -->
-
 
 
 <script src="{{asset('/public/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>

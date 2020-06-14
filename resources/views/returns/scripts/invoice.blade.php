@@ -1,7 +1,6 @@
 <script src="{{asset('/public/js/2.js')}}"></script>
 <link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
 <script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
-
 <script type="text/javascript">
     $(function () {
         $('#sell').addClass('active');
@@ -15,7 +14,7 @@
 
             var form = $('#productForm').serialize();
             $.ajax({
-                url: "{{ route('admin.invoice.edit') }}",
+                url: "{{ route('admin.returns.store.store') }}",
                 data: form,
                 type: 'POST',
                 success: function (data) {
@@ -50,7 +49,6 @@
     });
 
 </script>
-
 <script>
     $('#paymentMethod')
         .change(function () {
@@ -69,7 +67,6 @@
 
         .change();
 </script>
-
 <script language="javascript">
     var all_modelProducts = [];
     var all_settings = [];
@@ -84,17 +81,7 @@
     for (var i in all_setting)
 
         added_inputs2_array = [];
-        @foreach($invoice_products as $invoice_product)
 
-    var invoice_product = {
-            'product_id': "{{$invoice_product->product_id}}",
-            'color_id': "{{$invoice_product->color_id}}",
-            'salesNumber': "{{$invoice_product->salesNumber}}",
-            'salesPrice': "{{$invoice_product->salesPrice}}",
-            'sumTotal': "{{$invoice_product->sumTotal}}",
-        };
-    added_inputs2_array.push(invoice_product);
-    @endforeach
     if (added_inputs2_array.length >= 1)
         for (var a in added_inputs2_array)
             added_inputs_array_table2(added_inputs2_array[a], a);
@@ -115,12 +102,7 @@
             "</select>" +
             "</div></div></div>";
         document.getElementById('productt').appendChild(myNode);
-        $('#product' + a + '').val(data.product_id);
 
-        var undefined = $('#product' + a + '').val();
-        if (undefined == null) {
-            $('#product' + a + '').val(0)
-        }
 
 
         var myNode = document.createElement('div');
@@ -135,18 +117,13 @@
             "</select>" +
             "</div></div></div>";
         document.getElementById('colorr').appendChild(myNode);
-        $('#color' + a + '').val(data.color_id);
 
-        var undefined = $('#color' + a + '').val();
-        if (undefined == null) {
-            $('#color' + a + '').val(0)
-        }
 
         var myNode = document.createElement('div');
         myNode.id = 'selll' + a;
         myNode.innerHTML += "<div class='form-group'>" +
             "<input type=\"text\" id=\'sell" + a + "\'  name=\"sell[]\"\n" +
-            "class=\"form-control sell\" @if($id) value=\"" + data.salesPrice + "\" @endif/>" +
+            "class=\"form-control sell\"/>" +
             "</div></div></div>";
         document.getElementById('selll').appendChild(myNode);
         var undefined = $('#sell' + a + '').val();
@@ -158,7 +135,7 @@
         myNode.id = 'numberr' + a;
         myNode.innerHTML += "<div class='form-group'>" +
             "<input type=\"text\" id=\'number" + a + "\'  name=\"number[]\"\n" +
-            "class=\"form-control number\" @if($id) value=\"" + data.salesNumber + "\" @endif/>" +
+            "class=\"form-control number\"/>" +
             "</div></div></div>";
         document.getElementById('numberr').appendChild(myNode);
         var undefined = $('#number' + a + '').val();
@@ -349,7 +326,6 @@
     function formatNumber(num) {
         return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
-
     function calculateSum() {
 
         var sum = 0;
@@ -483,7 +459,6 @@
     });
 
 </script>
-
 <script>
     kamaDatepicker('created',
         {

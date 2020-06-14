@@ -260,8 +260,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/productqueue/sort', 'ProductQueueController@sort')->name('admin.product.list.sort');
         Route::post('productqueue/Soort', 'ProductQueueController@Soort')->name('admin.product.list.Soort');
         Route::post('productqueue/stored', 'ProductQueueController@stored')->name('admin.invoice.store.date');
-
-
         Route::post('/productqueue/list/store', 'ProductQueueController@Liststore')->name('admin.invoices.success.list.store');
 
 
@@ -276,20 +274,16 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/invoice/detailTrash/{id?}', 'InvoiceController@detailTrash')->name('admin.invoice.detailTrash');
         Route::post('/invoice/store', 'InvoiceController@store')->name('admin.invoice.store');
         Route::post('/storedetail/store', 'InvoiceController@storedetail')->name('admin.invoices.success.detail.store');
-
-
         Route::get('/invoice/update/{id?}', 'InvoiceController@update')->name('admin.invoice.update');
-
         Route::get('/invoice/update/product/{id?}', 'InvoiceController@updateproduct')->name('admin.invoice.product.update');
 
 
         Route::get('/invoice/PrintDetail/{id?}', 'InvoiceController@PrintDetail')->name('admin.print.detail');
+        Route::get('/invoice/PrintDetaill/{id?}', 'InvoiceController@PrintDetaill')->name('admin.print.detaill');
 
 
         Route::post('/invoice/product/edit', 'InvoiceController@editproduct')->name('admin.invoice.product.edit');
         Route::post('/invoice/edit', 'InvoiceController@edit')->name('admin.invoice.edit');
-
-
         Route::post('/invoice/confirm', 'InvoiceController@confirm')->name('admin.invoice.confirm.customer');
         Route::post('/invoice/delete', 'InvoiceController@delete')->name('admin.invoice.delete');
         Route::post('/invoice/paymentconfrim', 'InvoiceController@paymentconfrim')->name('admin.invoice.payment.confrim.store');
@@ -314,12 +308,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/invoice/ManyStore', 'InvoiceController@ManyStore')->name('admin.invoice.customer.many.store');
         Route::get('ajaxdata/massremove', 'InvoiceController@massremove')->name('ajaxdata.massremove');
         Route::get('invoice/trash/search', 'InvoiceController@search')->name('admin.invoice.trash.search');
-
-
         Route::get('invoice/list/time', 'InvoiceController@ListTime')->name('admin.invoice.success.list.time');
-
-
-
         Route::post('/invoice/cancel', 'InvoiceController@cancel')->name('admin.invoices.success.detail.cancel');
 
 
@@ -330,6 +319,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/target/update/{id?}', 'TargetController@update')->name('admin.target.update');
         Route::delete('/target/delete/{id?}', 'TargetController@delete')->name('admin.target.delete');
 
+
         //SchedulingController
         Route::get('/Scheduling/list', 'SchedulingController@list')->name('admin.scheduling.list');
         Route::get('/Scheduling/success/{id?}', 'SchedulingController@success')->name('admin.scheduling.success');
@@ -339,13 +329,20 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/Scheduling/StoreExit', 'SchedulingController@StoreExit')->name('admin.scheduling.store.exit');
         Route::post('/Scheduling/ExitFac', 'SchedulingController@ExitFac')->name('admin.scheduling.store.exit.fac');
         Route::get('/Scheduling/detail/list', 'SchedulingController@detaillist')->name('admin.scheduling.detail.list');
-
-
-
         Route::post('/Scheduling/update/date', 'SchedulingController@updatedate')->name('admin.scheduling.update.date');
-
-
         Route::post('/Scheduling/cancel/detail', 'SchedulingController@canceldetail')->name('admin.scheduling.cancel.detail');
+
+
+        //SalesArchiveController
+        Route::get('/SalesArchive/list', 'SalesArchiveController@list')->name('admin.salesarchive.list');
+
+
+
+        //ReturnsController
+        Route::get('/Returns/list', 'ReturnsController@list')->name('admin.returns.list');
+        Route::post('/Returns/store', 'ReturnsController@store')->name('admin.returns.store');
+        Route::post('/Returns/store/store', 'ReturnsController@storeinvoice')->name('admin.returns.store.store');
+        Route::get('/Returns/store/{returns?}', 'ReturnsController@invoice')->name('admin.invoice.store.return');
 
 
 
@@ -408,6 +405,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         //BarnTemporaryController
         Route::get('/barntemporary/list', 'BarnTemporaryController@list')->name('admin.barntemporary.list');
 
+        //BarnReturnsController
+        Route::get('/barnreturn/list', 'BarnReturnsController@list')->name('admin.barnreturn.list');
 
     });
 

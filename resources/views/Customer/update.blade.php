@@ -41,8 +41,10 @@
                             <input type="hidden" id="zone_id" name="zone_id" value="{{$id->city}}">
                             <input type="hidden" id="areas_id" name="areas_id" value="{{$id->staate}}">
                             <input type="hidden" id="datew" name="datew" value="{{$id->date}}">
-                            <input type="hidden" id="Established_companyr" name="Established_companyr" value="{{$customer_company->Established_company}}">
-
+                            @if(!empty($customer_company->Established_company))
+                                <input type="hidden" id="Established_companyr" name="Established_companyr"
+                                       value="{{$customer_company->Established_company}}">
+                            @endif
                             <div class="row setup-content" id="step-1" style="display: block;">
                                 <br/>
                                 <hr/>

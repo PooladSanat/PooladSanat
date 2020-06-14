@@ -113,6 +113,17 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>توضیحات
+                                    </label>
+                                    <textarea id="description"
+                                              placeholder="لطفا توضیحات خود را در مورد پیش فاکتور وارد کنید"
+                                              name="description" class="form-control">
+
+                                                    </textarea>
+                                </div>
+                            </div>
 
 
                         </div>
@@ -176,11 +187,15 @@
                                     </th>
                                 </tr>
                                 <tr>
-                                    <th colspan="6"><center>تخفیف</center></th>
+                                    <th colspan="6">
+                                        <center>تخفیف</center>
+                                    </th>
                                     <th id="ta"></th>
                                 </tr>
                                 <tr>
-                                    <th colspan="6"><center>جمع نهایی</center></th>
+                                    <th colspan="6">
+                                        <center>جمع نهایی</center>
+                                    </th>
                                     <th id="totalfinal"></th>
                                 </tr>
                                 </tfoot>
@@ -196,7 +211,8 @@
                         ثبت
                     </button>
                     &nbsp;&nbsp;
-                    <a href="{{route('admin.invoice.index')}}" style="width: 130px" type="submit" class="btn btn-danger">
+                    <a href="{{route('admin.invoice.index')}}" style="width: 130px" type="submit"
+                       class="btn btn-danger">
                         برگشت
                     </a>
                 </div>

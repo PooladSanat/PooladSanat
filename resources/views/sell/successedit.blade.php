@@ -140,6 +140,18 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>توضیحات
+                                    </label>
+                                    <textarea id="description"
+                                              placeholder="لطفا توضیحات خود را در مورد پیش فاکتور وارد کنید"
+                                              name="description" class="form-control">
+{{$id->description}}
+                                                    </textarea>
+                                </div>
+                            </div>
+
 
                         </div>
                         <div class="table table-responsive">
@@ -218,7 +230,7 @@
                         ثبت
                     </button>
                     &nbsp;&nbsp;
-                    <a href="{{route('admin.invoice.index')}}" style="width: 130px" type="submit"
+                    <a href="{{route('admin.invoice.success')}}" style="width: 130px" type="submit"
                        class="btn btn-danger">
                         برگشت
                     </a>

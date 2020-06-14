@@ -714,6 +714,7 @@ class InvoiceController extends Controller
                     'ta' => $request->taa,
                     'totalfinal' => $request->price_f,
                     'ma' => $request->ma,
+                    'description' => $request->description,
                     'create' => $this->convert2english($request->created),
                 ]);
                 try {
@@ -794,6 +795,8 @@ class InvoiceController extends Controller
                     'ta' => $request->taa,
                     'totalfinal' => $request->price_f,
                     'ma' => $request->ma,
+                    'create' => $this->convert2english($request->created),
+                    'description' => $request->description,
                 ]);
                 try {
                     \DB::table('invoice_product')
@@ -884,6 +887,7 @@ class InvoiceController extends Controller
                     'ta' => $request->taa,
                     'totalfinal' => $request->price_f,
                     'ma' => $request->ma,
+                    'description' => $request->description,
                     'create' => $this->convert2english($request->created),
                 ]);
                 try {
@@ -1178,6 +1182,46 @@ class InvoiceController extends Controller
             ->where('invoice_id', $id->id)
             ->get();
         return view('sell.detail.list',
+            compact('id', 'customer', 'user', 'invoice_products'
+                , 'products', 'colors', 'customer_validation_payment'
+                , 'admin_invoice', 'select_stores', 'users', 'users_s'));
+
+    }
+    public function PrintDetaill(Invoice $id)
+    {
+        $customer_validation_payment = \DB::table('customer_validation_payment')
+            ->where('customer_id', $id->customer_id)
+            ->first();
+        if (!empty($customer_validation_payment->user_id)) {
+            $user_id = $customer_validation_payment->user_id;
+        } else
+            $user_id = null;
+
+
+        $admin_invoice = \DB::table('admin_invoice')
+            ->where('invoice_id', $id->id)
+            ->first();
+        if (!empty($admin_invoice->user_id)) {
+            $user_id_c = $admin_invoice->user_id;
+        } else
+            $user_id_c = null;
+
+//        $customer_history_payment = \DB::table('customer_history_payment')
+//            ->where('customer_id', $id->customer_id)
+//            ->first();
+        $select_stores = SelectStore::all();
+        $products = Product::all();
+        $colors = Color::all();
+        $customer = Customer::where('id', $id->customer_id)->first();
+        $user = User::where('id', $id->user_id)->first();
+
+
+        $users = User::where('id', $user_id)->first();
+        $users_s = User::where('id', $user_id_c)->first();
+        $invoice_products = \DB::table('invoice_product')
+            ->where('invoice_id', $id->id)
+            ->get();
+        return view('SellesArchive.print',
             compact('id', 'customer', 'user', 'invoice_products'
                 , 'products', 'colors', 'customer_validation_payment'
                 , 'admin_invoice', 'select_stores', 'users', 'users_s'));

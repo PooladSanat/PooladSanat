@@ -471,6 +471,9 @@ class SchedulingController extends Controller
             ->where('id', $id->detail_id)
             ->where('status', null)
             ->get();
+        $invoices = \DB::table('invoice_product')
+            ->where('id', $id->detail_id)
+            ->get();
         if ($validator->passes()) {
             \DB::beginTransaction();
             try {
@@ -496,6 +499,13 @@ class SchedulingController extends Controller
                                 'status' => 1,
                             ]);
                     }
+                }
+                foreach ($invoices as $invoice) {
+                    \DB::table('invoices')
+                        ->where('id', $invoice->invoice_id)
+                        ->update([
+                            'status' => 1,
+                        ]);
                 }
                 \DB::commit();
                 return response()->json(['success' => 'success']);

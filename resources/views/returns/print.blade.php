@@ -14,15 +14,16 @@
         <input type="hidden" name="taa" id="taa">
         <input type="hidden" name="price_f" id="price_f">
         <input type="hidden" name="ma" id="ma">
-        <input type="hidden" name="takhh" id="takhh" value="{{$id->takhfif}}">
+        <input type="hidden" name="takhh" id="takhh" value="100">
         <input type="hidden" name="createsa" id="createsa" value="{{$id->create}}">
+        <input type="hidden" name="returns" id="returns" value="{{$returns->id}}">
         <div class="row">
             <div class="col-md-12">
                 <!-- BEGIN EXAMPLE TABLE PORTLET-->
                 <div class="portlet box blue">
                     <div class="portlet-title">
                         <div class="caption">
-                            ویرایش مشخصات پیش فاکتور
+                             پیش فاکتور
                         </div>
                     </div>
 
@@ -237,7 +238,7 @@
                         ثبت
                     </button>
                     &nbsp;&nbsp;
-                    <a href="{{route('admin.invoice.index')}}" style="width: 130px" type="submit"
+                    <a href="{{route('admin.returns.list')}}" style="width: 130px" type="submit"
                        class="btn btn-danger">
                         برگشت
                     </a>
@@ -253,7 +254,7 @@
 
 
 
-    @include('sell.scripts.update')
+    @include('returns.scripts.invoice')
 
 
 

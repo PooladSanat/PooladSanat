@@ -23,7 +23,7 @@
                 <div class="portlet box blue">
                     <div class="portlet-title">
                         <div class="caption">
-                             پیش فاکتور
+                            پیش فاکتور
                         </div>
                     </div>
 

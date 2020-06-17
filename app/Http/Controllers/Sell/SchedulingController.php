@@ -21,16 +21,16 @@ use Yajra\DataTables\DataTables;
 
 class SchedulingController extends Controller
 {
-
     public function list(Request $request)
     {
+
         $id = auth()->user()->id;
         $role_id = \DB::table('role_user')
             ->where('user_id', $id)->first();
         $role = DB::table('roles')
             ->where('id', $role_id->role_id)
             ->first();
-        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی" or $role->name == "مسئول حمل و نقل") {
+        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی" or $role->name == "مسئول حمل و نقل" or $role->name == "مدیر انبار") {
             if ($request->ajax()) {
                 $data = Scheduling::where('date', $this->convert2english($request->from_date))
                     ->orderBy('id', 'desc')
@@ -248,210 +248,216 @@ class SchedulingController extends Controller
 
     public function StoreExit(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'numberrr' => 'required',
-        ], [
-            'numberrr.required' => 'لطفا مقدار خارج شده از انبار را وارد کنید',
-        ]);
-        $id = Scheduling::where('id', $request->proder)->first();
-        $id_p = \DB::table('invoice_product')
-            ->where('id', $id->detail_id)->first();
-        $barn = \DB::table('barns_products')
-            ->where('product_id', $id_p->product_id)
-            ->where('color_id', $id_p->color_id)
-            ->first();
-        $exitproductbarn = \DB::table('exitproductbarn')
-            ->where('id', $request->id_exittt)
-            ->first();
-        $min = $id->number - $request->numberrr;
-        if ($validator->passes()) {
-            if (!empty($request->id_exittt)) {
-                \DB::beginTransaction();
-                try {
-                    \DB::table('exitproductbarn')
-                        ->where('id', $request->id_exittt)
-                        ->update([
-                            'number' => $request->numberrr,
-                        ]);
-                    \DB::table('barns_products')
-                        ->where('product_id', $id_p->product_id)
-                        ->where('color_id', $id_p->color_id)
-                        ->update([
-                            'Inventory' => $barn->Inventory + $exitproductbarn->number,
-                        ]);
-                    \DB::table('invoice_product')
-                        ->where('id', $id->detail_id)
-                        ->update([
-                            'leftover' => $id_p->leftover + $exitproductbarn->number,
-                            'end' => null,
-                        ]);
 
-                    $idd = Scheduling::where('id', $request->proder)->first();
-                    $id_pp = \DB::table('invoice_product')
+        $validator = Validator::make($request->all(), [
+            'numberexit.*' => 'required',
+        ], [
+            'numberexit.*.required' => 'لطفا مقدار خارج شده از انبار را وارد کنید',
+        ]);
+
+        $id_invoi = count(collect($request)->get('id_invoi'));
+        if (!empty($request->updatee)) {
+            if ($validator->passes()) {
+                for ($i = 0; $i < $id_invoi; $i++) {
+                    $id = Scheduling::where('id', $request->get('id_invoi')[$i])->first();
+                    $id_p = \DB::table('invoice_product')
                         ->where('id', $id->detail_id)->first();
-                    $barnn = \DB::table('barns_products')
+                    $barn = \DB::table('barns_products')
                         ->where('product_id', $id_p->product_id)
                         ->where('color_id', $id_p->color_id)
                         ->first();
-                    $minn = $idd->number - $request->numberrr;
+                    $min = $id->number - $request->get('numberexit')[$i];
+
+                    \DB::beginTransaction();
+                    try {
+                        \DB::table('exitproductbarn')
+                            ->where('detail_id', $request->get('id_invoi')[$i])
+                            ->update([
+                                'number' => $request->get('numberexit')[$i],
+                            ]);
+                        if ($request->get('numberexit')[$i] == $id_p->salesNumber) {
+                            Scheduling::where('id', $request->get('id_invoi')[$i])->update([
+                                'total' => $request->get('numberexit')[$i],
+                            ]);
 
 
-                    if ($request->numberr == $id_p->salesNumber) {
-                        Scheduling::find($request->proder)->update([
-                            'total' => $request->numberrr,
-                        ]);
-                        \DB::table('barns_products')
-                            ->where('product_id', $id_p->product_id)
-                            ->where('color_id', $id_p->color_id)
-                            ->update([
-                                'Inventory' => $barnn->Inventory - $request->numberrr,
-                                'NumberSold' => $barnn->NumberSold - $request->numberrr,
-                            ]);
-                        \DB::table('invoice_product')
-                            ->where('id', $idd->detail_id)
-                            ->update([
-                                'leftover' => $id_pp->leftover - $minn,
-                            ]);
-                        if (!empty($id->statusfull)) {
-                            if ($id->statusfull == 8) {
-                                Scheduling::where('pack', $id->pack)->update([
+                            \DB::table('barns_products')
+                                ->where('product_id', $id_p->product_id)
+                                ->where('color_id', $id_p->color_id)
+                                ->update([
+                                    'Inventory' => $barn->Inventory + $id->total,
+                                    'NumberSold' => abs($barn->NumberSold - $id->total),
+                                ]);
+
+                            \DB::table('invoice_product')
+                                ->where('id', $id->detail_id)
+                                ->update([
+                                    'leftover' => $id_p->leftover - $id->total,
+                                ]);
+
+
+                            \DB::table('barns_products')
+                                ->where('product_id', $id_p->product_id)
+                                ->where('color_id', $id_p->color_id)
+                                ->update([
+                                    'Inventory' => $barn->Inventory - $request->get('numberexit')[$i],
+                                    'NumberSold' => abs($barn->NumberSold - $request->get('numberexit')[$i]),
+                                ]);
+
+                            \DB::table('invoice_product')
+                                ->where('id', $id->detail_id)
+                                ->update([
+                                    'leftover' => $id->number - $request->get('numberexit')[$i] + $id_p->leftover,
+                                ]);
+
+                            Scheduling::where('pack', $request->get('pack')[$i])
+                                ->update([
                                     'statusfull' => 8,
                                 ]);
-                            }
-                        } else {
-                            Scheduling::where('pack', $id->pack)->update([
-                                'statusfull' => 8,
+
+
+                        } elseif ($request->get('numberexit')[$i] < $id_p->salesNumber and $request->get('numberexit')[$i] > 0) {
+
+                            Scheduling::where('id', $request->get('id_invoi')[$i])->update([
+                                'total' => $request->get('numberexit')[$i],
                             ]);
-                        }
-                    } elseif ($request->numberrr < $id_p->salesNumber and $request->numberrr > 0) {
-                        \DB::table('invoice_product')
-                            ->where('id', $idd->detail_id)
-                            ->update([
-                                'leftover' => $id_pp->leftover - $request->numberrr,
-                                'end' => null,
-                            ]);
-                        Scheduling::find($request->proder)->update([
-                            'total' => $request->numberrr,
-                        ]);
-                        \DB::table('barns_products')
-                            ->where('product_id', $id_p->product_id)
-                            ->where('color_id', $id_p->color_id)
-                            ->update([
-                                'Inventory' => $barnn->Inventory - $request->numberrr,
-//                                'NumberSold' => $barnn->NumberSold - $idd->number,
-                            ]);
-                        if (!empty($id->statusfull)) {
-                            if ($id->statusfull == 8) {
-                                Scheduling::where('pack', $id->pack)->update([
+
+
+                            \DB::table('invoice_product')
+                                ->where('id', $id->detail_id)
+                                ->update([
+                                    'leftover' => $min + $id_p->leftover,
+                                    'end' => null,
+                                ]);
+
+
+                            \DB::table('barns_products')
+                                ->where('product_id', $id_p->product_id)
+                                ->where('color_id', $id_p->color_id)
+                                ->update([
+                                    'Inventory' => $barn->Inventory - $request->get('numberexit')[$i],
+                                    'NumberSold' => abs($barn->NumberSold - $request->get('numberexit')[$i]),
+                                ]);
+
+
+                            Scheduling::where('pack', $request->get('pack')[$i])
+                                ->update([
                                     'statusfull' => 9,
                                 ]);
-                            }
-                        } else {
-                            Scheduling::where('pack', $id->pack)->update([
-                                'statusfull' => 9,
-                            ]);
-                        }
 
-                    } elseif ($request->numberrr == 0) {
-                        Scheduling::find($request->proder)->update([
-                            'status' => 5,
-                            'statusfull' => null,
-                            'end' => 2,
-                            'total' => $request->numberrr,
-                        ]);
+
+                        } elseif ($request->get('numberexit')[$i] == 0) {
+                            Scheduling::find($request->get('id_invoi')[$i])->update([
+                                'status' => 5,
+                                'statusfull' => null,
+                                'end' => 2,
+                                'total' => $request->get('numberexit')[$i],
+                            ]);
+
+                        }
+                        \DB::commit();
+                    } catch (Exception $exception) {
+                        \DB::rollBack();
                     }
-
-
-                    \DB::commit();
-                    return response()->json(['success' => 'success']);
-                } catch (Exception $exception) {
-                    \DB::rollBack();
                 }
-
-            } else {
-                \DB::beginTransaction();
-                try {
-                    \DB::table('exitproductbarn')
-                        ->insert([
-                            'detail_id' => $request->proder,
-                            'number' => $request->numberrr,
-                        ]);
-                    if ($request->numberrr == $id_p->salesNumber) {
-                        Scheduling::find($request->proder)->update([
-                            'total' => $request->numberrr,
-                        ]);
-                        \DB::table('barns_products')
-                            ->where('product_id', $id_p->product_id)
-                            ->where('color_id', $id_p->color_id)
-                            ->update([
-                                'Inventory' => $barn->Inventory - $request->numberrr,
-                                'NumberSold' => $barn->NumberSold - $request->numberrr,
-                            ]);
-                        \DB::table('invoice_product')
-                            ->where('id', $id->detail_id)
-                            ->update([
-                                'leftover' => $id->number - $request->numberrr + $id_p->leftover,
-                            ]);
-                        if (!empty($id->statusfull)) {
-                            if ($id->statusfull == 8) {
-                                Scheduling::where('pack', $id->pack)->update([
-                                    'statusfull' => 8,
-                                ]);
-                            }
-                        } else {
-                            Scheduling::where('pack', $id->pack)->update([
-                                'statusfull' => 8,
-                            ]);
-                        }
-                    } elseif ($request->numberrr < $id_p->salesNumber and $request->numberrr > 0) {
-                        \DB::table('invoice_product')
-                            ->where('id', $id->detail_id)
-                            ->update([
-                                'leftover' => $min + $id_p->leftover,
-                                'end' => null,
-                            ]);
-                        Scheduling::find($request->proder)->update([
-                            'total' => $request->numberrr,
-                        ]);
-                        \DB::table('barns_products')
-                            ->where('product_id', $id_p->product_id)
-                            ->where('color_id', $id_p->color_id)
-                            ->update([
-                                'Inventory' => $barn->Inventory - $request->numberrr,
-                                'NumberSold' => $barn->NumberSold - $id->number,
-                            ]);
-
-                        if (!empty($id->statusfull)) {
-                            if ($id->statusfull == 8) {
-                                Scheduling::where('pack', $id->pack)->update([
-                                    'statusfull' => 9,
-                                ]);
-                            }
-                        } else {
-                            Scheduling::where('pack', $id->pack)->update([
-                                'statusfull' => 9,
-                            ]);
-                        }
-
-
-                    } elseif ($request->numberrr == 0) {
-                        Scheduling::find($request->proder)->update([
-                            'status' => 5,
-                            'statusfull' => null,
-                            'end' => 2,
-                            'total' => $request->numberrr,
-                        ]);
-
-                    }
-                    \DB::commit();
-                    return response()->json(['success' => 'success']);
-                } catch (Exception $exception) {
-                    \DB::rollBack();
-                }
+                return response()->json(['success' => 'success']);
             }
-        }
-        return Response::json(['errors' => $validator->errors()]);
+            return Response::json(['errors' => $validator->errors()]);
+        } else {
+            if ($validator->passes()) {
+                for ($i = 0; $i < $id_invoi; $i++) {
+                    $id = Scheduling::where('id', $request->get('id_invoi')[$i])->first();
+                    $id_p = \DB::table('invoice_product')
+                        ->where('id', $id->detail_id)->first();
+                    $barn = \DB::table('barns_products')
+                        ->where('product_id', $id_p->product_id)
+                        ->where('color_id', $id_p->color_id)
+                        ->first();
+                    $min = $id->number - $request->get('numberexit')[$i];
 
+                    \DB::beginTransaction();
+                    try {
+                        \DB::table('exitproductbarn')
+                            ->insert([
+                                'detail_id' => $request->get('id_invoi')[$i],
+                                'number' => $request->get('numberexit')[$i],
+                            ]);
+                        if ($request->get('numberexit')[$i] == $id_p->salesNumber) {
+                            Scheduling::find($request->get('id_invoi')[$i])->update([
+                                'total' => $request->get('numberexit')[$i],
+                            ]);
+                            \DB::table('barns_products')
+                                ->where('product_id', $id_p->product_id)
+                                ->where('color_id', $id_p->color_id)
+                                ->update([
+                                    'Inventory' => $barn->Inventory - $request->get('numberexit')[$i],
+                                    'NumberSold' => $barn->NumberSold - $request->get('numberexit')[$i],
+                                ]);
+                            \DB::table('invoice_product')
+                                ->where('id', $id->detail_id)
+                                ->update([
+                                    'leftover' => $id->number - $request->get('numberexit')[$i] + $id_p->leftover,
+                                ]);
+                            if (!empty($id->statusfull)) {
+                                if ($id->statusfull == 8) {
+                                    Scheduling::where('pack', $id->pack)->update([
+                                        'statusfull' => 8,
+                                    ]);
+                                }
+                            } else {
+                                Scheduling::where('pack', $id->pack)->update([
+                                    'statusfull' => 8,
+                                ]);
+                            }
+                        } elseif ($request->get('numberexit')[$i] < $id_p->salesNumber and $request->get('numberexit')[$i] > 0) {
+                            \DB::table('invoice_product')
+                                ->where('id', $id->detail_id)
+                                ->update([
+                                    'leftover' => $min + $id_p->leftover,
+                                    'end' => null,
+                                ]);
+                            Scheduling::find($request->get('id_invoi')[$i])->update([
+                                'total' => $request->get('numberexit')[$i],
+                            ]);
+                            \DB::table('barns_products')
+                                ->where('product_id', $id_p->product_id)
+                                ->where('color_id', $id_p->color_id)
+                                ->update([
+                                    'Inventory' => $barn->Inventory - $request->get('numberexit')[$i],
+                                    'NumberSold' => $barn->NumberSold - $id->number,
+                                ]);
+
+                            if (!empty($id->statusfull)) {
+                                if ($id->statusfull == 8) {
+                                    Scheduling::where('pack', $id->pack)->update([
+                                        'statusfull' => 9,
+                                    ]);
+                                }
+                            } else {
+                                Scheduling::where('pack', $id->pack)->update([
+                                    'statusfull' => 9,
+                                ]);
+                            }
+
+
+                        } elseif ($request->get('numberexit')[$i] == 0) {
+                            Scheduling::find($request->get('id_invoi')[$i])->update([
+                                'status' => 5,
+                                'statusfull' => null,
+                                'end' => 2,
+                                'total' => $request->get('numberexit')[$i],
+                            ]);
+
+                        }
+                        \DB::commit();
+                    } catch (Exception $exception) {
+                        \DB::rollBack();
+                    }
+                }
+                return response()->json(['success' => 'success']);
+            }
+            return Response::json(['errors' => $validator->errors()]);
+        }
 
     }
 
@@ -520,23 +526,30 @@ class SchedulingController extends Controller
 
     public function exit($id)
     {
+        $check = Scheduling::where('pack', $id)->first();
+        if (!empty($check->total)) {
+            $update = 1;
+        } else {
+            $update = null;
+        }
+
         $data = Scheduling::where('pack', $id)->get();
-        foreach ($data as $datum) {
+
+        foreach ($data as $datum)
             $product = \DB::table('invoice_product')
                 ->where('id', $datum->detail_id)
-                ->get();
-        }
-        return response()->json($product);
-
-        $product_id = Product::find($product->product_id);
-        $color_id = Color::find($product->color_id);
-        $exitproductbarn = \DB::table('exitproductbarn')
-            ->where('detail_id', $id)
+                ->first();
+        $havale = \DB::table('_success_number_invoice')
+            ->where('scheduling_id', $datum->pack)
             ->first();
-        return response()->json(['product_id' => $product_id,
-            'color_id' => $color_id,
-            'data' => $data,
-            'exitt' => $exitproductbarn]);
+        $invoice = Invoice::where('id', $product->invoice_id)->first();
+        $customer = Customer::where('id', $invoice->customer_id)->first();
+
+        return response()->json(['data' => $data,
+            'invoice' => $invoice,
+            'customer' => $customer,
+            'hav' => $havale,
+            'update' => $update]);
     }
 
     public function store(Request $request)
@@ -639,10 +652,12 @@ class SchedulingController extends Controller
                 'description' => $request->description,
 
             ]);
-        Scheduling::where('pack', $id->pack)->update([
+
+        Scheduling::where('id', $request->id_p)->update([
             'statusfull' => '9',
             'end' => null,
         ]);
+
         \DB::table('invoice_product')
             ->where('id', $id->detail_id)
             ->update([
@@ -737,6 +752,4 @@ class SchedulingController extends Controller
         $string = str_replace($arabic, $newNumbers, $string);
         return str_replace($persian, $newNumbers, $string);
     }
-
-
 }

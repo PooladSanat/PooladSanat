@@ -17,6 +17,10 @@
     @php
         $dat = \Carbon\Carbon::now();
     $date = \Morilog\Jalali\Jalalian::forge($dat)->format('Y/m/d');
+    $invoice_products = \DB::table('invoice_product')->get();
+    $products = \App\Product::all();
+    $colors = \App\Color::all();
+    $invoices = \App\Invoice::all();
     @endphp
     $('#from_date').val('{{$date}}');
     $(function () {
@@ -34,6 +38,11 @@
                 processing: true,
                 serverSide: true,
                 "ordering": false,
+                "bInfo": false,
+                "paging": false,
+                "bPaginate": false,
+                "scrollY": "450px",
+                "scrollCollapse": true,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     if (aData.status == 'عدم خروج') {
                         $('td:eq(11)', nRow).css('background-color', '#ff6a6b');
@@ -191,43 +200,143 @@
         });
 
         $('body').on('click', '.plus-exit', function () {
-            $('#detail-table').DataTable().destroy();
             var product_id = $(this).data('id');
+            $(".product").remove();
+            $(".color").remove();
+            $(".number").remove();
+            $(".numberexit").remove();
             $.get("{{ route('admin.scheduling.exit') }}" + '/' + product_id, function (data) {
                 $('#ajaxModelExit').modal('show');
                 $('#captioon').text('ثبت خروج از انبار');
+                $('#updatee').val(data.update);
+                $('#descriptioonn').val(data.invoice.description);
+                $('#customerrrr').val(data.customer.name);
+                $('#hav').val(data.hav.number);
+                added_inputs2_array = [];
+                invoices = [];
+                products = [];
+                colors = [];
+                sells = [];
 
-                var tablee = $('.detail-table').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    "ordering": false,
-                    "searching": false, "bPaginate": false,
-                    "bLengthChange": false,
-                    "bFilter": true,
-                    "bInfo": false,
-                    "bAutoWidth": false,
-                    "language": {
-                        "search": "جستجو:",
-                        "lengthMenu": "نمایش _MENU_",
-                        "zeroRecords": "موردی یافت نشد!",
-                        "info": "نمایش _PAGE_ از _PAGES_",
-                        "infoEmpty": "موردی یافت نشد",
-                        "infoFiltered": "(جستجو از _MAX_ مورد)",
-                        "processing": "در حال پردازش اطلاعات"
-                    },
-                    ajax: {
-                        url: "{{ route('admin.scheduling.detail.list') }}",
-                        data: {product_id: product_id}
-                    },
-
-                    columns: [
-                        {data: 'product', name: 'product', orderable: false, searchable: false},
-                        {data: 'color', name: 'color', orderable: false, searchable: false},
-                        {data: 'number', name: 'number', orderable: false, searchable: false},
-                        {data: 'actionn', name: 'actionn', orderable: false, searchable: false},
-                    ],
+                data.data.forEach(function (entry) {
+                    var invoice_product = {
+                        'detail_id': entry.detail_id,
+                        'id': entry.id,
+                        'total': entry.total,
+                        'pack': entry.pack,
+                    };
+                    added_inputs2_array.push(invoice_product);
                 });
+                    @foreach($invoices as $invoice)
+                var sell = {
+                        'id': "{{$invoice->id}}",
+                        'customer_id': "{{$invoice->customer_id}}",
+                        'description': "{{$invoice->description}}",
+                    };
+                sells.push(sell);
+                    @endforeach
+                    @foreach($invoice_products as $invoice_product)
+                var invoice = {
+                        'id': "{{$invoice_product->id}}",
+                        'product_id': "{{$invoice_product->product_id}}",
+                        'color_id': "{{$invoice_product->color_id}}",
+                        'salesNumber': "{{$invoice_product->salesNumber}}",
+                        'salesPrice': "{{$invoice_product->salesPrice}}",
+                        'sumTotal': "{{$invoice_product->sumTotal}}",
+                        'invoice_id': "{{$invoice_product->invoice_id}}",
+                    };
+                invoices.push(invoice);
+                    @endforeach
+                    @foreach($products as $product)
+                var product = {
+                        'id': "{{$product->id}}",
+                        'label': "{{$product->label}}",
+                    };
+                products.push(product);
+                    @endforeach
+                    @foreach($colors as $color)
+                var color = {
+                        'id': "{{$color->id}}",
+                        'name': "{{$color->name}}",
+                    };
+                colors.push(color);
+                @endforeach
 
+                if (added_inputs2_array.length >= 1)
+                    for (var a in added_inputs2_array)
+                        added_inputs_array_table2(added_inputs2_array[a], a);
+
+                function added_inputs_array_table2(data, a) {
+                    for (var f in invoices) {
+                        if (invoices[f].id == data.detail_id) {
+                            var myNode = document.createElement('div');
+                            myNode.id = 'codee' + a;
+                            myNode.innerHTML += "<div class='form-group'>" +
+                                "<input type=\"text\" id=\'code" + a + "\' readonly value=" + invoices[f].id + "  name=\"code[]\"\n" +
+                                "class=\"form-control color\" />" +
+                                "</div></div></div>";
+                            document.getElementById('codee').appendChild(myNode);
+                            for (var p in products) {
+                                if (products[p].id == invoices[f].product_id) {
+                                    var myNode = document.createElement('div');
+                                    myNode.id = 'productt' + a;
+                                    myNode.innerHTML += "<div class='form-group'>" +
+                                        "<input type=\"text\" id=\'product" + a + "\' readonly  name=\"product[]\"\n" +
+                                        "class=\"form-control product\" />" +
+                                        "</div></div></div>";
+                                    document.getElementById('productt').appendChild(myNode);
+                                    $('#product' + a + '').val(products[p].label);
+                                }
+                            }
+                            for (var c in colors) {
+                                if (invoices[f].color_id == colors[c].id) {
+                                    var myNode = document.createElement('div');
+                                    myNode.id = 'colorrr' + a;
+                                    myNode.innerHTML += "<div class='form-group'>" +
+                                        "<input type=\"text\" id=\'color" + a + "\' readonly  name=\"color[]\"\n" +
+                                        "class=\"form-control color\" />" +
+                                        "</div></div></div>";
+                                    document.getElementById('colorrr').appendChild(myNode);
+                                    $('#color' + a + '').val(colors[c].name);
+
+                                }
+                            }
+
+
+                            var myNode = document.createElement('div');
+                            myNode.id = 'numberr' + a;
+                            myNode.innerHTML += "<div class='form-group'>" +
+                                "<input type=\"text\" id=\'number" + a + "\' readonly value=" + invoices[f].salesNumber + "  name=\"number[]\"\n" +
+                                "class=\"form-control number\" />" +
+                                "</div></div></div>";
+                            document.getElementById('numberr').appendChild(myNode);
+
+                            var myNode = document.createElement('div');
+                            myNode.id = 'numberexitt' + a;
+                            myNode.innerHTML += "<div class='form-group'>" +
+                                "<input type=\"text\" id=\'numberexit" + a + "\' value=" + data.total + "  name=\"numberexit[]\"\n" +
+                                "class=\"form-control numberexit\" />" +
+                                "</div></div></div>";
+                            document.getElementById('numberexitt').appendChild(myNode);
+
+                            myNode.id = 'numberr' + a;
+                            myNode.innerHTML += "<div class='form-group'>" +
+                                "<input type=\"hidden\" id=\'id_invoi" + a + "\' readonly value=" + data.id + "  name=\"id_invoi[]\"\n" +
+                                "class=\"form-control number\" />" +
+                                "</div></div></div>";
+
+                            myNode.id = 'packk' + a;
+                            myNode.innerHTML += "<div class='form-group'>" +
+                                "<input type=\"hidden\" id=\'pack" + a + "\' readonly value=" + data.pack + "  name=\"pack[]\"\n" +
+                                "class=\"form-control number\" />" +
+                                "</div></div></div>";
+
+
+                        }
+                    }
+
+
+                }
             })
         });
 
@@ -278,12 +387,12 @@
             });
         });
 
-        $('#exitBtn').click(function (e) {
+        $('#savebarn').click(function (e) {
             e.preventDefault();
-            $('#exitBtn').text('در حال ثبت اطلاعات...');
-            $('#exitBtn').prop("disabled", true);
+            $('#savebarn').text('در حال ثبت اطلاعات...');
+            $('#savebarn').prop("disabled", true);
             $.ajax({
-                data: $('#productFormeeeeeee').serialize(),
+                data: $('#productFmm').serialize(),
                 url: "{{ route('admin.scheduling.store.exit') }}",
                 type: "POST",
                 dataType: 'json',
@@ -298,16 +407,21 @@
                                 confirmButtonText: 'تایید'
                             })
                         });
-                        $('#exitBtn').text('ثبت');
-                        $('#exitBtn').prop("disabled", false);
+                        $('#savebarn').text('ثبت');
+                        $('#savebarn').prop("disabled", false);
                     }
                     if (data.success) {
-                        $('#productFormeeeeeee').trigger("reset");
-                        $('#ajaxModelExitDetail').modal('hide');
-                        $('#detail-table').DataTable().ajax.reload();
+                        $('#productFmm').trigger("reset");
+                        $('#ajaxModelExit').modal('hide');
                         $('#data-table').DataTable().ajax.reload();
-                        $('#exitBtn').text('ثبت');
-                        $('#exitBtn').prop("disabled", false);
+                        Swal.fire({
+                            title: 'موفق!',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید'
+                        });
+                        $('#savebarn').text('ثبت');
+                        $('#savebarn').prop("disabled", false);
                     }
                 }
             });
@@ -453,6 +567,14 @@
             }
         })
     });
+
+    function deleteService2(id, event) {
+        event.preventDefault();
+        $('#productt' + id).remove();
+        $('#colorrr' + id).remove();
+        $('#numberr' + id).remove();
+        $('#numberexitt' + id).remove();
+    }
 
     $('#sell').addClass('active');
 

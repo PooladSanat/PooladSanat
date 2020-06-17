@@ -81,27 +81,78 @@
                     <div class="form-body">
                         <div class="form-group">
 
-                            <form autocomplete="off" id="productFormm" name="productFormm" class="form-horizontal">
+                            <form autocomplete="off" id="productFmm" name="productFmm">
                                 <input type="hidden" name="id" id="id">
                                 <input type="hidden" name="prod" id="prod">
                                 <input type="hidden" name="namee" id="namee">
                                 <input type="hidden" name="colorr" id="colorr">
                                 <input type="hidden" name="id_exit" id="id_exit">
+                                <input type="hidden" name="updatee" id="updatee">
                                 @csrf
                                 <div class="row">
-                                    <table class="table table-striped table-bordered detail-table" id="detail-table">
-                                        <thead style="background-color: #e8ecff">
-                                        <tr>
-                                            <th>محصول</th>
-                                            <th>رنگ</th>
-                                            <th>تعداد</th>
-                                            <th>عملیات</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>شماره حواله
+                                                    </label>
+                                                    <input class="form-control" type="text" name="hav" id="hav"
+                                                           disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>نام خریدار
+                                                    </label>
+                                                    <input class="form-control" type="text" name="customerrrr"
+                                                           id="customerrrr" disabled></div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>توضیحات
+                                                    </label>
+                                                    <input class="form-control" type="text" name="descriptioonn"
+                                                           id="descriptioonn" disabled></div>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="table table-responsive">
+                                            <table
+                                                class="table table-responsive table-striped table-bordered">
+                                                <thead style="background-color: #989e8f">
+                                                <tr>
+                                                    <td>کد فروش</td>
+                                                    <td>نام محصول</td>
+                                                    <td>رنگ</td>
+                                                    <td>تعداد</td>
+                                                    <td>تعداد خروجی</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody
+                                                    id="TextBoxContainerbank">
+                                                <tr>
+                                                    <td id="codee"></td>
+                                                    <td id="productt"></td>
+                                                    <td id="colorrr"></td>
+                                                    <td id="numberr"></td>
+                                                    <td id="numberexitt"></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
 
+                                        </div>
+                                        <div class="pull-left">
+                                            <button style="width: 130px" type="submit" class="btn btn-success"
+                                                    id="savebarn" value="ثبت">
+                                                ثبت
+                                            </button>
+                                            &nbsp;&nbsp;
+                                            <a data-dismiss="modal" style="width: 130px" type="submit"
+                                               class="btn btn-danger">
+                                                بستن
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -334,7 +385,8 @@
                     <div class="form-body">
                         <div class="form-group">
 
-                            <form autocomplete="off" id="productFormeeeeeee" name="productFormeeeeeee" class="form-horizontal">
+                            <form autocomplete="off" id="productFormeeeeeee" name="productFormeeeeeee"
+                                  class="form-horizontal">
                                 <input type="hidden" name="id_exittt" id="id_exittt">
                                 <input type="hidden" name="proder" id="proder">
                                 @csrf

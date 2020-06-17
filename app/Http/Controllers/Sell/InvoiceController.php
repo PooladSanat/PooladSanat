@@ -729,6 +729,7 @@ class InvoiceController extends Controller
                             'color_id' => $request->get('color')[$i],
                             'salesNumber' => $request->get('number')[$i],
                             'salesPrice' => $request->get('sell')[$i],
+                            'leftover' => $request->get('number')[$i],
                             'sumTotal' => $request->get('Price_Sell')[$i],
                             'weight' => $request->get('Weight')[$i],
                             'taxAmount' => $request->get('Tax')[$i],
@@ -888,6 +889,7 @@ class InvoiceController extends Controller
                     'totalfinal' => $request->price_f,
                     'ma' => $request->ma,
                     'description' => $request->description,
+                    'sign' => $request->user_id,
                     'create' => $this->convert2english($request->created),
                 ]);
                 try {
@@ -1187,6 +1189,7 @@ class InvoiceController extends Controller
                 , 'admin_invoice', 'select_stores', 'users', 'users_s'));
 
     }
+
     public function PrintDetaill(Invoice $id)
     {
         $customer_validation_payment = \DB::table('customer_validation_payment')
@@ -1253,7 +1256,6 @@ class InvoiceController extends Controller
         try {
             Invoice::where('id', $request->id_invoice)->update([
                 'state' => 2,
-                'sign' => auth()->user()->id,
             ]);
             \DB::table('admin_invoice')
                 ->updateOrInsert(['invoice_id' => $request->id_invoice],

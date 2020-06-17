@@ -57,6 +57,11 @@
         var table = $('#data-table').DataTable({
             processing: true,
             serverSide: true,
+            "bInfo": false,
+            "paging": false,
+            "bPaginate": false,
+            "scrollY": "450px",
+            "scrollCollapse": true,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 if (parseInt(aData.barn) < parseInt(aData.salesNumber)) {
                     $('td:eq(9)', nRow).css('color', '#fb8000');

@@ -6,7 +6,7 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption">
-                        لیست موودی انبار ضایعات
+                        لیست موجودی انبار ضایعات
                     </div>
                     <div class="tools"></div>
                 </div>

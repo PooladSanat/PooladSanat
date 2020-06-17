@@ -27,7 +27,6 @@
                     <div class="portlet-body">
                         <div class="row">
 
-
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>نام فروشنده
@@ -42,7 +41,6 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>نام خریدار
@@ -55,7 +53,6 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>نوع فاکتور
@@ -88,7 +85,6 @@
                                     <input type="text" name="takhfif" id="takhfif" class="form-control">
                                 </div>
                             </div>
-
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>سایر هزینه ها
@@ -96,7 +92,6 @@
                                     <input type="text" name="expenses" id="expenses" class="form-control">
                                 </div>
                             </div>
-
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>هزینه حمل
@@ -104,7 +99,6 @@
                                     <input type="text" name="Carry" id="Carry" class="form-control">
                                 </div>
                             </div>
-
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>تاریخ صدور پیش فاکتور
@@ -112,7 +106,6 @@
                                     <input type="text" name="created" id="created" class="form-control">
                                 </div>
                             </div>
-
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>توضیحات
@@ -124,7 +117,6 @@
                                                     </textarea>
                                 </div>
                             </div>
-
 
                         </div>
                         <div class="table table-responsive">

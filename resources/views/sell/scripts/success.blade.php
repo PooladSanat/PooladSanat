@@ -1,8 +1,8 @@
 <script src="{{asset('/public/js/a1.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/js/a2.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
-<script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script>
-<script src="//cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+<script src="{{asset('/public/js/datatab.js')}}" type="text/javascript"></script>
+<script src="{{asset('/public/js/row.js')}}" type="text/javascript"></script>
 <style>
 
 
@@ -12,7 +12,6 @@
 </style>
 <link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
 <script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
-
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
     $(function () {
@@ -60,8 +59,6 @@
             "bInfo": false,
             "paging": false,
             "bPaginate": false,
-            "scrollY": "450px",
-            "scrollCollapse": true,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 if (parseInt(aData.barn) < parseInt(aData.salesNumber)) {
                     $('td:eq(9)', nRow).css('color', '#fb8000');
@@ -432,6 +429,8 @@
                             icon: 'success',
                             confirmButtonText: 'تایید',
                         });
+                        $('#saveToList').text('ثبت');
+                        $('#saveToList').prop("disabled", false);
                     }
                 }
             });
@@ -518,6 +517,7 @@
             $('.ffff').remove();
             $('.ddddd').remove();
             var id = [];
+            var include = [];
             $('.student_checkbox:checked').each(function () {
                 id.push($(this).val());
             });
@@ -529,28 +529,50 @@
                     data.forEach(function (item) {
                         for (var i in invoice_product) {
                             if (invoice_product[i].id == item) {
-                                for (var d in invoice) {
-                                    if (invoice_product[i].product_id == invoice[d].id) {
-                                        for (var e in color) {
-                                            if (invoice_product[i].color_id == color[e].id) {
-                                                $('#ajaxModel').modal('show');
-                                                var counter = 2;
-                                                var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv' + counter);
-                                                newTextBoxDiv.after().html('<div class="col-md-12">' +
-                                                    '<label class="ffff">' + invoice[d].label + '' + ' - ' + '' + color[e].name + '</label>' +
-                                                    '<input type="hidden" name="id_product[]" id="id_product" value="' + invoice_product[i].id + '">' +
-                                                    '<input placeholder="لطفا مقدار بارگیری را وارد کنید" class="form-control ddddd"' +
-                                                    'type="number" name="product_name[]" id="product_name" value="' + invoice_product[i].leftover + '" >' +
-                                                    '</div>');
-                                                newTextBoxDiv.appendTo("#TextBoxesGroup");
-                                                counter++;
+                                for (var p in product) {
+                                    if (invoice_product[i].invoice_id == product[p].id) {
+                                        include.push(product[p].costumer);
+                                    }
+                                }
+                            }
+                        };
+                        var min = Math.min.apply(null, include);
+                        var max = Math.max.apply(null, include);
+                        if (min == max) {
+                            for (var i in invoice_product) {
+                                if (invoice_product[i].id == item) {
+                                    for (var d in invoice) {
+                                        if (invoice_product[i].product_id == invoice[d].id) {
+                                            for (var e in color) {
+                                                if (invoice_product[i].color_id == color[e].id) {
+                                                    $('#ajaxModel').modal('show');
+                                                    var counter = 2;
+                                                    var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv' + counter);
+                                                    newTextBoxDiv.after().html('<div class="col-md-12">' +
+                                                        '<label class="ffff">' + invoice[d].label + '' + ' - ' + '' + color[e].name + '</label>' +
+                                                        '<input type="hidden" name="id_product[]" id="id_product" value="' + invoice_product[i].id + '">' +
+                                                        '<input placeholder="لطفا مقدار بارگیری را وارد کنید" class="form-control ddddd"' +
+                                                        'type="number" name="product_name[]" id="product_name" value="' + invoice_product[i].leftover + '" >' +
+                                                        '</div>');
+                                                    newTextBoxDiv.appendTo("#TextBoxesGroup");
+                                                    counter++;
+                                                }
                                             }
                                         }
                                     }
-                                }
 
+                                }
                             }
+                        } else {
+                            $('#ajaxModel').modal('hide');
+                            Swal.fire({
+                                title: 'اخطار',
+                                text: 'مجاز برای ارسال به چند خریدار نمیباشید!',
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            });
                         }
+
                     });
 
                 }
@@ -558,7 +580,8 @@
             });
 
 
-        });
+        })
+        ;
 
         $('#saveBtnListS').click(function (e) {
             e.preventDefault();
@@ -593,6 +616,8 @@
                             icon: 'success',
                             confirmButtonText: 'تایید',
                         });
+                        $('#saveBtnListS').text('ثبت');
+                        $('#saveBtnListS').prop("disabled", false);
                     }
                     if (data.erro) {
                         $('#productlistForm').trigger("reset");
@@ -649,9 +674,8 @@
                 nextButtonIcon: "fa fa-arrow-circle-right",
             });
 
-    });
-
-
+    })
+    ;
     $('#sell').addClass('active');
 
 

@@ -251,366 +251,452 @@
                 </li>
 
 
-                <li class="treeview" id="admin-user">
-                    <a href="#">
-                        <i class="fa fa-user"></i> <span>مدیریت کاربران</span>
-                        <span class="pull-left-container">
+                @if(Gate::check('لیست کاربران') || Gate::check('تعریف دسترسی')
+|| Gate::check('تعریف نقش') || Gate::check('لیست جابجایی'))
+                    <li class="treeview" id="admin-user">
+                        <a href="#">
+                            <i class="fa fa-user"></i> <span>مدیریت کاربران</span>
+                            <span class="pull-left-container">
               <i class="fa fa-angle-right pull-left"></i>
             </span>
-                    </a>
-                    <ul class="treeview-menu">
+                        </a>
+                        <ul class="treeview-menu">
+                            @can('لیست کاربران')
+                                <li><a href="{{route('admin.user.show')}}"><i class="fa fa-circle-o"></i>
+                                        لیست کاربران
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('تعریف دسترسی')
+                                <li><a href="{{route('admin.user.permission')}}"><i
+                                            class="fa fa-circle-o"></i>تعریف دسترسی ها</a>
+                                </li>
+                            @endcan
+                            @can('تعریف نقش')
+                                <li><a href="{{route('admin.role.show')}}"><i class="fa fa-circle-o"></i>تعریف نقش
+                                        ها</a>
+                                </li>
+                            @endcan
+                            @can('لیست جابجایی')
+                                <li><a href="{{route('admin.user.alternatives')}}"><i
+                                            class="fa fa-circle-o"></i>لیست جابجایی ها</a>
+                                </li>
+                            @endcan
 
-                        <li><a href="{{route('admin.user.show')}}"><i class="fa fa-circle-o"></i>
-                                لیست کاربران
-                            </a>
-                        </li>
-
-                        <li><a href="{{route('admin.user.permission')}}"><i
-                                    class="fa fa-circle-o"></i>تعریف دسترسی ها</a>
-                        </li>
-
-                        <li><a href="{{route('admin.role.show')}}"><i class="fa fa-circle-o"></i>تعریف نقش
-                                ها</a>
-                        </li>
-
-                        <li><a href="{{route('admin.user.alternatives')}}"><i
-                                    class="fa fa-circle-o"></i>لیست جابجایی ها</a>
-                        </li>
-
-                    </ul>
-                </li>
-
-
-                <li class="treeview" id="foundation">
-                    <a href="#">
-                        <i class="fa fa-star"></i> <span>تعاریف پایه</span>
-                        <span class="pull-left-container">
+                        </ul>
+                    </li>
+                @endif
+                @if(Gate::check('تعریف رنگ') || Gate::check('تعریف مستربچ')
+                                                             || Gate::check('مواد پلیمیری') || Gate::check('تامین کنندگان')
+                                                              || Gate::check('تعریف دستگاه') || Gate::check('تعریف دستگاه')
+                                                               || Gate::check('ضایعات رنگ') || Gate::check('زمان تغیر رنگ')
+                                                               || Gate::check('تعریف شهرها و مناطق')
+                                                               || Gate::check('گروه کالایی') || Gate::check('مشخصه محصول')
+|| Gate::check('تعریف محصول') || Gate::check('BOM') || Gate::check('تعریف قالب ساز') || Gate::check('تعریف قالب')
+                       || Gate::check('Insert های قالب') || Gate::check('انتصاب محصول به قالب'))
+                    <li class="treeview" id="foundation">
+                        <a href="#">
+                            <i class="fa fa-star"></i> <span>تعاریف پایه</span>
+                            <span class="pull-left-container">
               <i class="fa fa-angle-right pull-left"></i>
             </span>
-                    </a>
-                    <ul class="treeview-menu">
+                        </a>
+                        <ul class="treeview-menu">
+                            @if(Gate::check('گروه کالایی') || Gate::check('مشخصه محصول')
+    || Gate::check('تعریف محصول') || Gate::check('BOM'))
 
-                        <li class="treeview" id="foundation_a">
-                            <a href="#">
-                                <span>محصولات</span>
-                                <span class="pull-left-container">
+                                <li class="treeview" id="foundation_a">
+                                    <a href="#">
+                                        <span>محصولات</span>
+                                        <span class="pull-left-container">
               <i class="fa fa-angle-right pull-left"></i>
             </span>
-                            </a>
-                            <ul class="treeview-menu">
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        @can('گروه کالایی')
+                                            <li><a href="{{route('admin.commodity.list')}}"><i
+                                                        class="fa fa-circle-o"></i>گروه کالایی</a>
+                                            </li>
+                                        @endcan
+                                        @can('مشخصه محصول')
+                                            <li><a href="{{route('admin.ProductCharacteristic.list')}}"><i
+                                                        class="fa fa-circle-o"></i>مشخصه محصول</a>
+                                            </li>
+                                        @endcan
+                                        @can('تعریف محصول')
 
-                                <li><a href="{{route('admin.commodity.list')}}"><i
-                                            class="fa fa-circle-o"></i>گروه کالایی</a>
+                                            <li><a href="{{route('admin.product.list')}}"><i
+                                                        class="fa fa-circle-o"></i>تعریف محصول</a>
+                                            </li>
+                                        @endcan
+                                        @can('BOM')
+
+                                            <li><a href="{{route('admin.bom.list')}}"><i
+                                                        class="fa fa-circle-o"></i>BOM</a>
+                                            </li>
+                                        @endcan
+                                    </ul>
                                 </li>
+                            @endif
 
-                                <li><a href="{{route('admin.ProductCharacteristic.list')}}"><i
-                                            class="fa fa-circle-o"></i>مشخصه محصول</a>
-                                </li>
-
-                                <li><a href="{{route('admin.product.list')}}"><i
-                                            class="fa fa-circle-o"></i>تعریف محصول</a>
-                                </li>
-
-                                <li><a href="{{route('admin.bom.list')}}"><i
-                                            class="fa fa-circle-o"></i>BOM</a>
-                                </li>
-
-
-                            </ul>
-                        </li>
-
-                        <li class="treeview" id="foundation_b">
-                            <a href="#">
-                                <span>قالب ها</span>
-                                <span class="pull-left-container">
+                            @if(Gate::check('تعریف قالب ساز') || Gate::check('تعریف قالب')
+                           || Gate::check('Insert های قالب') || Gate::check('انتصاب محصول به قالب'))
+                                <li class="treeview" id="foundation_b">
+                                    <a href="#">
+                                        <span>قالب ها</span>
+                                        <span class="pull-left-container">
               <i class="fa fa-angle-right pull-left"></i>
             </span>
-                            </a>
-                            <ul class="treeview-menu">
-
-                                <li><a href="{{route('admin.models.list')}}"><i
-                                            class="fa fa-circle-o"></i>تعریف قالب سازها</a>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        @can('تعریف قالب ساز')
+                                            <li><a href="{{route('admin.models.list')}}"><i
+                                                        class="fa fa-circle-o"></i>تعریف قالب سازها</a>
+                                            </li>
+                                        @endcan
+                                        @can('تعریف قالب')
+                                            <li><a href="{{route('admin.format.list')}}"><i
+                                                        class="fa fa-circle-o"></i>تعریف قالب</a>
+                                            </li>
+                                        @endcan
+                                        @can('Insert های قالب')
+                                            <li><a href="{{route('admin.insert.list')}}"><i
+                                                        class="fa fa-circle-o"></i>Insert های قالب </a>
+                                            </li>
+                                        @endcan
+                                        @can('انتصاب محصول به قالب')
+                                            <li><a href="{{route('admin.model.product.list')}}"><i
+                                                        class="fa fa-circle-o"></i>انتصاب محصول به قالب</a>
+                                            </li>
+                                        @endcan
+                                    </ul>
                                 </li>
+                            @endif
 
-                                <li><a href="{{route('admin.format.list')}}"><i
-                                            class="fa fa-circle-o"></i>تعریف قالب</a>
-                                </li>
-
-                                <li><a href="{{route('admin.insert.list')}}"><i
-                                            class="fa fa-circle-o"></i>Insert های قالب </a>
-                                </li>
-
-                                <li><a href="{{route('admin.model.product.list')}}"><i
-                                            class="fa fa-circle-o"></i>انتصاب محصول به قالب</a>
-                                </li>
-
-                            </ul>
-                        </li>
-
-                        <li class="treeview" id="foundation_c">
-                            <a href="#">
-                                <span>تعاریف دیگر</span>
-                                <span class="pull-left-container">
+                            @if(Gate::check('تعریف رنگ') || Gate::check('تعریف مستربچ')
+                                                  || Gate::check('مواد پلیمیری') || Gate::check('تامین کنندگان')
+                                                   || Gate::check('تعریف دستگاه') || Gate::check('تعریف دستگاه')
+                                                    || Gate::check('ضایعات رنگ') || Gate::check('زمان تغیر رنگ')
+                                                    || Gate::check('تعریف شهرها و مناطق'))
+                                <li class="treeview" id="foundation_c">
+                                    <a href="#">
+                                        <span>تعاریف دیگر</span>
+                                        <span class="pull-left-container">
               <i class="fa fa-angle-right pull-left"></i>
             </span>
-                            </a>
-                            <ul class="treeview-menu">
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        @can('تعریف رنگ')
+                                            <li><a href="{{route('admin.storecolor.list')}}"><i
+                                                        class="fa fa-circle-o"></i>تعریف رنگ</a>
+                                            </li>
+                                        @endcan
+                                        @can('تعریف مستربچ')
+                                            <li><a href="{{route('admin.color.list')}}"><i
+                                                        class="fa fa-circle-o"></i>تعریف مستربچ</a>
+                                            </li>
+                                        @endcan
+                                        @can('مواد پلیمیری')
+                                            <li><a href="{{route('admin.polymeric.list')}}"><i
+                                                        class="fa fa-circle-o"></i>مواد پلیمیری</a>
+                                            </li>
+                                        @endcan
+                                        @can('تامین کنندگان')
+                                            <li><a href="{{route('admin.seller.list')}}"><i
+                                                        class="fa fa-circle-o"></i>تامین کنندگان</a>
+                                            </li>
+                                        @endcan
+                                        @can('تعریف دستگاه')
+                                            <li><a href="{{route('admin.device.list')}}"><i
+                                                        class="fa fa-circle-o"></i>تعریف دستگاه</a>
+                                            </li>
+                                        @endcan
+                                        @can('ضایعات رنگ')
+                                            <li><a href="{{route('admin.colorscrap.list')}}"><i
+                                                        class="fa fa-circle-o"></i>ضایعات رنگ</a>
+                                            </li>
+                                        @endcan
+                                        @can('زمان تغیر رنگ')
+                                            <li><a href="{{route('admin.colorchange.list')}}"><i
+                                                        class="fa fa-circle-o"></i>زمان تغیر رنگ</a>
+                                            </li>
+                                        @endcan
+                                        @can('تعریف شهرها و مناطق')
 
-                                <li><a href="{{route('admin.storecolor.list')}}"><i
-                                            class="fa fa-circle-o"></i>تعریف رنگ</a>
+                                            <li><a href="{{route('admin.areas.list')}}"><i
+                                                        class="fa fa-circle-o"></i>تعریف شهرها و مناطق</a>
+                                            </li>
+                                        @endcan
+
+                                    </ul>
                                 </li>
+                            @endif
 
-                                <li><a href="{{route('admin.color.list')}}"><i
-                                            class="fa fa-circle-o"></i>تعریف مستربچ</a>
+                        </ul>
+                    </li>
+                @endif
+
+                @if(Gate::check('مشتریان') || Gate::check('انواع مشتریان'))
+                    <li class="treeview" id="customer">
+                        <a href="#">
+                            <i class="fa fa-user"></i> <span>مشتریان</span>
+                            <span class="pull-left-container">
+<i class="fa fa-angle-right pull-left"></i>
+</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            @can('انواع مشتریان')
+                                <li><a href="{{route('admin.customer.type')}}"><i
+                                            class="fa fa-circle-o"></i>انواع مشتریان</a>
                                 </li>
+                            @endcan
+                            @can('مشتریان')
 
-                                <li><a href="{{route('admin.polymeric.list')}}"><i
-                                            class="fa fa-circle-o"></i>مواد پلیمیری</a>
+                                <li><a href="{{route('admin.customers.index')}}"><i
+                                            class="fa fa-circle-o"></i>مشتریان</a>
                                 </li>
+                            @endcan
 
-                                <li><a href="{{route('admin.seller.list')}}"><i
-                                            class="fa fa-circle-o"></i>تامین کنندگان</a>
+                        </ul>
+                    </li>
+                @endif
+
+                @if(Gate::check('آرشیو فروش') || Gate::check('پیش فاکتور های تایید نشده')
+                || Gate::check('پیش فاکتور های تایید شده') || Gate::check('پیش فاکتور های لغو شده')
+                || Gate::check('زمان بندی بارگیری') || Gate::check('مرجوعی ها')
+                || Gate::check('هدف گذاری فروش'))
+                    <li class="treeview" id="sell">
+                        <a href="#">
+                            <i class="fa fa-line-chart"></i> <span>فروش</span>
+                            <span class="pull-left-container">
+<i class="fa fa-angle-right pull-left"></i>
+</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            @can('آرشیو فروش')
+                                <li><a href="{{route('admin.salesarchive.list')}}"><i
+                                            class="fa fa-circle-o"></i>آرشیو فروش</a>
                                 </li>
-
-                                <li><a href="{{route('admin.device.list')}}"><i
-                                            class="fa fa-circle-o"></i>تعریف دستگاه</a>
+                            @endcan
+                            @can('پیش فاکتور های تایید نشده')
+                                <li><a href="{{route('admin.invoice.index')}}"><i
+                                            class="fa fa-circle-o"></i>پیش فاکتورهای تایید نشده</a>
                                 </li>
-
-                                <li><a href="{{route('admin.colorscrap.list')}}"><i
-                                            class="fa fa-circle-o"></i>ضایعات رنگ</a>
+                            @endcan
+                            @can('پیش فاکتور های تایید شده')
+                                <li>
+                                    <a href="{{route('admin.invoice.success')}}">
+                                        <i class="fa fa-circle-o"></i> <span>پیش فاکتور های تایید شده</span>
+                                        <span class="pull-left-container">
+<small class="label pull-left bg-red">0</small>
+</span>
+                                    </a>
                                 </li>
-                                <li><a href="{{route('admin.colorchange.list')}}"><i
-                                            class="fa fa-circle-o"></i>زملن تغیر رنگ</a>
+                            @endcan
+                            @can('پیش فاکتور های لغو شده')
+                                <li><a href="{{route('admin.invoice.trash')}}"><i
+                                            class="fa fa-circle-o"></i>پیش فاکتور های لغو شده</a>
                                 </li>
-
-                                <li><a href="{{route('admin.areas.list')}}"><i
-                                            class="fa fa-circle-o"></i>تعریف شهرها و مناطق</a>
+                            @endcan
+                            @can('زمان بندی بارگیری')
+                                <li><a href="{{route('admin.scheduling.list')}}"><i
+                                            class="fa fa-circle-o"></i>زمان بندی بارگیری</a>
                                 </li>
-
-                            </ul>
-                        </li>
-
-                    </ul>
-                </li>
-
-                <li class="treeview" id="customer">
-                    <a href="#">
-                        <i class="fa fa-user"></i> <span>مشتریان</span>
-                        <span class="pull-left-container">
-              <i class="fa fa-angle-right pull-left"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-
-                        <li><a href="{{route('admin.customer.type')}}"><i
-                                    class="fa fa-circle-o"></i>انواع مشتریان</a>
-                        </li>
-
-
-                        <li><a href="{{route('admin.customers.index')}}"><i
-                                    class="fa fa-circle-o"></i>مشتریان</a>
-                        </li>
-
-                    </ul>
-                </li>
-
-
-                <li class="treeview" id="barn">
-                    <a href="#">
-                        <i class="fa fa-archive"></i> <span>انبار</span>
-                        <span class="pull-left-container">
-              <i class="fa fa-angle-right pull-left"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-
-                        <li><a href="{{route('admin.barncolor.list')}}"><i
-                                    class="fa fa-circle-o"></i>انبار مستربچ</a>
-                        </li>
-                        <li><a href="{{route('admin.barnmaterial.list')}}"><i
-                                    class="fa fa-circle-o"></i>انبار مواد پلیمری</a>
-                        </li>
-                        <li><a href="{{route('admin.barnproduct.list')}}"><i
-                                    class="fa fa-circle-o"></i>انبار کالاهای ساخته شده</a>
-                        </li>
-
-                        <li><a href="{{route('admin.receiptproduct.list')}}"><i
-                                    class="fa fa-circle-o"></i>رسید کالای ساخته شده</a>
-                        </li>
-
-                        <li><a href="{{route('admin.barntemporary.list')}}"><i
-                                    class="fa fa-circle-o"></i>انبار موقت</a>
-                        </li>
-
-                        <li><a href="{{route('admin.barnreturn.list')}}"><i
-                                    class="fa fa-circle-o"></i>انبار ضایعات</a>
-                        </li>
-
-
-                    </ul>
-                </li>
-
-
-                <li class="treeview" id="manufacturing">
-                    <a href="#">
-                        <i class="fa fa-pie-chart"></i> <span>تولید</span>
-                        <span class="pull-left-container">
-              <i class="fa fa-angle-right pull-left"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-
-                        <li><a href="{{route('admin.Manufacturing.list')}}"><i
-                                    class="fa fa-circle-o"></i>تولید</a>
-                        </li>
-
-                        <li><a href="{{route('admin.product.list.list')}}"><i
-                                    class="fa fa-circle-o"></i>صف تولید</a>
-                        </li>
-
-
-                        <li><a href="{{route('admin.pPlanning.list')}}"><i
-                                    class="fa fa-circle-o"></i>پلن خطوط تولید</a>
-                        </li>
-
-                        <li><a href="{{route('admin.productionorder.list')}}"><i
-                                    class="fa fa-circle-o"></i>سفارش تولید</a>
-                        </li>
-                        <li><a href="{{route('admin.viewproduct.list')}}"><i
-                                    class="fa fa-circle-o"></i>برنامه ریزی تولید</a>
-                        </li>
-
-
-                        <li class="treeview" id="manufacturing_m">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> <span>ثبت اتفاقات تولید</span>
-                                <span class="pull-left-container">
-              <i class="fa fa-angle-right pull-left"></i>
-            </span>
-                            </a>
-                            <ul class="treeview-menu">
-
-                                <li><a href="{{route('admin.eventsmachine.list')}}"><i
-                                            class="fa fa-circle-o"></i>اتفاقات ماشین</a>
+                            @endcan
+                            @can('مرجوعی ها')
+                                <li><a href="{{route('admin.returns.list')}}"><i
+                                            class="fa fa-circle-o"></i>مرجوعی ها</a>
                                 </li>
-                                <li><a href="{{route('admin.eventsformat.list')}}"><i
-                                            class="fa fa-circle-o"></i>اتفاقات قالب</a>
+                            @endcan
+                            @can('هدف گذاری فروش')
+                                <li><a href="{{route('admin.target.list')}}"><i
+                                            class="fa fa-circle-o"></i>هدف گذاری فروش</a>
                                 </li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endif
 
-                            </ul>
-                        </li>
-
-
-                        <li class="treeview" id="manufacturing_n">
-                            <a href="#">
-                                <i class="fa fa-circle-o"></i> <span>PM</span>
-                                <span class="pull-left-container">
-              <i class="fa fa-angle-right pull-left"></i>
-            </span>
-                            </a>
-                            <ul class="treeview-menu">
-
-                                <li><a href="{{route('admin.pmmachine.list')}}"><i
-                                            class="fa fa-circle-o"></i>PM ماشین</a>
+                @if(Gate::check('تولید') || Gate::check('صف تولید')
+                               || Gate::check('پلن خطوط تولید') || Gate::check('سفارش تولید')
+                               || Gate::check('برنامه ریزی تولید') || Gate::check('ثبت اتفاقات تولید')
+                               || Gate::check('pm'))
+                    <li class="treeview" id="manufacturing">
+                        <a href="#">
+                            <i class="fa fa-pie-chart"></i> <span>تولید</span>
+                            <span class="pull-left-container">
+<i class="fa fa-angle-right pull-left"></i>
+</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            @can('تولید')
+                                <li><a href="{{route('admin.Manufacturing.list')}}"><i
+                                            class="fa fa-circle-o"></i>تولید</a>
                                 </li>
-                                <li><a href="{{route('admin.pmformat.list')}}"><i
-                                            class="fa fa-circle-o"></i>PM قالب</a>
+                            @endcan
+                            @can('صف تولید')
+                                <li><a href="{{route('admin.product.list.list')}}"><i
+                                            class="fa fa-circle-o"></i>صف تولید</a>
                                 </li>
-                            </ul>
-                        </li>
+                            @endcan
+                            @can('پلن خطوط تولید')
+                                <li><a href="{{route('admin.pPlanning.list')}}"><i
+                                            class="fa fa-circle-o"></i>پلن خطوط تولید</a>
+                                </li>
+                            @endcan
+                            @can('سفارش تولید')
+                                <li><a href="{{route('admin.productionorder.list')}}"><i
+                                            class="fa fa-circle-o"></i>سفارش تولید</a>
+                                </li>
+                            @endcan
+                            @can('برنامه ریزی تولید')
+                                <li><a href="{{route('admin.viewproduct.list')}}"><i
+                                            class="fa fa-circle-o"></i>برنامه ریزی تولید</a>
+                                </li>
+                            @endcan
+                            @can('ثبت اتفاقات تولید')
+                                <li class="treeview" id="manufacturing_m">
+                                    <a href="#">
+                                        <i class="fa fa-circle-o"></i> <span>ثبت اتفاقات تولید</span>
+                                        <span class="pull-left-container">
+<i class="fa fa-angle-right pull-left"></i>
+</span>
+                                    </a>
+                                    <ul class="treeview-menu">
 
+                                        <li><a href="{{route('admin.eventsmachine.list')}}"><i
+                                                    class="fa fa-circle-o"></i>اتفاقات ماشین</a>
+                                        </li>
+                                        <li><a href="{{route('admin.eventsformat.list')}}"><i
+                                                    class="fa fa-circle-o"></i>اتفاقات قالب</a>
+                                        </li>
 
-                    </ul>
-                </li>
+                                    </ul>
+                                </li>
+                            @endcan
+                            @can('pm')
+                                <li class="treeview" id="manufacturing_n">
+                                    <a href="#">
+                                        <i class="fa fa-circle-o"></i> <span>PM</span>
+                                        <span class="pull-left-container">
+<i class="fa fa-angle-right pull-left"></i>
+</span>
+                                    </a>
+                                    <ul class="treeview-menu">
 
+                                        <li><a href="{{route('admin.pmmachine.list')}}"><i
+                                                    class="fa fa-circle-o"></i>PM ماشین</a>
+                                        </li>
+                                        <li><a href="{{route('admin.pmformat.list')}}"><i
+                                                    class="fa fa-circle-o"></i>PM قالب</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endcan
 
-                <li class="treeview" id="sell">
-                    <a href="#">
-                        <i class="fa fa-line-chart"></i> <span>فروش</span>
-                        <span class="pull-left-container">
-              <i class="fa fa-angle-right pull-left"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="{{route('admin.salesarchive.list')}}"><i
-                                    class="fa fa-circle-o"></i>آرشیو فروش</a>
-                        </li>
+                        </ul>
+                    </li>
+                @endif
 
-                        <li><a href="{{route('admin.invoice.index')}}"><i
-                                    class="fa fa-circle-o"></i>پیش فاکتورهای تایید نشده</a>
-                        </li>
+                @if(Gate::check('انبار مستربچ') || Gate::check('انبار مواد پلیمیری')
+                                              || Gate::check('انبار کالاهای ساخته شده') || Gate::check('رسید کالای ساخته شده')
+                                              || Gate::check('انبار موقت') || Gate::check('انبار ضایعات')
+                                             )
+                    <li class="treeview" id="barn">
+                        <a href="#">
+                            <i class="fa fa-archive"></i> <span>انبار</span>
+                            <span class="pull-left-container">
+<i class="fa fa-angle-right pull-left"></i>
+</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            @can('انبار مستربچ')
+                                <li><a href="{{route('admin.barncolor.list')}}"><i
+                                            class="fa fa-circle-o"></i>انبار مستربچ</a>
+                                </li>
+                            @endcan
+                            @can('انبار مواد پلیمیری')
+                                <li><a href="{{route('admin.barnmaterial.list')}}"><i
+                                            class="fa fa-circle-o"></i>انبار مواد پلیمری</a>
+                                </li>
+                            @endcan
+                            @can('انبار کالاهای ساخته شده')
+                                <li><a href="{{route('admin.barnproduct.list')}}"><i
+                                            class="fa fa-circle-o"></i>انبار کالاهای ساخته شده</a>
+                                </li>
+                            @endcan
+                            @can('رسید کالای ساخته شده')
+                                <li><a href="{{route('admin.receiptproduct.list')}}"><i
+                                            class="fa fa-circle-o"></i>رسید کالای ساخته شده</a>
+                                </li>
+                            @endcan
+                            @can('انبار موقت')
+                                <li><a href="{{route('admin.barntemporary.list')}}"><i
+                                            class="fa fa-circle-o"></i>انبار موقت</a>
+                                </li>
+                            @endcan
+                            @can('انبار ضایعات')
+                                <li><a href="{{route('admin.barnreturn.list')}}"><i
+                                            class="fa fa-circle-o"></i>انبار ضایعات</a>
+                                </li>
+                            @endcan
 
+                        </ul>
+                    </li>
+                @endif
 
-                        <li>
-                            <a href="{{route('admin.invoice.success')}}">
-                                <i class="fa fa-circle-o"></i> <span>پیش فاکتور های تایید شده</span>
-                                <span class="pull-left-container">
-              <small class="label pull-left bg-red">0</small>
-            </span>
-                            </a>
-                        </li>
+                @if(Gate::check('بازسازی نرم افزار') || Gate::check('شروع به کار نرم افزار')
+                                                              || Gate::check('پشتیبان گیری از دیتابیس') || Gate::check('مشخصات عمومی سیستم')
+                                                              || Gate::check('لیست حسابهای بانکی') || Gate::check('لیست انبارها')
+                                                              || Gate::check('توقفات ماشین')
+                                                             )
+                    <li class="treeview" id="setting">
+                        <a href="#">
+                            <i class="fa fa-hourglass-start"></i> <span>تنظیمات نرم افزار</span>
+                            <span class="pull-left-container">
+<i class="fa fa-angle-right pull-left"></i>
+</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            @can('بازسازی نرم افزار')
+                                <li><a href="javascript:void(0)" id="stop"><i
+                                            class="fa fa-circle-o"></i>بازسازی نرم افزار</a>
+                                </li>
+                            @endcan
+                            @can('شروع به کار نرم افزار')
+                                <li><a href="javascript:void(0)" id="start_s"><i
+                                            class="fa fa-circle-o"></i>شروع به کار نرم افزار</a>
+                                </li>
+                            @endcan
+                            @can('پشتیبان گیری از دیتابیس')
+                                <li><a href="javascript:void(0)" id="backup"><i
+                                            class="fa fa-circle-o"></i>پشتیبان گیری از دیتابیس</a>
+                                </li>
+                            @endcan
+                            @can('مشخصات عمومی سیستم')
+                                <li><a href="{{route('admin.setting.wizard')}}"><i
+                                            class="fa fa-circle-o"></i>مشخصات عمومی سیستم</a>
+                                </li>
+                            @endcan
+                            @can('لیست حسابهای بانکی')
+                                <li><a href="{{route('admin.bank.list')}}"><i
+                                            class="fa fa-circle-o"></i>لیست حسابهای بانکی</a>
+                                </li>
+                            @endcan
+                            @can('لیست انبارها')
+                                <li><a href="{{route('admin.selectstore.list')}}"><i
+                                            class="fa fa-circle-o"></i>لیست انبارها</a>
+                                </li>
+                            @endcan
+                            @can('توقفات ماشین')
+                                <li><a href="{{route('admin.Reasonstostop.list')}}"><i
+                                            class="fa fa-circle-o"></i>توقفات ماشین</a>
+                                </li>
+                            @endcan
 
-
-                        <li><a href="{{route('admin.invoice.trash')}}"><i
-                                    class="fa fa-circle-o"></i>پیش فاکتور های لغو شده</a>
-                        </li>
-
-
-                        <li><a href="{{route('admin.scheduling.list')}}"><i
-                                    class="fa fa-circle-o"></i>زمان بندی بارگیری</a>
-                        </li>
-                        <li><a href="{{route('admin.returns.list')}}"><i
-                                    class="fa fa-circle-o"></i>مرجوعی ها</a>
-                        </li>
-
-                        <li><a href="{{route('admin.target.list')}}"><i
-                                    class="fa fa-circle-o"></i>هدف گذاری فروش</a>
-                        </li>
-
-                    </ul>
-                </li>
-
-                <li class="treeview" id="setting">
-                    <a href="#">
-                        <i class="fa fa-hourglass-start"></i> <span>تنظیمات نرم افزار</span>
-                        <span class="pull-left-container">
-              <i class="fa fa-angle-right pull-left"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-
-                        <li><a href="javascript:void(0)" id="stop"><i
-                                    class="fa fa-circle-o"></i>بازسازی نرم افزار</a>
-                        </li>
-
-                        <li><a href="javascript:void(0)" id="start_s"><i
-                                    class="fa fa-circle-o"></i>شروع به کار نرم افزار</a>
-                        </li>
-
-                        <li><a href="javascript:void(0)" id="backup"><i
-                                    class="fa fa-circle-o"></i>پشتیبان گیری از دیتابیس</a>
-                        </li>
-
-                        <li><a href="{{route('admin.setting.wizard')}}"><i
-                                    class="fa fa-circle-o"></i>مشخصات عمومی سیستم</a>
-                        </li>
-
-                        <li><a href="{{route('admin.bank.list')}}"><i
-                                    class="fa fa-circle-o"></i>لیست حسابهای بانکی</a>
-                        </li>
-
-                        <li><a href="{{route('admin.selectstore.list')}}"><i
-                                    class="fa fa-circle-o"></i>لیست انبارها</a>
-                        </li>
-
-                        <li><a href="{{route('admin.Reasonstostop.list')}}"><i
-                                    class="fa fa-circle-o"></i>توقفات ماشین</a>
-                        </li>
-
-
-                    </ul>
-                </li>
-
+                        </ul>
+                    </li>
+                @endif
             </ul>
         </section>
     </aside>

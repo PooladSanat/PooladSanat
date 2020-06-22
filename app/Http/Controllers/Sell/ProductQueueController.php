@@ -117,7 +117,6 @@ class ProductQueueController extends Controller
         return response()->json($data);
     }
 
-
     public function Liststore(Request $request)
     {
 
@@ -197,9 +196,7 @@ class ProductQueueController extends Controller
 
     }
 
-
-    public
-    function wizard($id)
+    public function wizard($id)
     {
         $products = \DB::table('detail_invoice_list')
             ->where('id', $id)
@@ -216,8 +213,7 @@ class ProductQueueController extends Controller
         return view('productlist.wizard', compact('polymerics', 'products', 'namec', 'namep'));
     }
 
-    public
-    function actions($row)
+    public function actions($row)
     {
 
         $btn = '<a href="' . route('admin.product.list.wizard', $row->id) . '" data-toggle="tooltip"

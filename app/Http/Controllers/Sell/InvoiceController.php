@@ -281,11 +281,11 @@ class InvoiceController extends Controller
             if (request()->ajax()) {
                 if (!empty($request->from_date)) {
                     $data = Invoice::onlyTrashed()
-                        ->where('user_id', $id)
+                        ->where('user_id', auth()->user()->id)
                         ->whereBetween('date', array($request->from_date, $request->to_date))
                         ->get();
                 } else {
-                    $data = Invoice::onlyTrashed()->get();
+                    $data = Invoice::onlyTrashed()->where('user_id', auth()->user()->id)->get();
                 }
                 return Datatables::of($data)
                     ->addIndexColumn()
@@ -814,7 +814,9 @@ class InvoiceController extends Controller
                             'sumTotal' => $request->get('Price_Sell')[$i],
                             'weight' => $request->get('Weight')[$i],
                             'taxAmount' => $request->get('Tax')[$i],
+                            'leftover' => $request->get('number')[$i],
                             'state' => 1,
+                            'user_id' => $request->user_id,
                         ]);
                     }
                 } catch (\Exception $e) {
@@ -1435,7 +1437,12 @@ class InvoiceController extends Controller
                     })
                     ->addColumn('invoice', function ($row) {
                         $customer = Invoice::where('id', $row->invoice_id)->first();
-                        return $customer->invoiceNumber;
+                        $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->invoice_id . '" data-original-title="ثبت نهایی"
+                       class="Print">
+                       ' . $customer->invoiceNumber . '
+                       </a>';
+                        return $btn;
                     })
                     ->addColumn('user', function ($row) {
                         $customer = Invoice::where('id', $row->invoice_id)->first();
@@ -1482,7 +1489,7 @@ class InvoiceController extends Controller
                     ->addColumn('action_success', function ($row) {
                         return $this->action_success($row);
                     })
-                    ->rawColumns(['action_success', 'checkbox'])
+                    ->rawColumns(['action_success', 'checkbox','invoice'])
                     ->make(true);
             }
             return view('sell.success',
@@ -1717,34 +1724,6 @@ class InvoiceController extends Controller
 
         $btn = null;
 
-        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="تایید توسط مشتری"
-                       class="SuccessCustomer">
-
-                       <i class="fa fa-check fa-lg" title="تایید توسط مشتری"></i>
-                       </a>&nbsp;&nbsp;';
-
-
-        $btn = $btn . '<a href="' . route('admin.invoice.update', $row->id) . '">
-                       <i class="fa fa-edit fa-lg" title="ویرایش پیش فاکتور"></i>
-                       </a>&nbsp;&nbsp;';
-
-
-        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="حذف"
-                       class="deleteProduct">
-
-                       <i class="fa fa-times fa-lg" title="لغو پیش فاکتور"></i>
-                       </a>&nbsp;&nbsp;';
-
-
-        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="چاپ پیش فاکتور"
-                       class="Print">
-
-                       <i class="fa fa-print fa-lg" title="چاپ پیش فاکتور"></i>
-                       </a>&nbsp;&nbsp;';
-
 
         $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->id . '" data-original-title="سوابق مالی"
@@ -1753,6 +1732,28 @@ class InvoiceController extends Controller
                        <i class="fa fa-credit-card fa-lg" title="سوابق مالی"></i>
 
                        </a>&nbsp;&nbsp;';
+        if (Gate::check('تایید مدیریت')) {
+            $btn = $btn . '<a href="' . route('admin.print.detail', $row->id) . '">
+
+                       <i class="fa fa-user fa-lg" title="تایید مدیریت"></i>
+                       </a>&nbsp;&nbsp;';
+        }
+
+
+        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="چاپ پیش فاکتور"
+                       class="Print">
+
+                       <i class="fa fa-print fa-lg" title="چاپ پیش فاکتور"></i>
+                       </a>&nbsp;&nbsp;';
+        if ($row->state == 2) {
+            $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="تایید توسط مشتری"
+                       class="SuccessCustomer">
+
+                       <i class="fa fa-check fa-lg" title="تایید توسط مشتری"></i>
+                       </a>&nbsp;&nbsp;';
+        }
 
 
 //        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
@@ -1768,10 +1769,17 @@ class InvoiceController extends Controller
 //                       </a>&nbsp;&nbsp;';
 
 
-        $btn = $btn . '<a href="' . route('admin.print.detail', $row->id) . '">
+        $btn = $btn . '<a href="' . route('admin.invoice.update', $row->id) . '">
+                       <i class="fa fa-edit fa-lg" title="ویرایش پیش فاکتور"></i>
+                       </a>&nbsp;&nbsp;';
 
-                       <i class="fa fa-eye fa-lg" title="جزییات پیش فاکتور"></i>
-                       </a>';
+
+        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="حذف"
+                       class="deleteProduct">
+
+                       <i class="fa fa-times fa-lg" title="لغو پیش فاکتور"></i>
+                       </a>&nbsp;&nbsp;';
 
 
 //        $btn = $btn . '<a href="' . route('admin.invoice.print', $row->id) . '" target="_blank">
@@ -1802,15 +1810,6 @@ class InvoiceController extends Controller
 
         $btn = null;
 
-        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="انصراف از فروش"
-                       class="cancel">
-                       <i class="fa fa-remove fa-lg" title="انصراف از فروش"></i>
-                       </a>&nbsp;&nbsp;';
-
-        $btn = $btn . '<a href="' . route('admin.invoice.product.update', $row->invoice_id) . '">
-                       <i class="fa fa-edit fa-lg" title="ویرایش پیش فاکتور"></i>
-                       </a>&nbsp;&nbsp;';
 
         $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->id . '" data-original-title="بارگیری"
@@ -1825,6 +1824,18 @@ class InvoiceController extends Controller
                        <i class="fa fa-list fa-lg" title="ارسال به صف"></i>
                        </a>&nbsp;&nbsp;';
 
+        if (Gate::check('ویرایش پیش فاکتور تایید شده')) {
+            $btn = $btn . '<a href="' . route('admin.invoice.product.update', $row->invoice_id) . '">
+                       <i class="fa fa-edit fa-lg" title="ویرایش پیش فاکتور"></i>
+                       </a>&nbsp;&nbsp;';
+        }
+        if (Gate::check('انصراف از فروش')) {
+            $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="انصراف از فروش"
+                       class="cancel">
+                       <i class="fa fa-remove fa-lg" title="انصراف از فروش"></i>
+                       </a>&nbsp;&nbsp;';
+        }
 
         return $btn;
 

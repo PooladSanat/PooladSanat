@@ -121,7 +121,7 @@
                                                 class="table table-responsive table-striped table-bordered">
                                                 <thead style="background-color: #989e8f">
                                                 <tr>
-                                                    <td>کد فروش</td>
+                                                    <td style="font-size: 25px">کد فروش</td>
                                                     <td>نام محصول</td>
                                                     <td>رنگ</td>
                                                     <td>تعداد</td>

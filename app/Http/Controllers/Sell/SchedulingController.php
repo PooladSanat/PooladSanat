@@ -7,10 +7,12 @@ use App\Customer;
 use App\Http\Controllers\Controller;
 use App\Invoice;
 use App\Product;
+use App\SalesInvoice;
 use App\Scheduling;
 use App\User;
 use Carbon\Carbon;
 use DB;
+use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 use Morilog\Jalali\Jalalian;
@@ -675,9 +677,105 @@ class SchedulingController extends Controller
 
     }
 
+    public function print($id)
+    {
+        $check = SalesInvoice::where('number_pak', $id)->first();
+        if (!empty($check)) {
+            $pooducts = Product::all();
+            $colors = Color::all();
+            $invoice_products = DB::table('invoice_product')
+                ->get();
+            $products = Scheduling::where('pack', $id)
+                ->where('total', '!=', 0)->get();
+
+            $name = Scheduling::where('pack', $id)
+                ->where('total', '!=', 0)->first();
+
+            $name_user = DB::table('invoice_product')
+                ->where('id', $name->detail_id)->first();
+
+            $invoices = Invoice::where('id', $name_user->invoice_id)->first();
+
+            $customers = Customer::where('id', $invoices->customer_id)->first();
+
+            $detail_customer = DB::table('type_customers')
+                ->where('id', $customers->type)->first();
+
+
+            if ($detail_customer->type == 1) {
+                $customer_company = DB::table('customer_company')
+                    ->where('customer_id', $customers->id)->first();
+                return view('Scheduling.print.list',
+                    compact('invoice_products', 'check', 'colors', 'customer_company', 'pooducts', 'products', 'customers', 'invoices'));
+
+            } else {
+                $customer_personal = DB::table('customer_personal')
+                    ->where('customer_id', $customers->id)->first();
+                return view('Scheduling.print.list',
+                    compact('invoice_products', 'check', 'colors', 'customer_personal', 'pooducts', 'products', 'customers', 'invoices'));
+
+            }
+        } else {
+            $number_id = DB::table('sales_invoices')
+                ->latest()
+                ->first();
+            if (!empty($number_id)) {
+                $num = $number_id->id + 1;
+            } else {
+                $num = 1;
+            }
+            $now_date = new Verta();
+            $year = substr($now_date->year, strpos($now_date->year, '://') + 2, 6);
+
+            $factor = SalesInvoice::create([
+                'number_factor' => $year . '100' . $num,
+                'number_pak' => $id,
+            ]);
+
+            $pooducts = Product::all();
+            $colors = Color::all();
+            $invoice_products = DB::table('invoice_product')
+                ->get();
+            $products = Scheduling::where('pack', $id)
+                ->where('total', '!=', 0)->get();
+
+            $name = Scheduling::where('pack', $id)
+                ->where('total', '!=', 0)->first();
+
+            $name_user = DB::table('invoice_product')
+                ->where('id', $name->detail_id)->first();
+
+            $invoices = Invoice::where('id', $name_user->invoice_id)->first();
+
+            $customers = Customer::where('id', $invoices->customer_id)->first();
+
+            $detail_customer = DB::table('type_customers')
+                ->where('id', $customers->type)->first();
+
+
+            if ($detail_customer->type == 1) {
+                $customer_company = DB::table('customer_company')
+                    ->where('customer_id', $customers->id)->first();
+                return view('Scheduling.print.list',
+                    compact('invoice_products', 'factor', 'colors', 'customer_company', 'pooducts', 'products', 'customers', 'invoices'));
+
+            } else {
+                $customer_personal = DB::table('customer_personal')
+                    ->where('customer_id', $customers->id)->first();
+                return view('Scheduling.print.list',
+                    compact('invoice_products', 'factor', 'colors', 'customer_personal', 'pooducts', 'products', 'customers', 'invoices'));
+
+            }
+        }
+
+
+    }
+
     public function actions($row)
     {
         $btn = null;
+
+
         if ($row->status == 5 and $row->end == 2) {
             $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->id . '" data-original-title="تغیر تاریخ بارگیری"
@@ -693,29 +791,46 @@ class SchedulingController extends Controller
 
         }
         if ($row->end == null) {
-            $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+            if ($row->status == 0) {
+                $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->pack . '" data-original-title="ویرایش"
                        class="success-plus">
                   <i class="fa fa-check fa-lg" title="تایید و ثبت"></i>
                        </a>&nbsp;&nbsp;';
-
-            $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+            }
+            if ($row->status != 0) {
+                if (\Gate::check('ثبت شماره حواله حسابداری')) {
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->pack . '" data-original-title="ویرایش"
                        class="plus-number">
                   <i class="fa fa-exchange fa-lg" title="ثبت شماره حواله حسابداری"></i>
                        </a>&nbsp;&nbsp;';
-
-            $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                }
+                if ($row->status = 2) {
+                    if (\Gate::check('ثبت اطلاعات خروج')) {
+                        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->pack . '" data-original-title="ویرایش"
                        class="plus-exit">
                   <i class="fa fa-send fa-lg" title="ثبت اطلاعات خروج"></i>
                        </a>&nbsp;&nbsp;';
-
-            $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                    }
+                    if ($row->statusfull != null) {
+                        if (\Gate::check('ثبت شماره فاکتور')) {
+                            $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->pack . '" data-original-title="ویرایش"
                        class="send-fac">
                   <i class="fa fa-plus fa-lg" title="ثبت شماره فاکتور"></i>
                        </a>&nbsp;&nbsp;';
+                        }
+                        $btn = $btn . '<a href="' . route('admin.Scheduling.print', $row->pack) . '" target="_blank">
+                       <i class="fa fa-print fa-lg" title="چاپ فاکتور فروش"></i>
+                       </a>&nbsp;&nbsp;';
+                    }
+
+                }
+            }
+
+
         }
 
 

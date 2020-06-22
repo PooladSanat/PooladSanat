@@ -248,7 +248,7 @@
                 <div class="col-md-4">
                     <p style="font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;با
                         تشکر</p>
-                    <p style="font-size: 20px">شرکت ماشین های تزریق پلاستیک پولاد</p>
+                    <p style="font-size: 20px">شرکت قطعات پلاستیک پولاد پویش</p>
 
                         @if(!empty($user_id->sign))
 
@@ -281,6 +281,7 @@
 <script>
     $(document).ready(function () {
         persianToEnNumConvert();
+        window.print();
     });
 
     function persianToEnNumConvert() {
@@ -302,6 +303,6 @@
         change(document.body);
     }
 
-    window.print();
+
 </script>
 

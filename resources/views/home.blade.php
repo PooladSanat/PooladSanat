@@ -47,7 +47,6 @@
                                         <div class="col-md-4">
                                             <label class="col-md-3">سال:</label>
                                             <select name="year" id="year" class="form-control col-md-9">
-                                                <option value="1398">1398</option>
                                                 <option value="1399">1399</option>
                                                 <option value="1400">1400</option>
                                                 <option value="1401">1401</option>
@@ -94,7 +93,6 @@
                                         <div class="col-md-4">
                                             <label class="col-md-3">سال:</label>
                                             <select name="year_sell" id="year_sell" class="form-control col-md-9">
-                                                <option value="1398">1398</option>
                                                 <option value="1399">1399</option>
                                                 <option value="1400">1400</option>
                                                 <option value="1401">1401</option>

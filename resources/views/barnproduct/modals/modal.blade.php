@@ -60,14 +60,14 @@
 
                                     <div class="col-md-12">
 
-                                        <label>موجودی فزیکی
+                                        <label>موجودی فیزیکی
                                             <span
                                                 style="color: red"
                                                 class="required-mark">*</span>
                                         </label>
                                         <input type="number" id="PhysicalInventory" name="PhysicalInventory"
                                                class="form-control"
-                                               placeholder="لطفا موجودی فزیکی را وارد کنید"
+                                               placeholder="لطفا موجودی فیزیکی را وارد کنید"
                                                required>
 
                                     </div>

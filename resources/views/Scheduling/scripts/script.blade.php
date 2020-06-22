@@ -1,13 +1,11 @@
 <script src="{{asset('/public/js/a1.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/js/a2.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
-<script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script>
-<script src="//cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+<script src="{{asset('/public/js/datatab.js')}}" type="text/javascript"></script>
+<script src="{{asset('/public/js/row.js')}}" type="text/javascript"></script>
 <link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
 <script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 <style>
-
-
     .as-console-wrapper {
         display: none !important;
     }
@@ -21,6 +19,7 @@
     $products = \App\Product::all();
     $colors = \App\Color::all();
     $invoices = \App\Invoice::all();
+    $barnproducts = \App\BarnsProduct::all();
     @endphp
     $('#from_date').val('{{$date}}');
     $(function () {
@@ -41,8 +40,6 @@
                 "bInfo": false,
                 "paging": false,
                 "bPaginate": false,
-                "scrollY": "450px",
-                "scrollCollapse": true,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     if (aData.status == 'عدم خروج') {
                         $('td:eq(11)', nRow).css('background-color', '#ff6a6b');
@@ -212,11 +209,13 @@
                 $('#descriptioonn').val(data.invoice.description);
                 $('#customerrrr').val(data.customer.name);
                 $('#hav').val(data.hav.number);
+
                 added_inputs2_array = [];
                 invoices = [];
                 products = [];
                 colors = [];
                 sells = [];
+                barnproducts = [];
 
                 data.data.forEach(function (entry) {
                     var invoice_product = {
@@ -260,7 +259,17 @@
                         'name': "{{$color->name}}",
                     };
                 colors.push(color);
+                    @endforeach
+                    @foreach($barnproducts as $barnproduct)
+                var barnproduct = {
+                        'product_id': "{{$barnproduct->product_id}}",
+                        'color_id': "{{$barnproduct->color_id}}",
+                        'Inventory': "{{$barnproduct->Inventory}}",
+                    };
+                barnproducts.push(barnproduct);
                 @endforeach
+
+
 
                 if (added_inputs2_array.length >= 1)
                     for (var a in added_inputs2_array)
@@ -301,8 +310,6 @@
 
                                 }
                             }
-
-
                             var myNode = document.createElement('div');
                             myNode.id = 'numberr' + a;
                             myNode.innerHTML += "<div class='form-group'>" +
@@ -311,19 +318,64 @@
                                 "</div></div></div>";
                             document.getElementById('numberr').appendChild(myNode);
 
-                            var myNode = document.createElement('div');
-                            myNode.id = 'numberexitt' + a;
-                            myNode.innerHTML += "<div class='form-group'>" +
-                                "<input type=\"text\" id=\'numberexit" + a + "\' value=" + data.total + "  name=\"numberexit[]\"\n" +
-                                "class=\"form-control numberexit\" />" +
-                                "</div></div></div>";
-                            document.getElementById('numberexitt').appendChild(myNode);
+                            if ($('#updatee').val() == 1) {
+
+
+                                for (var p in products) {
+                                    if (products[p].id == invoices[f].product_id) {
+                                        for (var c in colors) {
+                                            if (invoices[f].color_id == colors[c].id) {
+                                                for (var b in barnproducts) {
+                                                    if (barnproducts[b].color_id == invoices[f].color_id
+                                                        && barnproducts[b].product_id == invoices[f].product_id) {
+                                                        var myNode = document.createElement('div');
+                                                        myNode.id = 'numberexitt' + a;
+                                                        myNode.innerHTML += "<div class='form-group'>" +
+                                                            "<input type=\"number\" value=" + data.total + " id=\'numberexit" + a + "\' placeholder='موجودی انبار " + barnproducts[b].Inventory + "'  name=\"numberexit[]\"\n" +
+                                                            "class=\"form-control numberexit\" />" +
+                                                            "</div></div></div>";
+                                                        document.getElementById('numberexitt').appendChild(myNode);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+
+                            } else {
+
+                                for (var p in products) {
+                                    if (products[p].id == invoices[f].product_id) {
+                                        for (var c in colors) {
+                                            if (invoices[f].color_id == colors[c].id) {
+                                                for (var b in barnproducts) {
+                                                    if (barnproducts[b].color_id == invoices[f].color_id
+                                                        && barnproducts[b].product_id == invoices[f].product_id) {
+                                                        var myNode = document.createElement('div');
+                                                        myNode.id = 'numberexitt' + a;
+                                                        myNode.innerHTML += "<div class='form-group'>" +
+                                                            "<input type=\"number\" id=\'numberexit" + a + "\' placeholder='موجودی انبار " + barnproducts[b].Inventory + "'  name=\"numberexit[]\"\n" +
+                                                            "class=\"form-control numberexit\" />" +
+                                                            "</div></div></div>";
+                                                        document.getElementById('numberexitt').appendChild(myNode);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+
+                            }
+
 
                             myNode.id = 'numberr' + a;
                             myNode.innerHTML += "<div class='form-group'>" +
                                 "<input type=\"hidden\" id=\'id_invoi" + a + "\' readonly value=" + data.id + "  name=\"id_invoi[]\"\n" +
                                 "class=\"form-control number\" />" +
                                 "</div></div></div>";
+
 
                             myNode.id = 'packk' + a;
                             myNode.innerHTML += "<div class='form-group'>" +

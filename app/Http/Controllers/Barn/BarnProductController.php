@@ -27,7 +27,7 @@ class BarnProductController extends Controller
                 ->addColumn('color_id', function ($row) {
                     $color = Color::where('id', $row->color_id)->first();
                     if (!empty($color)) {
-                        return $color->manufacturer . ' - ' . $color->name;
+                        return $color->name;
 
                     } else {
                         return '';

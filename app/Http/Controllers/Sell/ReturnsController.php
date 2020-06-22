@@ -29,6 +29,7 @@ class ReturnsController extends Controller
     {
 
         $products = Product::all();
+        $customers = Customer::all();
         $colors = Color::all();
         if ($request->ajax()) {
             $data = Returns::orderBy('id', 'desc')->get();
@@ -48,7 +49,7 @@ class ReturnsController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('returns.list', compact('products', 'colors'));
+        return view('returns.list', compact('customers', 'colors', 'products'));
 
     }
 
@@ -118,6 +119,53 @@ class ReturnsController extends Controller
 
     }
 
+    public function number(Request $request)
+    {
+        $state = DB::table('invoices')
+            ->where('customer_id', $request->commodity_id)->get();
+        return response()->json($state);
+
+
+    }
+
+    public function product(Request $request)
+    {
+        $data = DB::table('invoice_product')
+            ->where('invoice_id', $request->product)
+            ->distinct()
+            ->get(['product_id']);
+        return response()->json($data);
+
+    }
+
+    public function color(Request $request)
+    {
+        $data = DB::table('invoice_product')
+            ->where('invoice_id', $request->color)
+            ->where('product_id', $request->p)
+            ->distinct()
+            ->get(['color_id']);
+        return response()->json($data);
+
+    }
+
+    public function storee(Request $request)
+    {
+
+
+
+    }
+
+    public function totalnumber(Request $request)
+    {
+        $data = DB::table('invoice_product')
+            ->where('invoice_id', $request->color)
+            ->where('product_id', $request->p)
+            ->where('color_id', $request->c)
+            ->first();
+        return response()->json($data);
+
+    }
 
 
     public function storeinvoice(Request $request)
@@ -219,6 +267,7 @@ class ReturnsController extends Controller
         return $btn;
 
     }
+
     public function convert2english($string)
     {
         $newNumbers = range(0, 9);

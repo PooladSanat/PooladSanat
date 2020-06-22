@@ -512,7 +512,7 @@
                                                 class="required-mark">*</span>
                                         </label>
                                         <select name="Carry" id="Carry" class="form-control">
-                                            <option>پولاد صنعت</option>
+                                            <option>پولاد پویش</option>
                                             <option>مشتری</option>
                                         </select>
 
@@ -586,7 +586,7 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption" id="caption">
-
+                        ارسال برای زمانبندی بارگیری
                     </div>
                     <div class="caption pull-left">
                         <a data-dismiss="modal">
@@ -635,7 +635,7 @@
                                                 class="required-mark">*</span>
                                         </label>
                                         <select name="Carry" id="Carry" class="form-control">
-                                            <option>پولاد صنعت</option>
+                                            <option>پولاد پویش</option>
                                             <option>مشتری</option>
                                         </select>
 

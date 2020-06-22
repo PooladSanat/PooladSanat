@@ -5,6 +5,7 @@
                 <div class="portlet box blue">
                     <div class="portlet-title">
                         <div class="caption">
+                            تعریف مرجوعی جدید
                         </div>
                         <div class="caption pull-left">
                             <a data-dismiss="modal">
@@ -17,59 +18,64 @@
                         <div class="form-body">
                             <div class="form-group">
 
-                                <form autocomplete="off" id="productForm" name="productForm"
-                                      class="form-horizontal">
+                                <form autocomplete="off" id="productForm" name="productForm">
+
                                     @csrf
                                     <div class="row">
-                                        <div class="row">
-                                            <div class="col-md-12">
+                                        <div class="col-md-12">
+                                            <div class="row">
+
+
                                                 <div class="col-md-4">
-                                                    <label>محصول:</label>
-                                                    <select name="product_id" id="product_id"
+                                                    <label>مشتری:</label>
+                                                    <select name="customer_id" id="customer_id"
                                                             class="form-control">
-                                                        @foreach($products as $product)
+                                                        <option>انتخاب کنید...</option>
+                                                        @foreach($customers as $customer)
                                                             <option
-                                                                value="{{$product->id}}">{{$product->label}}</option>
+                                                                value="{{$customer->id}}">{{$customer->name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
 
                                                 <div class="col-md-4">
-                                                    <label>رنگ:</label>
+                                                    <label>هزینه حمل:</label>
                                                     <select name="color_id" id="color_id"
                                                             class="form-control">
-                                                        @foreach($colors as $color)
-                                                            <option
-                                                                value="{{$color->id}}">{{$color->name}}</option>
-                                                        @endforeach
+                                                        <option value="پولاد پویش">پولاد پویش</option>
+                                                        <option value="مشتری">مشتری</option>
                                                     </select>
                                                 </div>
 
                                                 <div class="col-md-4">
-                                                    <label>تاریخ:</label>
+                                                    <label>تاریخ مرجوع:</label>
                                                     <input type="text" name="date" id="date" class="form-control">
                                                 </div>
 
-                                                <div class="col-md-4">
-                                                    <label>شماره فاکتور:</label>
-                                                    <input type="text" name="invoice_number" id="invoice_number" class="form-control">
-                                                </div>
 
-                                                <div class="col-md-4">
-                                                    <label>تعداد سالم:</label>
-                                                    <input type="text" name="healthynumber" id="healthynumber"
-                                                           class="form-control">
-                                                </div>
-
-                                                <div class="col-md-4">
-                                                    <label>تعداد ضایعات:</label>
-                                                    <input type="text" name="wastagenumber" id="wastagenumber"
-                                                           class="form-control">
-                                                </div>
                                                 <div class="col-md-12">
-                                                    <label>دلیل مرجوعی:</label>
+                                                    <label> دلایل مشتری جهت عودت محصول:</label>
+                                                    <textarea name="description_m" id="description"
+                                                              placeholder="لطفا  دلایل مشتری جهت عودت محصول را وارد کنید"
+                                                              class="form-control"
+                                                              rows="2" cols="50">
+                                                    </textarea>
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <label>دلایل واحد فروش جهت پذیرش:</label>
+                                                    <textarea name="description_f" id="description"
+                                                              placeholder="لطفا دلایل واحد فروش جهت پذیرش خود را وارد کنید"
+                                                              class="form-control"
+                                                              rows="2" cols="50">
+                                                    </textarea>
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <label>توضیحات:</label>
                                                     <textarea name="description" id="description"
-                                                              placeholder="لطفا دلیل مرجوعی را وارد کنید" class="form-control"
+                                                              placeholder="لطفا توضیحات خود را وارد کنید"
+                                                              class="form-control"
                                                               rows="2" cols="50">
                                                     </textarea>
                                                 </div>
@@ -77,6 +83,50 @@
 
                                             </div>
 
+                                            <br/>
+                                            <div class="table table-responsive">
+                                                <table
+                                                    class="table table-responsive table-striped table-bordered">
+                                                    <thead>
+                                                    <tr>
+                                                        <td>فاکتور</td>
+                                                        <td>محصول</td>
+                                                        <td>رنگ</td>
+                                                        <td>تعداد کل</td>
+                                                        <td>تعداد مرجوع شده</td>
+                                                        <td>دلیل مشتری</td>
+                                                        <td>عملیات</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody
+                                                        id="TextBoxContainerbank">
+
+                                                    <tr>
+                                                        <td id="invoicee"></td>
+                                                        <td id="productt"></td>
+                                                        <td id="colorr"></td>
+                                                        <td id="totalnumberr"></td>
+                                                        <td id="numberr"></td>
+                                                        <td id="reasonss"></td>
+                                                        <td id="actiont"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                    <tr>
+                                                        <th colspan="1">
+                                                            <button id="btnAddbank"
+                                                                    type="button"
+                                                                    onclick="addInput10()"
+                                                                    class="btn btn-primary"
+                                                                    data-toggle="tooltip">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </th>
+                                                    </tr>
+                                                    </tfoot>
+                                                </table>
+
+                                            </div>
                                         </div>
                                     </div>
                                     <br/>

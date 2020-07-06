@@ -34,6 +34,9 @@ class BarnProductController extends Controller
 
                     }
                 })
+                ->addColumn('true', function ($row) {
+                    return abs($row->Inventory - $row->NumberSold);
+                })
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
                 })

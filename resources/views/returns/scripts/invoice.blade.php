@@ -2,19 +2,26 @@
 <link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
 <script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 <script type="text/javascript">
+    @php
+        $dat = \Carbon\Carbon::now();
+    $date = \Morilog\Jalali\Jalalian::forge($dat)->format('Y/m/d');
+    @endphp
+    $('#created').val('{{$date}}');
     $(function () {
+
         $('#sell').addClass('active');
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         $('#saveBtn').click(function (e) {
             e.preventDefault();
-
             var form = $('#productForm').serialize();
             $.ajax({
-                url: "{{ route('admin.returns.store.store') }}",
+                url: "{{ route('admin.returns.store.stoore') }}",
                 data: form,
                 type: 'POST',
                 success: function (data) {
@@ -27,7 +34,6 @@
                                 confirmButtonText: 'تایید'
                             })
                         });
-
                     }
                     if (data.success) {
                         Swal.fire({
@@ -46,27 +52,27 @@
             });
         });
 
+        $('#paymentMethod')
+            .change(function () {
+                var t = $('#paymentMethod').val();
+                if (t == "نقدی") {
+                    $('#takhfif').val(23);
+                } else if (t == "بصورت چک 1 ماهه") {
+                    $('#takhfif').val(21);
+                } else if (t == "بصورت چک 2 ماهه") {
+                    $('#takhfif').val(19);
+                } else if (t == "بصورت چک 3 ماهه") {
+                    $('#takhfif').val(17);
+                }
+                totalfinal();
+            })
+            .change();
+
     });
 
 </script>
-<script>
-    $('#paymentMethod')
-        .change(function () {
-            var t = $('#paymentMethod').val();
-            if (t == "نقدی") {
-                $('#takhfif').val(23);
-            } else if (t == "بصورت چک 1 ماهه") {
-                $('#takhfif').val(21);
-            } else if (t == "بصورت چک 2 ماهه") {
-                $('#takhfif').val(19);
-            } else if (t == "بصورت چک 3 ماهه") {
-                $('#takhfif').val(17);
-            }
-            totalfinal();
-        })
 
-        .change();
-</script>
+
 <script language="javascript">
     var all_modelProducts = [];
     var all_settings = [];
@@ -81,7 +87,6 @@
     for (var i in all_setting)
 
         added_inputs2_array = [];
-
     if (added_inputs2_array.length >= 1)
         for (var a in added_inputs2_array)
             added_inputs_array_table2(added_inputs2_array[a], a);
@@ -89,13 +94,12 @@
 
     function added_inputs_array_table2(data, a) {
 
-
         var myNode = document.createElement('div');
         myNode.id = 'productt' + a;
         myNode.innerHTML += "<div class='form-group'>" +
             "<select id=\'product" + a + "\'  name=\"product[]\"\n" +
             "class=\"form-control\"/>" +
-            "<option value=\"0\">انتخاب کنید</option>" +
+            "<option>انتخاب کنید</option>" +
             "+@foreach($products as $product)+" +
             "<option value=\"{{$product->id}}\">{{$product->label}}</option>" +
             "+@endforeach+" +
@@ -104,19 +108,17 @@
         document.getElementById('productt').appendChild(myNode);
 
 
-
         var myNode = document.createElement('div');
-        myNode.id = 'colorr' + a;
+        myNode.id = 'color' + a;
         myNode.innerHTML += "<div class='form-group'>" +
             "<select id=\'color" + a + "\'  name=\"color[]\"\n" +
             "class=\"form-control\"/>" +
-            "<option value=\"0\">انتخاب کنید</option>" +
             "+@foreach($colors as $color)+" +
             "<option value=\"{{$color->id}}\">{{$color->name}}</option>" +
             "+@endforeach+" +
             "</select>" +
             "</div></div></div>";
-        document.getElementById('colorr').appendChild(myNode);
+        document.getElementById('color').appendChild(myNode);
 
 
         var myNode = document.createElement('div');
@@ -126,10 +128,6 @@
             "class=\"form-control sell\"/>" +
             "</div></div></div>";
         document.getElementById('selll').appendChild(myNode);
-        var undefined = $('#sell' + a + '').val();
-        if (undefined == 'undefined') {
-            $('#sell' + a + '').val('')
-        }
 
         var myNode = document.createElement('div');
         myNode.id = 'numberr' + a;
@@ -138,15 +136,12 @@
             "class=\"form-control number\"/>" +
             "</div></div></div>";
         document.getElementById('numberr').appendChild(myNode);
-        var undefined = $('#number' + a + '').val();
-        if (undefined == 'undefined') {
-            $('#number' + a + '').val('')
-        }
+
         var myNode = document.createElement('div');
         myNode.id = 'Price_Selll' + a;
         myNode.innerHTML += "<div class='form-group'>" +
             "<input type=\"text\" id=\'Price_Sell" + a + "\' readonly  name=\"Price_Sell[]\"\n" +
-            "class=\"form-control Price_Sell\" />" +
+            "class=\"form-control Price_Sell\"/>" +
             "</div></div></div>";
         document.getElementById('Price_Selll').appendChild(myNode);
 
@@ -158,6 +153,7 @@
             "class=\"form-control Weight\"/>" +
             "</div></div></div>";
         document.getElementById('Weightt').appendChild(myNode);
+
 
         var myNode = document.createElement('div');
         myNode.id = 'Taxx' + a;
@@ -181,20 +177,20 @@
                 var number = parseInt($('#number' + a + '').val());
                 $('#Price_Sell' + a + '').val(selll * number);
                 if ($('#InvoiceType').val() == 1) {
-
                     var s = parseFloat($('#Price_Sell' + a + '').val() * all_setting[i].Tax / 100) + parseFloat($('#Price_Sell' + a + '').val());
                     $('#Tax' + a + '').val(s - $('#Price_Sell' + a + '').val());
                     tax();
                     totalfinal();
                 } else {
-                    var sum = parseFloat('0');
-                    $('#Tax' + a + '').val(sum);
+                    var sum = parseFloat($('#Price_Sell' + a + '').val());
+                    $('#Tax' + a + '').val('0');
                     tax();
                     totalfinal();
                 }
 
             })
             .keyup();
+
 
         $('#sell' + a + '')
             .keyup(function () {
@@ -209,6 +205,7 @@
             })
             .keyup();
 
+
         $('#number' + a + '')
             .keyup(function () {
                 $(".number").each(function () {
@@ -216,6 +213,7 @@
                         numberSum();
                         Price_SellSum();
                         Wigt();
+
                     });
                 });
 
@@ -229,57 +227,6 @@
             })
             .keyup();
 
-
-        $('#product' + a + '')
-            .change(function () {
-                var id = $('#product' + a + '').val();
-                $.ajax({
-                    type: "GET",
-                    url: "{{route('admin.product.price')}}?id=" + id,
-                    success: function (res) {
-                        if (res) {
-                            $('#sell' + a + '').val(res.id.price);
-                            var selllll = parseInt($('#sell' + a + '').val());
-                            var numberrr = parseInt($('#number' + a + '').val());
-                            $('#Price_Sell' + a + '').val(selllll * numberrr);
-                            if ($('#InvoiceType').val() == 1) {
-                                var s = parseFloat($('#Price_Sell' + a + '').val() * all_setting[i].Tax / 100) + parseFloat($('#Price_Sell' + a + '').val());
-                                $('#Tax' + a + '').val(s - $('#Price_Sell' + a + '').val());
-                                tax();
-                                calculateSum();
-                                numberSum();
-                                Price_SellSum();
-
-                            } else {
-                                var s = parseFloat($('#Price_Sell' + a + '').val() * all_setting[i].Tax / 100) + parseFloat($('#Price_Sell' + a + '').val());
-                                $('#Tax' + a + '').val('0');
-                                tax();
-                                calculateSum();
-                                numberSum();
-                                Price_SellSum();
-                            }
-
-
-                        } else {
-
-                        }
-                    }
-                });
-            })
-            .change();
-
-        $('#product' + a + '')
-            .change(function () {
-                var id = $('#product' + a + '').val();
-                for (var i in all_modelProducts) {
-                    if (all_modelProducts[i].product_id == id) {
-                        var number = parseInt($('#number' + a + '').val());
-                        $('#Weight' + a + '').val(all_modelProducts[i].size * number);
-                        Wigt();
-                    }
-                }
-            })
-            .change();
 
         $('#InvoiceType')
             .change(function () {
@@ -297,35 +244,120 @@
             })
             .change();
 
-        $('#takhfif')
-            .keyup(function () {
-                totalfinal();
+
+        $('#product' + a + '')
+            .change(function () {
+                var id = $('#product' + a + '').val();
+                for (var i in all_modelProducts) {
+                    if (all_modelProducts[i].product_id == id) {
+                        var number = parseInt($('#number' + a + '').val());
+                        $('#Weight' + a + '').val(all_modelProducts[i].size * number);
+                        Wigt();
+
+
+                    }
+
+
+                }
+
+
             })
-            .keyup();
+            .change();
+
+        $('#product' + a + '')
+            .change(function () {
+                var id = $('#product' + a + '').val();
+                $.ajax({
+                    type: "GET",
+                    url: "{{route('admin.product.price')}}?id=" + id,
+                    success: function (res) {
+
+                        if (res) {
+
+                            if (res.product) {
+                                $('#type' + a + '').empty();
+                                $.each(res.product, function (key, value) {
+                                    $('#type' + a + '').append('<option value="' + value.id + '">' + value.title + '</option>');
+                                });
+
+                            } else {
+                                $('#type' + a + '').empty();
+                            }
 
 
-        $('#expenses')
-            .keyup(function () {
-                totalfinal();
+                            $('#sell' + a + '').val(res.id.price);
+                            var selllll = parseInt($('#sell' + a + '').val());
+                            var numberrr = parseInt($('#number' + a + '').val());
+                            $('#Price_Sell' + a + '').val(selllll * numberrr);
+                            $('#Tax' + a + '').val(parseFloat($('#Price_Sell' + a + '').val() * all_setting[i].Tax / 100) + parseFloat($('#Price_Sell' + a + '').val()));
+                            tax();
+                            calculateSum();
+                            numberSum();
+                            Price_SellSum();
+
+                        } else {
+
+                        }
+                    }
+                });
+
+
             })
-            .keyup();
-
-        $('#Carry')
-            .keyup(function () {
-                totalfinal();
-            })
-            .keyup();
-
-
-
+            .change();
 
 
     }
+
+    function deleteService2(id, event) {
+        event.preventDefault();
+        $('#productt' + id).remove();
+        $('#color' + id).remove();
+        $('#selll' + id).remove();
+        $('#numberr' + id).remove();
+        $('#Taxx' + id).remove();
+        $('#Price_Selll' + id).remove();
+        $('#Weightt' + id).remove();
+        $('#actiont' + id).remove();
+
+        tax();
+        totalfinal();
+        calculateSum();
+        numberSum();
+        Price_SellSum();
+        Wigt();
+
+    }
+
+    $('#takhfif')
+        .keyup(function () {
+            totalfinal();
+        })
+        .keyup();
+
+
+    $('#expenses')
+        .keyup(function () {
+            totalfinal();
+        })
+        .keyup();
+
+    $('#Carry')
+        .keyup(function () {
+            totalfinal();
+        })
+        .keyup();
+
+    $('#paymentMethod')
+        .change(function () {
+            totalfinal();
+        })
+        .change();
 
 
     function formatNumber(num) {
         return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
+
     function calculateSum() {
 
         var sum = 0;
@@ -340,7 +372,6 @@
     }
 
     function numberSum() {
-
         var sum = 0;
         $(".number").each(function () {
             if (!isNaN(this.value) && this.value.length != 0) {
@@ -416,6 +447,7 @@
         $('#totalfinal').text(formatNumber(Number(v) + Number(sum) + Number(expenses) + Number(Carry)) + ' ' + ' ریال ');
     }
 
+
     function addInput10() {
 
 
@@ -429,34 +461,6 @@
         added_inputs_array_table2(data, added_inputs2_array.length - 1);
     }
 
-    function deleteService2(id, event) {
-
-
-        event.preventDefault();
-        $('#productt' + id).remove();
-        $('#colorr' + id).remove();
-        $('#selll' + id).remove();
-        $('#numberr' + id).remove();
-        $('#Taxx' + id).remove();
-        $('#Price_Selll' + id).remove();
-        $('#Weightt' + id).remove();
-        $('#actiont' + id).remove();
-
-
-        tax();
-        totalfinal();
-        calculateSum();
-        numberSum();
-        Price_SellSum();
-        Wigt();
-
-    }
-
-    $(window).on("load", function () {
-        $('#takhfif').val($('#takhh').val());
-        totalfinal();
-        $('#created').val($('#createsa').val());
-    });
 
 </script>
 <script>

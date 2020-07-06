@@ -27,7 +27,9 @@ class SalesArchiveController extends Controller
         $selectstores = SelectStore::where('status', 1)->get();
         if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی") {
             if ($request->ajax()) {
-                $data = Invoice::where('status', 1)->get();
+                $data = Invoice::where('status', 1)
+                    ->orderBy('id', 'DESC')
+                    ->get();
                 return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('user_id', function ($row) {
@@ -86,11 +88,12 @@ class SalesArchiveController extends Controller
                     ->make(true);
             }
             return view('SellesArchive.list', compact('banks', 'selectstores'));
-
         }
         if ($role->name == "کارشناس فروش") {
             if ($request->ajax()) {
-                $data = Invoice::where('user_id', $id)->where('status', 1)->get();
+                $data = Invoice::where('user_id', $id)->where('status', 1)
+                    ->orderBy('id', 'DESC')
+                    ->get();
                 return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('user_id', function ($row) {
@@ -149,9 +152,7 @@ class SalesArchiveController extends Controller
                     ->make(true);
             }
             return view('SellesArchive.list', compact('banks', 'selectstores'));
-
         }
-
     }
 
     public function actions($row)

@@ -26,6 +26,7 @@ class SchedulingController extends Controller
     public function list(Request $request)
     {
 
+
         $id = auth()->user()->id;
         $role_id = \DB::table('role_user')
             ->where('user_id', $id)->first();
@@ -34,9 +35,18 @@ class SchedulingController extends Controller
             ->first();
         if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی" or $role->name == "مسئول حمل و نقل" or $role->name == "مدیر انبار") {
             if ($request->ajax()) {
-                $data = Scheduling::where('date', $this->convert2english($request->from_date))
-                    ->orderBy('id', 'desc')
-                    ->get();
+                if (!empty($request->from_check)) {
+                    $data = Scheduling::whereIn('status', $request->from_check)
+                        ->orderBy('id', 'desc')
+                        ->get();
+                } elseif (empty($request->from_check) and !empty($request->from_date)) {
+                    $data = Scheduling::where('date', $this->convert2english($request->from_date))
+                        ->orderBy('id', 'desc')
+                        ->get();
+                } else {
+                    $data = DB::table('schedulings')->get();
+
+                }
                 return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('product', function ($row) {
@@ -74,7 +84,13 @@ class SchedulingController extends Controller
                             ->first();
                         $name = Invoice::where('id', $product_id->invoice_id)->first();
                         $username = Customer::where('id', $name->customer_id)->first();
-                        return $username->name;
+
+                        $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $username->id . '" data-original-title="ثبت تعداد خروجی"
+                       class="customer">
+                  ' . $username->name . '
+                       </a>&nbsp;&nbsp;';
+                        return $btn;
                     })
                     ->addColumn('status', function ($row) {
                         if ($row->status != 6) {
@@ -110,17 +126,30 @@ class SchedulingController extends Controller
                     ->addColumn('action', function ($row) {
                         return $this->actions($row);
                     })
-                    ->rawColumns(['action'])
+                    ->rawColumns(['action', 'customer_id'])
                     ->make(true);
             }
             return view('Scheduling.list');
         }
         if ($role->name == "کارشناس فروش") {
             if ($request->ajax()) {
-                $data = Scheduling::where('user_id', $id)
-                    ->where('date', $this->convert2english($request->from_date))
-                    ->orderBy('id', 'desc')
-                    ->get();
+
+                if (!empty($request->from_check)) {
+                    $data = Scheduling::whereIn('status', $request->from_check)
+                        ->where('user_id', $id)
+                        ->orderBy('id', 'desc')
+                        ->get();
+                } elseif (empty($request->from_check) and !empty($request->from_date)) {
+                    $data = Scheduling::where('user_id', $id)->where('date', $this->convert2english($request->from_date))
+                        ->orderBy('id', 'desc')
+                        ->get();
+                } else {
+
+                    $data = DB::table('schedulings')
+                        ->where('user_id', $id)
+                        ->get();
+                }
+
                 return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('product', function ($row) {
@@ -158,7 +187,12 @@ class SchedulingController extends Controller
                             ->first();
                         $name = Invoice::where('id', $product_id->invoice_id)->first();
                         $username = Customer::where('id', $name->customer_id)->first();
-                        return $username->name;
+                        $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $username->id . '" data-original-title="ثبت تعداد خروجی"
+                       class="customer">
+                  ' . $username->name . '
+                       </a>&nbsp;&nbsp;';
+                        return $btn;
                     })
                     ->addColumn('status', function ($row) {
 
@@ -190,7 +224,7 @@ class SchedulingController extends Controller
                     ->addColumn('action', function ($row) {
                         return $this->actions($row);
                     })
-                    ->rawColumns(['action'])
+                    ->rawColumns(['action', 'customer_id'])
                     ->make(true);
             }
             return view('Scheduling.list');
@@ -554,6 +588,50 @@ class SchedulingController extends Controller
             'update' => $update]);
     }
 
+    public function ubargiri($id)
+    {
+        $date = Scheduling::where('pack', $id)->first();
+        return response()->json($date);
+
+    }
+
+    public function customer($id)
+    {
+        $type = Customer::where('id', $id)
+            ->first();
+        $type_script = DB::table('type_customers')
+            ->where('id', $type->type)->first();
+
+        if ($type_script->type == 2) {
+            $customer_personal = DB::table('customer_personal')
+                ->where('customer_id', $id)
+                ->first();
+            return response()->json(['customer_personal' => $customer_personal]);
+        }
+        if ($type_script->type == 1) {
+            $customer_company = DB::table('customer_company')
+                ->where('customer_id', $id)
+                ->first();
+            return response()->json(['customer_company' => $customer_company]);
+
+        }
+
+
+    }
+
+    public function bargiri(Request $request)
+    {
+
+        Scheduling::where('pack', $request->id_pp)
+            ->update([
+                'type' => $request->type,
+                'time' => $request->time,
+                'description' => $request->descrtiption,
+            ]);
+        return response()->json(['success' => 'success']);
+
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -829,7 +907,15 @@ class SchedulingController extends Controller
 
                 }
             }
+            if (\Gate::check('ویرایش مشخصات ارسال بار')) {
+                $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->pack . '" data-original-title="ویرایش مشخصات ارسال بار"
+                       class="EditCar">
 
+                       <i class="fa fa-truck fa-lg" title="ویرایش مشخصات ارسال بار"></i>
+
+                       </a>&nbsp;&nbsp;';
+            }
 
         }
 

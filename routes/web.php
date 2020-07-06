@@ -326,6 +326,9 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/Scheduling/update/date', 'SchedulingController@updatedate')->name('admin.scheduling.update.date');
         Route::post('/Scheduling/cancel/detail', 'SchedulingController@canceldetail')->name('admin.scheduling.cancel.detail');
         Route::get('/Scheduling/print/{id?}', 'SchedulingController@print')->name('admin.Scheduling.print');
+        Route::post('/Scheduling/update/bargiri', 'SchedulingController@bargiri')->name('admin.scheduling.update.bargiri');
+        Route::get('/Scheduling/ubargiri/{id?}', 'SchedulingController@ubargiri')->name('admin.scheduling.update.ubargiri');
+        Route::get('/Scheduling/customer/{id?}', 'SchedulingController@customer')->name('admin.scheduling.update.customer');
 
 
         //SalesArchiveController
@@ -335,21 +338,30 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         //ReturnsController
         Route::get('/Returns/list', 'ReturnsController@list')->name('admin.returns.list');
         Route::post('/Returns/store', 'ReturnsController@store')->name('admin.returns.store');
-        Route::post('/Returns/store/store', 'ReturnsController@storeinvoice')->name('admin.returns.store.store');
+        Route::post('/Returns/store/store', 'ReturnsController@storeinvoice')->name('admin.returns.store.stoore');
         Route::get('/Returns/store/{returns?}', 'ReturnsController@invoice')->name('admin.invoice.store.return');
         Route::get('/Returns/invoice', 'ReturnsController@number')->name('admin.invoice.number.return');
         Route::get('/Returns/product', 'ReturnsController@product')->name('admin.invoice.product.return');
-
-
         Route::get('/Returns/color', 'ReturnsController@color')->name('admin.invoice.color.return');
-
-
-
         Route::get('/Returns/totalnumber', 'ReturnsController@totalnumber')->name('admin.invoice.totalnumber.return');
-
-
-
         Route::post('/Returns/storee', 'ReturnsController@storee')->name('admin.returns.store.store');
+        Route::post('/Returns/sttoree', 'ReturnsController@sttoree')->name('admin.returns.store.sttoree');
+        Route::post('/Returns/store/barn', 'ReturnsController@barn')->name('admin.returns.store.store.barn');
+        Route::get('/Returns/print/{id?}', 'ReturnsController@print')->name('admin.Returns.list.detail.print');
+        Route::post('/Returns/store/manager', 'ReturnsController@manager')->name('admin.returns.store.manager');
+        Route::post('/Returns/store/success', 'ReturnsController@success')->name('admin.returns.store.success.barn');
+
+
+        //ComplaintsController
+        Route::post('/Complaints/store', 'ComplaintsController@store')->name('admin.Complaints.store');
+        Route::post('/Complaints/store/detail', 'ComplaintsController@StoreDetail')->name('admin.Complaints.StoreDetail');
+        Route::get('/Complaints/list', 'ComplaintsController@list')->name('admin.Complaints.list');
+        Route::get('/Complaints/item', 'ComplaintsController@item')->name('admin.Complaints.list.item');
+        Route::get('/Complaints/invoice', 'ComplaintsController@invoice')->name('admin.Complaints.list.invoice');
+        Route::get('/Complaints/detail/{id?}', 'ComplaintsController@detail')->name('admin.Complaints.list.detail');
+        Route::get('/Complaints/close', 'ComplaintsController@close')->name('admin.Complaints.close');
+        Route::get('/Complaints/check', 'ComplaintsController@check')->name('admin.Complaints.check');
+        Route::get('/Complaints/file', 'ComplaintsController@file')->name('admin.Complaints.file.check');
 
 
     });

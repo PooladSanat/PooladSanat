@@ -23,44 +23,44 @@
     @endphp
     $('#from_date').val('{{$date}}');
     $(function () {
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
         load_data();
 
-        function load_data(from_date = '{{$date}}') {
+        function load_data(from_check = '', from_date = '{{$date}}') {
             $('#data-table').DataTable({
+
                 processing: true,
                 serverSide: true,
+
                 "ordering": false,
                 "bInfo": false,
                 "paging": false,
                 "bPaginate": false,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     if (aData.status == 'عدم خروج') {
-                        $('td:eq(11)', nRow).css('background-color', '#ff6a6b');
+                        $('td:eq(11)', nRow).css('background-color', 'rgba(255,106,107,0.65)');
                     } else if (aData.status == 'خروج کامل') {
-                        $('td:eq(11)', nRow).css('background-color', '#ccff8d');
+                        $('td:eq(11)', nRow).css('background-color', 'rgba(204,255,141,0.65)');
                     } else if (aData.status == 'خروج ناقص') {
-                        $('td:eq(11)', nRow).css('background-color', '#fffa81');
+                        $('td:eq(11)', nRow).css('background-color', 'rgba(255,250,130,0.65)');
                     } else if (aData.status == 'اتمام یافته') {
-                        $('td:eq(11)', nRow).css('background-color', '#ec97dd');
+                        $('td:eq(11)', nRow).css('background-color', 'rgba(255,163,239,0.65)');
                     } else if (aData.status == 'تایید حواله') {
-                        $('td:eq(11)', nRow).css('background-color', '#90ddfb');
+                        $('td:eq(11)', nRow).css('background-color', 'rgba(0,183,255,0.66)');
                     } else {
                         $('td', nRow).css('background-color', 'white');
                     }
 
                     if (parseInt(aData.total) == parseInt(aData.number)) {
-                        $('td:eq(6)', nRow).css('background-color', '#ccff8d');
+                        $('td:eq(6)', nRow).css('background-color', 'rgba(204,255,141,0.65)');
                     } else if (parseInt(aData.total) == parseInt("0")) {
-                        $('td:eq(6)', nRow).css('background-color', '#ff6a6b');
+                        $('td:eq(6)', nRow).css('background-color', 'rgba(255,106,107,0.64)');
                     } else if (parseInt(aData.total) < parseInt(aData.number)) {
-                        $('td:eq(6)', nRow).css('background-color', '#fffa82');
+                        $('td:eq(6)', nRow).css('background-color', 'rgba(255,250,130,0.65)');
                     } else {
                         $('td:eq(6)', nRow).css('background-color', 'white');
                     }
@@ -87,7 +87,8 @@
                     ajax: "{{ route('admin.scheduling.list') }}",
                     data:
                         {
-                            from_date: from_date
+                            from_date: from_date,
+                            from_check: from_check
                         }
                 },
                 columns: [
@@ -116,33 +117,88 @@
         }
 
         $('#filter').click(function () {
+            var from_check = $('#list').val();
             var from_date = $('#from_date').val();
-            var to_date = $('#to_date').val();
-            if (from_date != '' && to_date != '') {
-                $('#data-table').DataTable().destroy();
-                load_data(from_date, to_date);
-            } else {
-                Swal.fire({
-                    title: 'توجه',
-                    text: 'بازه تاریخ مورد نظر را انتخاب کنید!',
-                    icon: 'info',
-                    confirmButtonText: 'تایید'
-                });
-
-            }
-        });
-
-        $('#refresh').click(function () {
-            $('#from_date').val('');
-            $('#to_date').val('');
             $('#data-table').DataTable().destroy();
-            load_data();
+            load_data(from_check, from_date);
         });
 
         $('body').on('click', '.change-date', function () {
             var id = $(this).data('id');
             $('#changedateModel').modal('show');
             $('#id_d').val(id);
+        });
+
+        $('body').on('click', '.EditCar', function () {
+            var id = $(this).data('id');
+            $.get("{{ route('admin.scheduling.update.ubargiri') }}" + '/' + id, function (data) {
+                $('#editcar').modal('show');
+                $('#id_pp').val(id);
+                $('#type').val(data.type);
+                $('#time').val(data.time);
+                $('#descrtiption').val(data.description);
+            })
+
+
+        });
+
+        $('body').on('click', '.customer', function () {
+            var id = $(this).data('id');
+            $.get("{{ route('admin.scheduling.update.customer') }}" + '/' + id, function (data) {
+                $('#customere').modal('show');
+                if (data.customer_personal != null) {
+                    $('#phone').text(data.customer_personal.phone_personel);
+                    $('#tel').text(data.customer_personal.tel_personel);
+                    $('#address').text(data.customer_personal.adders_personel);
+                } else {
+                    $('#phone').text(data.customer_company.phone_company);
+                    $('#tel').text(data.customer_company.tel_company);
+                    $('#address').text(data.customer_company.adders_company);
+                }
+
+            })
+
+
+        });
+
+        $('#saveeditcar').click(function (e) {
+            e.preventDefault();
+            $('#saveeditcar').text('در حال ثبت اطلاعات...');
+            $('#saveeditcar').prop("disabled", true);
+            $.ajax({
+                data: $('#editcarr').serialize(),
+                url: "{{ route('admin.scheduling.update.bargiri') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.errors) {
+                        $('#editcar').modal('hide');
+                        jQuery.each(data.errors, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#saveeditcar').text('ثبت');
+                        $('#saveeditcar').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#editcarr').trigger("reset");
+                        $('#editcar').modal('hide');
+                        $('#data-table').DataTable().ajax.reload();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت دشد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveeditcar').text('ثبت');
+                        $('#saveeditcar').prop("disabled", false);
+                    }
+                }
+            });
         });
 
         $('#saveBtndate').click(function (e) {
@@ -631,6 +687,7 @@
     $('#sell').addClass('active');
 
 </script>
+
 
 <script>
     kamaDatepicker('from_date',

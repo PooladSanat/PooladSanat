@@ -725,6 +725,7 @@ class InvoiceController extends Controller
                     for ($i = 0; $i <= $number; $i++) {
                         \DB::table('invoice_product')->insert([
                             'invoice_id' => $request->id,
+                            'user_id' => $request->user_id,
                             'product_id' => $request->get('product')[$i],
                             'color_id' => $request->get('color')[$i],
                             'salesNumber' => $request->get('number')[$i],
@@ -1723,6 +1724,10 @@ class InvoiceController extends Controller
     {
 
         $btn = null;
+
+
+
+
 
 
         $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"

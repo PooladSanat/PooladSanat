@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Barn;
 use App\BarnMaterial;
 use App\Http\Controllers\Controller;
 use App\Polymeric;
+use App\Seller;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -26,6 +27,10 @@ class BarnMaterialController extends Controller
                         return 0;
                     }
 
+                })
+                ->addColumn('name', function ($row) {
+                    $name = Seller::where('id', $row->name)->first();
+                    return $name->company;
                 })
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
@@ -70,4 +75,5 @@ class BarnMaterialController extends Controller
 
         return $btn;
 
-    }}
+    }
+}

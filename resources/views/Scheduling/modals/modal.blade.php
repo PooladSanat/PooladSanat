@@ -62,7 +62,6 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="ajaxModelExit" aria-hidden="true">
     <div class="modal-dialog col-md-12">
         <div class="modal-body col-md-12">
@@ -164,7 +163,6 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="ajaxModelfac" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-body">
@@ -229,7 +227,6 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="changedateModel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-body">
@@ -293,7 +290,6 @@
 
     </div>
 </div>
-
 
 <div class="modal fade" id="cancelModel" aria-hidden="true">
     <div class="modal-dialog">
@@ -418,6 +414,161 @@
                                         <button style="width: 130px" type="button" class="btn btn-danger"
                                                 data-dismiss="modal">
                                             انصراف
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="editcar" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption" id="caption">
+                        ویرایش مشخصات ارسال بار
+                    </div>
+                    <div class="caption pull-left">
+                        <a data-dismiss="modal">
+                            <i style="color: white" class="pull-left fa fa-close"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                        <div class="form-group">
+
+                            <form autocomplete="off" id="editcarr" name="editcarr"
+                                  class="form-horizontal">
+                                <input type="hidden" name="id_pp" id="id_pp">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>نوع وسیله
+                                            <span
+                                                style="color: red"
+                                                class="required-mark">*</span>
+                                        </label>
+                                        <select name="type" id="type" class="form-control">
+                                            <option>سواری</option>
+                                            <option>وانت</option>
+                                            <option>نیسان</option>
+                                            <option>خاور</option>
+                                            <option>تک</option>
+                                            <option>جفت</option>
+                                            <option>ترانزیت</option>
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label>زمان حمل
+                                            <span
+                                                style="color: red"
+                                                class="required-mark">*</span>
+                                        </label>
+                                        <select name="time" id="time" class="form-control">
+                                            <option>صبح</option>
+                                            <option>ظهر</option>
+                                            <option>عصر</option>
+                                            <option>شب</option>
+                                        </select>
+
+                                    </div>
+
+
+                                    <div class="col-md-12">
+                                        <label>توضیحات
+                                        </label>
+                                        <textarea name="descrtiption" id="descrtiption" rows="5"
+                                                  class="form-control" placeholder="لطفا توضیحات را وارد کنید">
+                                                 </textarea>
+                                    </div>
+                                </div>
+                                <br/>
+                                <hr/>
+                                <div class="modal-footer">
+                                    <div class="text-left">
+                                        <button style="width: 130px" type="submit" class="btn btn-success"
+                                                id="saveeditcar"
+                                                value="ثبت">
+                                            ثبت
+                                        </button>
+                                        <button style="width: 130px" type="button" class="btn btn-danger"
+                                                data-dismiss="modal">
+                                            انصراف
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="customere" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption" id="caption">
+                        مشخصات مشتری
+                    </div>
+                    <div class="caption pull-left">
+                        <a data-dismiss="modal">
+                            <i style="color: white" class="pull-left fa fa-close"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                        <div class="form-group">
+
+                            <form autocomplete="off" id="editcarr" name="editcarr"
+                                  class="form-horizontal">
+                                <input type="hidden" name="id_pp" id="id_pp">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="col-md-6">شماره همراه:</label>
+                                        <label id="phone" class="col-md-6"></label>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                    <div class="col-md-12">
+                                        <label class="col-md-6">شماره تماس:</label>
+                                        <label id="tel" class="col-md-6"></label>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                    <div class="col-md-12">
+                                        <label class="col-md-6">آدرس:</label>
+                                        <label id="address" class="col-md-6"></label>
+                                    </div>
+
+                                </div>
+                                <br/>
+                                <hr/>
+                                <div class="modal-footer">
+                                    <div class="text-left">
+                                        <button style="width: 130px" type="button" class="btn btn-danger"
+                                                data-dismiss="modal">
+                                            بستن
                                         </button>
 
                                     </div>

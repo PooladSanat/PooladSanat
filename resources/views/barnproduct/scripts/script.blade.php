@@ -28,6 +28,7 @@
                 {data: 'color_id', name: 'color_id'},
                 {data: 'Inventory', name: 'Inventory'},
                 {data: 'NumberSold', name: 'NumberSold'},
+                {data: 'true', name: 'true'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
 
             ]

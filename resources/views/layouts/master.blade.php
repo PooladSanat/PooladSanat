@@ -464,7 +464,8 @@
                 @if(Gate::check('آرشیو فروش') || Gate::check('پیش فاکتور های تایید نشده')
                 || Gate::check('پیش فاکتور های تایید شده') || Gate::check('پیش فاکتور های لغو شده')
                 || Gate::check('زمان بندی بارگیری') || Gate::check('مرجوعی ها')
-                || Gate::check('هدف گذاری فروش'))
+                || Gate::check('هدف گذاری فروش')|| Gate::check('مرجوعی')
+                || Gate::check('شکایات'))
                     <li class="treeview" id="sell">
                         <a href="#">
                             <i class="fa fa-line-chart"></i> <span>فروش</span>
@@ -503,9 +504,14 @@
                                             class="fa fa-circle-o"></i>زمان بندی بارگیری</a>
                                 </li>
                             @endcan
-                            @can('مرجوعی ها')
+                            @can('مرجوعی')
                                 <li><a href="{{route('admin.returns.list')}}"><i
                                             class="fa fa-circle-o"></i>مرجوعی ها</a>
+                                </li>
+                            @endcan
+                            @can('شکایات')
+                                <li><a href="{{route('admin.Complaints.list')}}"><i
+                                            class="fa fa-circle-o"></i>لیست شکایات</a>
                                 </li>
                             @endcan
                             @can('هدف گذاری فروش')
@@ -513,6 +519,7 @@
                                             class="fa fa-circle-o"></i>هدف گذاری فروش</a>
                                 </li>
                             @endcan
+
                         </ul>
                     </li>
                 @endif
@@ -797,10 +804,14 @@
         placeholder: "لطفا کاربر را انتخاب کنین",
     });
 </script>
+
 <script src="{{asset('/public/assets/global/scripts/datatable.js')}}" type="text/javascript"></script>
+
 <script src="{{asset('/public/assets/global/plugins/datatables/datatables.min.js')}}" type="text/javascript"></script>
+
 <script src="{{asset('/public/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js')}}"
         type="text/javascript"></script>
+
 <script src="{{asset('/public/assets/pages/scripts/table-datatables-colreorder.js')}}"
         type="text/javascript"></script>
 
@@ -835,6 +846,68 @@
         });
     });
 
+
+    $(document).ready(function () {
+        $('#Audience').select2({
+            width: '100%',
+            placeholder: 'مخاطب',
+            language: {
+                noResults: function () {
+                    return 'مخاطب با این نام یافت نشد';
+                },
+            },
+        });
+    });
+
+    $(document).ready(function () {
+        $('#Copy').select2({
+            width: '100%',
+            placeholder: 'رونوشت',
+            language: {
+                noResults: function () {
+                    return 'مخاطب با این نام یافت نشد';
+                },
+            },
+        });
+    });
+
+
+    $(document).ready(function () {
+        $('#products').select2({
+            width: '100%',
+            placeholder: 'محصولات',
+            language: {
+                noResults: function () {
+                    return 'محصولی با این نام یافت نشد';
+                },
+            },
+        });
+    });
+
+    $(document).ready(function () {
+        $('#invoices').select2({
+            width: '100%',
+            placeholder: 'فاکتورها',
+            language: {
+                noResults: function () {
+                    return 'فاکتور با این نام یافت نشد';
+                },
+            },
+        });
+    });
+
+
+    $(document).ready(function () {
+        $('#list').select2({
+            width: '100%',
+            placeholder: 'جستجو در زمانبندی',
+            language: {
+                noResults: function () {
+                    return 'موجود نمیباشد!';
+                },
+            },
+        });
+    });
 
     $(document).ready(function () {
         $('#select2-exapl').select2({

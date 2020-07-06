@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Sell;
 
 use App\BarnReturns;
 use App\BarnsProduct;
+use App\BarnTemporary;
 use App\Color;
+use App\Complaints;
 use App\Customer;
 use App\Http\Controllers\Controller;
 use App\Invoice;
@@ -15,6 +17,7 @@ use App\Setting;
 use App\User;
 use Carbon\Carbon;
 use DB;
+use Gate;
 use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
 use Mockery\Exception;
@@ -32,21 +35,45 @@ class ReturnsController extends Controller
         $customers = Customer::all();
         $colors = Color::all();
         if ($request->ajax()) {
-            $data = Returns::orderBy('id', 'desc')->get();
+            $data = DB::table('returns')
+                ->orderBy('id', 'desc')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('product_id', function ($row) {
-                    $product = Product::where('id', $row->product_id)->first();
-                    return $product->label;
+                ->addColumn('code', function ($row) {
+                    $btn = '<a href="' . route('admin.Returns.list.detail.print', $row->id) . '">
+                     ' . $row->id . '
+                      </a>';
+                    return $btn;
                 })
-                ->addColumn('color_id', function ($row) {
-                    $color = Color::where('id', $row->color_id)->first();
-                    return $color->name;
+                ->addColumn('date', function ($row) {
+                    $date = Jalalian::forge($row->created_at)->format('Y/m/d');
+                    return $date;
+                })
+                ->addColumn('costumer_id', function ($row) {
+                    $costumer_id = Customer::where('id', $row->customer_id)->first();
+                    return $costumer_id->name;
+                })
+                ->addColumn('detail_returns', function ($row) {
+                    $detail_returns = DB::table('detail_returns')
+                        ->where('return_id', $row->id)
+                        ->sum('number');
+                    return $detail_returns;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->status == 1) {
+                        return 'در انتظار بررسی مدیر فروش';
+                    } elseif ($row->status == 2) {
+                        return 'در انتظار بررسی QC';
+                    } elseif ($row->status == 3) {
+                        return 'در انتظار بررسی انبار';
+                    } else {
+                        return 'اتمام یافته';
+                    }
                 })
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'code'])
                 ->make(true);
         }
         return view('returns.list', compact('customers', 'colors', 'products'));
@@ -106,26 +133,62 @@ class ReturnsController extends Controller
 
     public function invoice(Returns $returns)
     {
-        $id = Invoice::where('invoiceNumber', $returns->invoice_number)->first();
         $users = User::all();
         $customers = Customer::all();
         $products = Product::all();
         $colors = Color::all();
         $setting = Setting::first();
         $modelProducts = ModelProduct::all();
-
         return view('returns.print', compact('users', 'customers',
-            'products', 'colors', 'modelProducts', 'setting', 'id', 'returns'));
+            'returns',
+            'products', 'colors', 'modelProducts', 'setting'));
 
     }
 
     public function number(Request $request)
     {
+
         $state = DB::table('invoices')
             ->where('customer_id', $request->commodity_id)->get();
         return response()->json($state);
 
 
+    }
+
+    public function barn(Request $request)
+    {
+        $id = array();
+        $details = DB::table('detail_returns')
+            ->where('return_id', $request->id_id)
+            ->get();
+        foreach ($details as $detail) {
+            $id[] = $detail->id;
+        }
+
+        DB::table('return_qc')
+            ->insert([
+                'user_id' => auth()->user()->id,
+                'return_id' => $request->id_id,
+                'status' => $request->statusq,
+                'description' => $request->descriptionq,
+            ]);
+        Returns::where('id', $request->id_id)
+            ->update([
+                'status' => 3,
+            ]);
+        try {
+            $m = count(collect($request)->get('m'));
+            for ($i = 0; $i < $m; $i++) {
+                DB::table('detail_returns')->where('id', $id[$i])
+                    ->update([
+                        'Healthy' => $request->get('s')[$i],
+                        'wastage' => $request->get('m')[$i],
+                    ]);
+            }
+        } catch (Exception $exception) {
+            return response()->json(['success' => 'success']);
+        }
+        return response()->json(['success' => 'success']);
     }
 
     public function product(Request $request)
@@ -149,11 +212,214 @@ class ReturnsController extends Controller
 
     }
 
-    public function storee(Request $request)
+    public function manager(Request $request)
+    {
+        $date = Carbon::now();
+        DB::beginTransaction();
+        try {
+            Returns::where('id', $request->id_)
+                ->update([
+                    'status' => 2,
+                ]);
+            DB::table('return_manager')
+                ->insert([
+                    'user_id' => auth()->user()->id,
+                    'return_id' => $request->id_,
+                    'status' => $request->statusu,
+                    'description' => $request->descriptionu,
+                    'created_at' => $date,
+                ]);
+            DB::commit();
+        } catch (Exception $exception) {
+            DB::rollBack();
+        }
+        return response()->json(['success' => 'success']);
+
+    }
+
+    public function print($id)
+    {
+        $manager = DB::table('return_manager')
+            ->where('return_id', $id)
+            ->first();
+        $qc = DB::table('return_qc')
+            ->where('return_id', $id)
+            ->first();
+
+        $barn = DB::table('return_barn')
+            ->where('return_id', $id)
+            ->first();
+
+        $customers = Customer::all();
+        $return = Returns::where('id', $id)->first();
+        $invoices_id = DB::table('detail_returns')
+            ->where('return_id', $id)
+            ->first();
+        $Healthy = DB::table('detail_returns')
+            ->where('return_id', $id)
+            ->sum('Healthy');
+
+        $wastage = DB::table('detail_returns')
+            ->where('return_id', $id)
+            ->sum('wastage');
+
+
+        $sum = DB::table('detail_returns')
+            ->where('return_id', $id)
+            ->sum('number');
+
+
+        $invoices_ids = DB::table('detail_returns')
+            ->where('return_id', $id)
+            ->get();
+        $invoices = Invoice::all();
+        $users = User::all();
+        $complaints = Complaints::where('id', $invoices_id->complaints_id)->first();
+        return view('returns.detail', compact('users', 'id', 'invoices_id',
+            'return', 'customers', 'invoices', 'complaints', 'invoices_ids',
+            'sum', 'manager', 'Healthy', 'wastage', 'qc', 'barn'));
+    }
+
+    public function success(Request $request)
     {
 
+        $date = Carbon::now();
+        Returns::where('id', $request->id_d)
+            ->update([
+                'status' => 4,
+            ]);
+        DB::table('return_barn')
+            ->insert([
+                'user_id' => auth()->user()->id,
+                'return_id' => $request->id_d,
+                'status' => $request->statusd,
+                'description' => $request->descriptiond,
+                'created_at' => $date,
+            ]);
+
+        try {
+            $m = count(collect($request)->get('m'));
+            for ($i = 0; $i < $m; $i++) {
+                $barnproduct = DB::table('barns_products')
+                    ->where('product_id', $request->get('product')[$i])
+                    ->where('color_id', $request->get('coloor')[$i])
+                    ->first();
+
+                $barnreturn = DB::table('barn_returns')
+                    ->where('product_id', $request->get('product')[$i])
+                    ->where('color_id', $request->get('coloor')[$i])
+                    ->first();
 
 
+                if (!empty($barnproduct)) {
+                    DB::table('barns_products')
+                        ->where('product_id', $request->get('product')[$i])
+                        ->where('color_id', $request->get('coloor')[$i])
+                        ->update([
+                            'Inventory' => abs($barnproduct->Inventory + $request->get('s')[$i]),
+                        ]);
+                } else {
+                    DB::table('barns_products')
+                        ->where('product_id', $request->get('product')[$i])
+                        ->where('color_id', $request->get('coloor')[$i])
+                        ->insert([
+                            'product_id' => $request->get('product')[$i],
+                            'color_id' => $request->get('coloor')[$i],
+                            'Inventory' => abs($request->get('s')[$i]),
+                        ]);
+                }
+                if (!empty($barnreturn)) {
+                    DB::table('barn_returns')
+                        ->where('product_id', $request->get('product')[$i])
+                        ->where('color_id', $request->get('coloor')[$i])
+                        ->update([
+                            'Inventory' => abs($barnreturn->Inventory + $request->get('m')[$i]),
+                        ]);
+                } else {
+                    DB::table('barn_returns')
+                        ->where('product_id', $request->get('product')[$i])
+                        ->where('color_id', $request->get('coloor')[$i])
+                        ->insert([
+                            'product_id' => $request->get('product')[$i],
+                            'color_id' => $request->get('coloor')[$i],
+                            'Inventory' => abs($request->get('m')[$i]),
+                        ]);
+                }
+
+
+            }
+        } catch (Exception $exception) {
+            return response()->json(['success' => 'success']);
+        }
+
+
+        return response()->json(['success' => 'success']);
+
+    }
+
+    public function storee(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $return = Returns::create([
+                'customer_id' => $request->customer_id,
+                'Cost' => $request->Carry,
+                'date' => $request->date,
+                'Description_m' => $request->description_m,
+                'Description_v' => $request->description_f,
+                'description' => $request->description,
+                'status' => 1,
+            ]);
+            try {
+                $invoice = count(collect($request)->get('product'));
+                for ($i = 0; $i < $invoice; $i++) {
+                    \DB::table('detail_returns')->insert([
+                        'return_id' => $return->id,
+                        'invoice_id' => $request->get('invoice')[$i],
+                        'product_id' => $request->get('product')[$i],
+                        'color_id' => $request->get('color')[$i],
+                        'number' => $request->get('number')[$i],
+                        'reason' => $request->get('reasons')[$i],
+                    ]);
+                }
+            } catch (Exception $exception) {
+                return response()->json(['success' => 'success']);
+            }
+            DB::commit();
+        } catch (Exception $exception) {
+            DB::rollBack();
+        }
+        return response()->json(['success' => 'success']);
+    }
+
+    public function sttoree(Request $request)
+    {
+
+        DB::beginTransaction();
+        try {
+            $return = Returns::create([
+                'customer_id' => $request->customer_id,
+                'Cost' => $request->Carry,
+                'date' => $request->dattee,
+                'Description_m' => $request->description_m,
+                'Description_v' => $request->description_f,
+                'description' => $request->description,
+                'status' => 1,
+            ]);
+            DB::table('detail_returns')
+                ->where('complaints_id', $request->id_id)
+                ->update([
+                    'return_id' => $return->id,
+                ]);
+            Complaints::where('id', $request->id_id)
+                ->update([
+                    'status' => 3,
+                ]);
+            DB::commit();
+        } catch (Exception $exception) {
+            DB::rollBack();
+        }
+        return response()->json(['success' => 'success']);
     }
 
     public function totalnumber(Request $request)
@@ -167,9 +433,9 @@ class ReturnsController extends Controller
 
     }
 
-
     public function storeinvoice(Request $request)
     {
+
 
         $validator = Validator::make($request->all(), [
             'Weight.*' => 'required|integer',
@@ -227,7 +493,7 @@ class ReturnsController extends Controller
                     'totalfinal' => $request->price_f,
                     'ma' => $request->ma,
                     'create' => $this->convert2english($request->created),
-                    'returns' => $request->returns,
+                    'returns' => $request->return,
                     'description' => $request->description,
                 ]);
                 try {
@@ -257,12 +523,41 @@ class ReturnsController extends Controller
         return Response::json(['errors' => $validator->errors()]);
     }
 
-
     public function actions($row)
     {
-        $btn = '<a href="' . route('admin.invoice.store.return', $row->id) . '">
-                       <i class="fa fa-mail-reply-all fa-lg" title="پیش فاکتور"></i>
+        $btn = null;
+        if ($row->status == 4) {
+            $btn = $btn . '<a href="' . route('admin.invoice.store.return', $row->id) . '">
+                       <i class="fa fa-mail-reply-all fa-lg" title="صدور پیش فاکتور"></i>
                        </a>&nbsp;&nbsp;';
+        }
+        if ($row->status == 1) {
+            if (Gate::check('نظر مدیر فروش')) {
+                $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="مدیر فروش"
+                       class="usert">
+                       <i class="fa fa-user fa-lg" title="مدیر فروش"></i>
+                       </a>&nbsp;&nbsp;';
+            }
+        }
+        if ($row->status == 2) {
+            if (Gate::check('نظر QC')) {
+                $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="درخواست مرجوعی"
+                       class="qc">
+                       <i class="fa fa-file-text fa-lg" title="نظر QC"></i>
+                       </a>&nbsp;&nbsp;';
+            }
+        }
+        if ($row->status == 3) {
+            if (Gate::check('نظر انبار')) {
+                $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="نظر انبار"
+                       class="database">
+                       <i class="fa fa-database fa-lg" title="نظر انبار"></i>
+                       </a>&nbsp;&nbsp;';
+            }
+        }
 
         return $btn;
 

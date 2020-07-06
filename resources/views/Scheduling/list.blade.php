@@ -6,7 +6,7 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption">
-                       زمان بندی بارگیری
+                        زمان بندی بارگیری
                     </div>
                     <div class="tools"></div>
                 </div>
@@ -15,15 +15,31 @@
                           name="productForm" class="form-horizontal">
                         @csrf
                         <div class="row">
-                            <div class="col-md-4"></div>
+                            <div class="col-md-3"></div>
                             <div class="col-md-3">
-                                <input type="text" name="from_date" id="from_date" class="form-control" placeholder="از تاریخ" />
-
+                                <input type="text" name="from_date" id="from_date" class="form-control"
+                                       placeholder="از تاریخ"/>
                             </div>
+                            @can('جستجو در جدول زمانبندی')
+                                <div class="col-md-3">
+
+                                    <select dir="rtl" id="list" class="form-control"
+                                            name="list[]" multiple
+                                            required>
+                                        <option value="0">تایید و ثبت نشده</option>
+                                        <option value="1">تایید حواله نشده ها</option>
+                                        <option value="2">فاکتور های ثبت نشده</option>
+                                    </select>
+                                </div>
+                            @endcan
                             <div class="col-md-1">
-                                <button type="button" name="filter" id="filter" class="form-control btn btn-primary">جستجو</button>
+                                <button type="button" name="filter" id="filter" class="form-control btn btn-primary">
+                                    جستجو
+                                </button>
                             </div>
                         </div>
+
+
                     </form>
 
                     <table class="table table-striped table-bordered display data-table" id="data-table">
@@ -48,6 +64,7 @@
                         <tbody>
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>

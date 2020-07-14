@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sell;
 
 use App\Color;
 use App\Customer;
+use App\Factors;
 use App\Http\Controllers\Controller;
 use App\Invoice;
 use App\Product;
@@ -284,6 +285,8 @@ class SchedulingController extends Controller
 
     public function StoreExit(Request $request)
     {
+        $verta = verta();
+        $date = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'numberexit.*' => 'required',
@@ -490,6 +493,53 @@ class SchedulingController extends Controller
                         \DB::rollBack();
                     }
                 }
+                $p = array();
+                $sum = null;
+                $customer = DB::table('schedulings')
+                    ->where('pack', $request->pack[0])
+                    ->first();
+
+                $invoice = DB::table('invoice_product')
+                    ->where('id', $customer->detail_id)
+                    ->first();
+
+                $customer_id = DB::table('invoices')
+                    ->where('id', $invoice->invoice_id)
+                    ->first();
+
+                $color = count($request->color);
+
+                for ($u = 0; $u < $color; $u++) {
+                    $price = DB::table('products')
+                        ->where('id', $request->producte[$u])
+                        ->first();
+                    $r = $request->numberexit[$u] * $price->price;
+                    $p[] += $r;
+                }
+                $v = count($p);
+                for ($w = 0; $w < $v; $w++) {
+                    $sum += $p[$w];
+                }
+                if ($customer_id->paymentMethod == "نقدی") {
+                    $takhfif = 23;
+                } elseif ($customer_id->paymentMethod == "بصورت چک 1 ماهه") {
+                    $takhfif = 21;
+                } elseif ($customer_id->paymentMethod == "بصورت چک 2 ماهه") {
+                    $takhfif = 19;
+                } elseif ($customer_id->paymentMethod == "بصورت چک 3 ماهه") {
+                    $takhfif = 17;
+                }
+                $s = $sum * $takhfif / 100;
+                DB::table('factors')
+                    ->insert([
+                        'pack_id' => $request->pack[0],
+                        'customer_id' => $customer_id->customer_id,
+                        'sum' => $sum - $s,
+                        'status' => 0,
+                        'Month' => $verta->month,
+                        'type' => $customer_id->paymentMethod,
+                        'created_at' => $date,
+                    ]);
                 return response()->json(['success' => 'success']);
             }
             return Response::json(['errors' => $validator->errors()]);
@@ -499,6 +549,8 @@ class SchedulingController extends Controller
 
     public function ExitFac(Request $request)
     {
+        return response()->json($request->all());
+
         $validator = Validator::make($request->all(), [
             'number' => 'required',
         ], [

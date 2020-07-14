@@ -87,6 +87,7 @@
                                 <input type="hidden" name="colorr" id="colorr">
                                 <input type="hidden" name="id_exit" id="id_exit">
                                 <input type="hidden" name="updatee" id="updatee">
+                                <input type="hidden" name="custommmmerrrr" id="custommmmerrrr">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
@@ -103,8 +104,8 @@
                                                 <div class="form-group">
                                                     <label>نام خریدار
                                                     </label>
-                                                    <input class="form-control" type="text" name="customerrrr"
-                                                           id="customerrrr" disabled></div>
+                                                    <input class="form-control" type="text" name="custommmsmerrrr"
+                                                           id="custommmsmerrrr" disabled></div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">

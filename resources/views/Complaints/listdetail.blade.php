@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('content')
+
     @include('message.msg')
     <?php
     $array = array();
@@ -242,16 +243,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function () {
-            $('#mTable').DataTable({
-                "paging": false,
-                "info": false
-            });
-
-        });
-    </script>
     @include('Complaints.scripts.detail')
     @include('Complaints.modals.detail')
 @endsection

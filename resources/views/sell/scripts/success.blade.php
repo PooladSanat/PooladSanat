@@ -56,6 +56,7 @@
         var table = $('#data-table').DataTable({
             processing: true,
             serverSide: true,
+
             "bInfo": false,
             "paging": false,
             "bPaginate": false,
@@ -535,7 +536,8 @@
                                     }
                                 }
                             }
-                        };
+                        }
+                        ;
                         var min = Math.min.apply(null, include);
                         var max = Math.max.apply(null, include);
                         if (min == max) {
@@ -585,7 +587,8 @@
 
         $('#saveBtnListS').click(function (e) {
             e.preventDefault();
-            $('#saveBtnListS').text('در حال ثبت اطلاعات...');
+
+            $('#saveBtnListS').text('در حال ارسال اطلاعات...');
             $('#saveBtnListS').prop("disabled", true);
             $.ajax({
                 data: $('#productlistForm').serialize(),
@@ -593,6 +596,7 @@
                 type: "POST",
                 dataType: 'json',
                 success: function (data) {
+
                     if (data.error) {
                         $('#ajaxModel').modal('hide');
                         jQuery.each(data.error, function (key, value) {
@@ -606,6 +610,7 @@
                         $('#saveBtnListS').text('ثبت');
                         $('#saveBtnListS').prop("disabled", false);
                     }
+
                     if (data.success) {
                         $('#productlistForm').trigger("reset");
                         $('#ajaxModel').modal('hide');
@@ -619,7 +624,8 @@
                         $('#saveBtnListS').text('ثبت');
                         $('#saveBtnListS').prop("disabled", false);
                     }
-                    if (data.erro) {
+
+                    if (data.errorss) {
                         $('#productlistForm').trigger("reset");
                         $('#ajaxModel').modal('hide');
                         Swal.fire({
@@ -644,6 +650,59 @@
                         $('#saveBtnListS').text('ثبت');
                         $('#saveBtnListS').prop("disabled", false);
                     }
+
+                    if (data.erro) {
+                        $('#productlistForm').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        Swal.fire({
+                            title: 'خطا!',
+                            text: 'تعداد ارسالی برای بارگیری نمیتواند بیشتر از تعداد درخواستی مشتری باشد!',
+                            icon: 'error',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveBtnListS').text('ثبت');
+                        $('#saveBtnListS').prop("disabled", false);
+                    }
+
+                    if (data.eerrorr) {
+                        $('#productlistForm').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        Swal.fire({
+                            title: 'خطا!',
+                            text: 'تعداد ارسالی برای بارگیری نمیتواند بیشتر از تعداد درخواستی مشتری باشد!',
+                            icon: 'error',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveBtnListS').text('ثبت');
+                        $('#saveBtnListS').prop("disabled", false);
+                    }
+
+                    if (data.eerrrorr) {
+                        $('#productlistForm').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        Swal.fire({
+                            title: 'خطا!',
+                            text: 'تعداد ارسالی برای بارگیری نمیتواند بیشتر از تعداد درخواستی مشتری باشد!',
+                            icon: 'error',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveBtnListS').text('ثبت');
+                        $('#saveBtnListS').prop("disabled", false);
+                    }
+
+                    if (data.emppty) {
+                        $('#productlistForm').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        Swal.fire({
+                            title: 'خطا!',
+                            text: 'تعداد درخواستی محصولات شما از موجودی انبار بیشتر میباشد!',
+                            icon: 'error',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveBtnListS').text('ثبت');
+                        $('#saveBtnListS').prop("disabled", false);
+                    }
+
                 }
             });
         });

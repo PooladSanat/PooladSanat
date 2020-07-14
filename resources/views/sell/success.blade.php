@@ -16,7 +16,7 @@
                           name="productForm" class="form-horizontal">
                         @csrf
                     </form>
-                    <table class="table table-striped table-bordered display data-table" id="data-table">
+                    <table class="table table-striped table-bordered cell-border stripe display data-table " id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
                             <th>

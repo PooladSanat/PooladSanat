@@ -29,8 +29,12 @@
                 {data: 'Inventory', name: 'Inventory'},
                 {data: 'NumberSold', name: 'NumberSold'},
                 {data: 'true', name: 'true'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                    @can('ویرایش موجودی انبار')
+                {
+                    data: 'action', name: 'action', orderable: false, searchable: false
+                },
 
+                @endcan
             ]
         });
 

@@ -193,13 +193,7 @@
                 <td>{{number_format($invoice_product->salesPrice)}}</td>
                 <td>{{number_format($invoice_product->sumTotal)}}</td>
                 <td>
-                    @if($id->paymentMethod == 0)
-                        نقدی
-                    @else
-                        0 در {{\Morilog\Jalali\Jalalian::forge($id->created_at)->format('Y/m/d')}}
-                        ({{$id->paymentMethod}}روزه)
-
-                    @endif
+                    {{$id->paymentMethod}}
                 </td>
 
             </tr>

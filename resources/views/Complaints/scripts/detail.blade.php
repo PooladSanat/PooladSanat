@@ -21,6 +21,14 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+
+        var table = $('#mTable').DataTable({
+            "paging": false,
+            "info": false
+        });
+
+
         $('#new').click(function () {
             var id = $('#id').val();
             $('#newmodel').modal('show');

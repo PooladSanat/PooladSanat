@@ -35,7 +35,6 @@
 
                 processing: true,
                 serverSide: true,
-
                 "ordering": false,
                 "bInfo": false,
                 "paging": false,
@@ -263,7 +262,8 @@
                 $('#captioon').text('ثبت خروج از انبار');
                 $('#updatee').val(data.update);
                 $('#descriptioonn').val(data.invoice.description);
-                $('#customerrrr').val(data.customer.name);
+                $('#custommmmerrrr').val(data.customer.name);
+                $('#custommmsmerrrr').val(data.customer.name);
                 $('#hav').val(data.hav.number);
 
                 added_inputs2_array = [];
@@ -348,9 +348,11 @@
                                     myNode.innerHTML += "<div class='form-group'>" +
                                         "<input type=\"text\" id=\'product" + a + "\' readonly  name=\"product[]\"\n" +
                                         "class=\"form-control product\" />" +
+                                        "<input type='hidden' id=\'producte" + a + "\' name='producte[]'>"+
                                         "</div></div></div>";
                                     document.getElementById('productt').appendChild(myNode);
                                     $('#product' + a + '').val(products[p].label);
+                                    $('#producte' + a + '').val(products[p].id);
                                 }
                             }
                             for (var c in colors) {

@@ -135,22 +135,27 @@ class ProductQueueController extends Controller
             $pack = 1;
         }
         if ($validator->passes()) {
+            DB::beginTransaction();
             try {
                 $number = count(collect($request)->get('product_name'));
                 for ($i = 0; $i < $number; $i++) {
-
                     $numbr = DB::table('invoice_product')
                         ->where('id', $request->get('id_product')[$i])->first();
                     $barn = DB::table('barns_products')
                         ->where('product_id', $numbr->product_id)
                         ->where('color_id', $numbr->color_id)
                         ->first();
-                    $total = $barn->Inventory - $barn->NumberSold;
+                    if (empty($barn)) {
+                        return response()->json(['emppty' => 'emppty']);
+                    } else {
+                        $total = abs($barn->Inventory - $barn->NumberSold);
+                    }
+
                     if ($request->get('product_name')[$i] > $total) {
                         return response()->json(['erro' => 'erro']);
                     }
                     if ($numbr->leftover < $request->get('product_name')[$i]) {
-                        return response()->json(['errorr' => 'errorr']);
+                        return response()->json(['eerrorr' => 'eerrorr']);
                     } else {
                         Scheduling::create([
                             'detail_id' => $request->get('id_product')[$i],
@@ -180,15 +185,14 @@ class ProductQueueController extends Controller
                             ->where('color_id', $numbr->color_id)
                             ->update([
                                 'NumberSold' => $barn->NumberSold + $request->get('product_name')[$i],
-                                'Numbernotsold' => $barn->NumberSold - $barn->Inventory,
                             ]);
                     }
                 }
-            } catch
-            (Exception $exception) {
-                return response()->json(['success' => 'success']);
+                DB::commit();
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return response()->json(['errorr' => 'errorr']);
             }
-
             return response()->json(['success' => 'success']);
         }
         return Response::json(['error' => $validator->errors()]);

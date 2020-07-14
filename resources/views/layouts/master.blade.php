@@ -252,7 +252,7 @@
 
 
                 @if(Gate::check('لیست کاربران') || Gate::check('تعریف دسترسی')
-|| Gate::check('تعریف نقش') || Gate::check('لیست جابجایی'))
+                 || Gate::check('تعریف نقش') || Gate::check('لیست جابجایی'))
                     <li class="treeview" id="admin-user">
                         <a href="#">
                             <i class="fa fa-user"></i> <span>مدیریت کاربران</span>
@@ -286,14 +286,15 @@
                         </ul>
                     </li>
                 @endif
+
                 @if(Gate::check('تعریف رنگ') || Gate::check('تعریف مستربچ')
-                                                             || Gate::check('مواد پلیمیری') || Gate::check('تامین کنندگان')
-                                                              || Gate::check('تعریف دستگاه') || Gate::check('تعریف دستگاه')
-                                                               || Gate::check('ضایعات رنگ') || Gate::check('زمان تغیر رنگ')
-                                                               || Gate::check('تعریف شهرها و مناطق')
-                                                               || Gate::check('گروه کالایی') || Gate::check('مشخصه محصول')
-|| Gate::check('تعریف محصول') || Gate::check('BOM') || Gate::check('تعریف قالب ساز') || Gate::check('تعریف قالب')
-                       || Gate::check('Insert های قالب') || Gate::check('انتصاب محصول به قالب'))
+                 || Gate::check('مواد پلیمیری') || Gate::check('تامین کنندگان')
+                 || Gate::check('تعریف دستگاه') || Gate::check('تعریف دستگاه')
+                 || Gate::check('ضایعات رنگ') || Gate::check('زمان تغیر رنگ')
+                 || Gate::check('تعریف شهرها و مناطق')
+                 || Gate::check('گروه کالایی') || Gate::check('مشخصه محصول')
+                 || Gate::check('تعریف محصول') || Gate::check('BOM') || Gate::check('تعریف قالب ساز') || Gate::check('تعریف قالب')
+                 || Gate::check('Insert های قالب') || Gate::check('انتصاب محصول به قالب'))
                     <li class="treeview" id="foundation">
                         <a href="#">
                             <i class="fa fa-star"></i> <span>تعاریف پایه</span>
@@ -436,7 +437,8 @@
                     </li>
                 @endif
 
-                @if(Gate::check('مشتریان') || Gate::check('انواع مشتریان'))
+                @if(Gate::check('مشتریان') || Gate::check('انواع مشتریان')
+                    || Gate::check('حساب مشتریان'))
                     <li class="treeview" id="customer">
                         <a href="#">
                             <i class="fa fa-user"></i> <span>مشتریان</span>
@@ -454,6 +456,12 @@
 
                                 <li><a href="{{route('admin.customers.index')}}"><i
                                             class="fa fa-circle-o"></i>مشتریان</a>
+                                </li>
+                            @endcan
+
+                            @can('حساب مشتریان')
+                                <li><a href="{{route('admin.CustomerAccount.index')}}"><i
+                                            class="fa fa-circle-o"></i>حساب مشتریان</a>
                                 </li>
                             @endcan
 
@@ -524,10 +532,37 @@
                     </li>
                 @endif
 
+                @if(Gate::check('تسویه شده') || Gate::check('تسویه نشده'))
+                    <li class="treeview" id="payment">
+                        <a href="#">
+                            <i class="fa fa-credit-card"></i> <span>پرداختی ها</span>
+                            <span class="pull-left-container">
+<i class="fa fa-angle-right pull-left"></i>
+</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            @can('تسویه شده')
+                                <li><a href="{{route('admin.paymentsuccess.list')}}"><i
+                                            class="fa fa-circle-o"></i>تسویه شده ها</a>
+                                </li>
+                            @endcan
+
+
+                            @can('تسویه نشده')
+
+                                <li><a href="{{route('admin.payment.list')}}"><i
+                                            class="fa fa-circle-o"></i>تسویه نشده ها</a>
+                                </li>
+                            @endcan
+
+                        </ul>
+                    </li>
+                @endif
+
                 @if(Gate::check('تولید') || Gate::check('صف تولید')
-                               || Gate::check('پلن خطوط تولید') || Gate::check('سفارش تولید')
-                               || Gate::check('برنامه ریزی تولید') || Gate::check('ثبت اتفاقات تولید')
-                               || Gate::check('pm'))
+                || Gate::check('پلن خطوط تولید') || Gate::check('سفارش تولید')
+                || Gate::check('برنامه ریزی تولید') || Gate::check('ثبت اتفاقات تولید')
+                || Gate::check('pm'))
                     <li class="treeview" id="manufacturing">
                         <a href="#">
                             <i class="fa fa-pie-chart"></i> <span>تولید</span>
@@ -606,8 +641,8 @@
                 @endif
 
                 @if(Gate::check('انبار مستربچ') || Gate::check('انبار مواد پلیمیری')
-                                              || Gate::check('انبار کالاهای ساخته شده') || Gate::check('رسید کالای ساخته شده')
-                                              || Gate::check('انبار موقت') || Gate::check('انبار ضایعات')
+                || Gate::check('انبار کالاهای ساخته شده') || Gate::check('رسید کالای ساخته شده')
+                || Gate::check('انبار موقت') || Gate::check('انبار ضایعات')
                                              )
                     <li class="treeview" id="barn">
                         <a href="#">
@@ -653,10 +688,10 @@
                 @endif
 
                 @if(Gate::check('بازسازی نرم افزار') || Gate::check('شروع به کار نرم افزار')
-                                                              || Gate::check('پشتیبان گیری از دیتابیس') || Gate::check('مشخصات عمومی سیستم')
-                                                              || Gate::check('لیست حسابهای بانکی') || Gate::check('لیست انبارها')
-                                                              || Gate::check('توقفات ماشین')
-                                                             )
+                || Gate::check('پشتیبان گیری از دیتابیس') || Gate::check('مشخصات عمومی سیستم')
+                || Gate::check('لیست حسابهای بانکی') || Gate::check('لیست انبارها')
+                || Gate::check('توقفات ماشین')
+                 )
                     <li class="treeview" id="setting">
                         <a href="#">
                             <i class="fa fa-hourglass-start"></i> <span>تنظیمات نرم افزار</span>

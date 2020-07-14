@@ -172,12 +172,15 @@ class BarnProductController extends Controller
 
     public function actions($row)
     {
-
-        $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
+        $btn = null;
+        if (\Gate::check('ویرایش موجودی انبار')) {
+            $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->id . '" data-original-title="ویرایش"
                        class="editProduct">
                        <i class="fa fa-edit fa-lg" title="ویرایش"></i>
                        </a>&nbsp;&nbsp;';
+        }
+
         return $btn;
 
     }

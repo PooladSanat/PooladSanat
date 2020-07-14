@@ -10,6 +10,11 @@
     }
 </style>
 <script type="text/javascript">
+    <?php
+    $month = verta();
+    ?>
+    $('#month').val({{$month->month}});
+    $('#year').val({{$month->year}});
     $(function () {
             $.ajaxSetup({
                 headers: {
@@ -19,7 +24,7 @@
 
             load_data();
 
-            function load_data(customer_id = '', year = '', month = '') {
+            function load_data(customer_id = '', year = '{{$month->year}}', month = '{{$month->month}}') {
                 $('.data-table').DataTable({
                     processing: true,
                     serverSide: true,
@@ -55,15 +60,15 @@
                 });
             }
 
-        $('#filter').click(function () {
-            var customer_id = $('#customer_id').val();
-            var year = $('#year').val();
-            var month = $('#month').val();
-            $('.data-table').DataTable().destroy();
-            load_data(customer_id, year, month);
-        });
+            $('#filter').click(function () {
+                var customer_id = $('#customer_id').val();
+                var year = $('#year').val();
+                var month = $('#month').val();
+                $('.data-table').DataTable().destroy();
+                load_data(customer_id, year, month);
+            });
 
-        $(document).on('click', '#bulk_delete', function () {
+            $(document).on('click', '#bulk_delete', function () {
                 var id = [];
                 $('.student_checkbox:checked').each(function () {
                     id.push($(this).val());

@@ -18,7 +18,7 @@
                         <div class="form-group">
 
                             <form autocomplete="off" id="productForm" name="productForm">
-                                <input type="hidden" name="customer_id" id="customer_id">
+                                <input type="hidden" name="customer_ider" id="customer_ider">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-4">

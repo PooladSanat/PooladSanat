@@ -15,20 +15,47 @@ use Illuminate\Http\Request;
 use Mockery\Exception;
 use Morilog\Jalali\Jalalian;
 use Yajra\DataTables\DataTables;
+use function GuzzleHttp\Promise\all;
 
 class PaymentsController extends Controller
 {
 
     public function list(Request $request)
     {
+        $array_customer = array();
         $v = verta();
         $customers = Customer::all();
+        $array_Year = [1399, 1400, 1401, 1402, 1403, 1404, 1405, 1406, 1407, 1408, 1409, 1410, 1411, 1412, 1413, 1414, 1415, 1416, 1417, 1418, 1419, 1420];
+        $array_month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        foreach ($customers as $c) {
+            $array_customer[] = $c->id;
+        }
         if ($request->ajax()) {
 //            $data = DB::select("CALL get_invoices()");
+            if ($request->customer_id == null) {
+                $customer = $array_customer;
+            } else {
+                $customer = [$request->customer_id];
+            }
+            if ($request->year == null) {
+                $year = $array_Year;
+            } else {
+                $year = [$request->year];
+            }
+            if ($request->month == null) {
+                $month = $array_month;
+            } else {
+                $month = [$request->month];
+            }
+
             $data = DB::table('factors')
                 ->where('Month', $v->month)
                 ->where('status', 0)
+                ->whereIn('customer_id', $customer)
+                ->whereIn('Year', $year)
+                ->whereIn('Month', $month)
                 ->orderBy('customer_id', 'asc')->get();
+
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -77,14 +104,41 @@ class PaymentsController extends Controller
 
     public function paymentsuccess(Request $request)
     {
+        $array_customer = array();
         $v = verta();
         $customers = Customer::all();
+        $array_Year = [1399, 1400, 1401, 1402, 1403, 1404, 1405, 1406, 1407, 1408, 1409, 1410, 1411, 1412, 1413, 1414, 1415, 1416, 1417, 1418, 1419, 1420];
+        $array_month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        foreach ($customers as $c) {
+            $array_customer[] = $c->id;
+        }
         if ($request->ajax()) {
 //            $data = DB::select("CALL get_invoices()");
+
+            if ($request->customer_id == null) {
+                $customer = $array_customer;
+            } else {
+                $customer = [$request->customer_id];
+            }
+            if ($request->year == null) {
+                $year = $array_Year;
+            } else {
+                $year = [$request->year];
+            }
+            if ($request->month == null) {
+                $month = $array_month;
+            } else {
+                $month = [$request->month];
+            }
+
             $data = DB::table('factors')
                 ->where('Month', $v->month)
                 ->where('status', 1)
+                ->whereIn('customer_id', $customer)
+                ->whereIn('Year', $year)
+                ->whereIn('Month', $month)
                 ->orderBy('customer_id', 'asc')->get();
+
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('total', function ($row) {

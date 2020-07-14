@@ -20,8 +20,8 @@
                         </div>
                         <div class="col-md-2">
                             <label>نام مشتری:</label>
-                            <select class="form-control">
-                                <option>انتخاب کنید...</option>
+                            <select class="form-control" id="customer_id" name="customer_id">
+                                <option value="">انتخاب کنید...</option>
                                 @foreach($customers as $customer)
                                     <option value="{{$customer->id}}">{{$customer->name}}</option>
                                 @endforeach
@@ -29,8 +29,8 @@
                         </div>
                         <div class="col-md-2">
                             <label>سال:</label>
-                            <select class="form-control">
-                                <option>انتخاب کنید...</option>
+                            <select class="form-control" name="year" id="year">
+                                <option value="">انتخاب کنید...</option>
                                 <option value="1398">1398</option>
                                 <option value="1399">1399</option>
                                 <option value="1400">1400</option>
@@ -64,8 +64,8 @@
                         </div>
                         <div class="col-md-2">
                             <label>ماه:</label>
-                            <select class="form-control">
-                                <option>انتخاب کنید ...</option>
+                            <select class="form-control" name="month" id="month">
+                                <option value="">انتخاب کنید ...</option>
                                 <option value="1">فروردین</option>
                                 <option value="2">اردیبهشت</option>
                                 <option value="3">خرداد</option>
@@ -82,7 +82,9 @@
                         </div>
                         <div class="col-md-2">
                             <br/>
-                            <input type="submit" class="btn btn-primary" value="جستجو">
+                            <button type="button" name="filter" id="filter" class="form-control btn btn-primary">
+                                جستجو
+                            </button>
                         </div>
 
 

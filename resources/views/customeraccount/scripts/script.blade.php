@@ -40,6 +40,99 @@
 
         });
 
+
+        $('body').on('click', '.editpayment', function () {
+            var id = $(this).data('id');
+            $.get("{{ route('admin.CustomerAccount.update') }}" + '/' + id, function (data) {
+                $('#editpayment').modal('show');
+                $('#type').val(data.type);
+                $('#id_payment').val(id);
+                $('#shanase').val(data.shenase);
+                $('#name').val(data.name);
+                $('#name_user').val(data.name_user);
+                $('#price').val(data.price);
+                $('#date').val(data.date);
+                $('#id_customer').val(data.customer_id);
+            })
+
+        });
+
+        $('#saveeditpament').click(function (e) {
+            e.preventDefault();
+            $('#saveeditpament').text('در حال ثبت اطلاعات...');
+            $('#saveeditpament').prop("disabled", true);
+            $.ajax({
+                data: $('#form_editpament').serialize(),
+                url: "{{ route('admin.CustomerAccount.edit') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.errors) {
+                        $('#editpayment').modal('hide');
+                        jQuery.each(data.errors, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#saveeditpament').text('ثبت');
+                        $('#saveeditpament').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#form_editpament').trigger("reset");
+                        $('#editpayment').modal('hide');
+                        table1.draw();
+                        table.draw();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveeditpament').text('ثبت');
+                        $('#saveeditpament').prop("disabled", false);
+                    }
+                }
+            });
+        });
+
+        $('body').on('click', '.deletepayment', function () {
+            var id = $(this).data("id");
+            Swal.fire({
+                title: 'حذف پرداختی؟',
+                text: "مشخصات حذف شده قابل بازیابی نیستند!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'حذف',
+                cancelButtonText: 'انصراف',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: "{{route('admin.CustomerAccount.delete')}}" + '/' + id,
+                        data: {
+                            '_token': $('input[name=_token]').val(),
+                        },
+                        success: function (data) {
+                            table1.draw();
+                            table.draw();
+                            Swal.fire({
+                                title: 'موفق',
+                                text: 'مشخصات پرداختی با موفقیت از سیستم حذف شد',
+                                icon: 'success',
+                                confirmButtonText: 'تایید'
+                            })
+                        }
+                    });
+                }
+            })
+        });
+
+
         var table1 = $('.ee').DataTable({
             processing: true,
             serverSide: true,

@@ -537,6 +537,7 @@ class SchedulingController extends Controller
                         'sum' => $sum - $s,
                         'status' => 0,
                         'Month' => $verta->month,
+                        'Year' => $verta->year,
                         'type' => $customer_id->paymentMethod,
                         'created_at' => $date,
                     ]);
@@ -549,7 +550,7 @@ class SchedulingController extends Controller
 
     public function ExitFac(Request $request)
     {
-        return response()->json($request->all());
+
 
         $validator = Validator::make($request->all(), [
             'number' => 'required',

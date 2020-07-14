@@ -226,8 +226,13 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
         Route::post('/CustomerAccount/store', 'CustomerAccountController@store')->name('admin.CustomerAccount.store');
 
+        Route::post('/CustomerAccount/edit', 'CustomerAccountController@edit')->name('admin.CustomerAccount.edit');
+
         Route::get('/CustomerAccount/list/{id?}', 'CustomerAccountController@list')->name('admin.CustomerAccount.list');
 
+        Route::get('/CustomerAccount/update/{id?}', 'CustomerAccountController@update')->name('admin.CustomerAccount.update');
+
+        Route::delete('/CustomerAccount/delete/{id?}', 'CustomerAccountController@delete')->name('admin.CustomerAccount.delete');
 
 
 

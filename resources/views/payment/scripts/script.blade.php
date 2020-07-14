@@ -11,131 +11,19 @@
 </style>
 <script type="text/javascript">
     $(function () {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        var table = $('.data-table').DataTable({
-            processing: true,
-            serverSide: true,
-            "ordering": false,
-            "language": {
-                "search": "جستجو:",
-                "lengthMenu": "نمایش _MENU_",
-                "zeroRecords": "موردی یافت نشد!",
-                "info": "نمایش _PAGE_ از _PAGES_",
-                "infoEmpty": "موردی یافت نشد",
-                "infoFiltered": "(جستجو از _MAX_ مورد)",
-                "processing": "در حال پردازش اطلاعات"
-            },
-            ajax: "{{ route('admin.payment.list') }}",
-            columns: [
-                {data: 'checkbox', orderable: false, searchable: false},
-                {data: 'customer', name: 'customer'},
-                {data: 'pack_id', name: 'pack_id'},
-                {data: 'total', name: 'total'},
-                {data: 'type', name: 'type'},
-                {data: 'sumtotal', name: 'sumtotal'},
-                {data: 'creditor', name: 'creditor'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
-            ],
-            rowsGroup:
-                [
-                    1, 5, 6, 7
-                ],
-        });
-
-
-        $(document).on('click', '#bulk_delete', function () {
-            var id = [];
-            $('.student_checkbox:checked').each(function () {
-                id.push($(this).val());
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
             });
-            if (id.length > 0) {
-                $.ajax({
-                    url: "{{ route('admin.payment.list.payment')}}",
-                    method: "get",
-                    data: {id: id},
-                    success: function (data) {
-                        if (data.error_customer) {
-                            Swal.fire({
-                                title: 'خطا!',
-                                text: 'لطفا فاکتور های یک مشتری را انتخاب نمایید',
-                                icon: 'error',
-                                confirmButtonText: 'تایید'
-                            });
-                        }
 
-                        if (data.success) {
-                            $('#ajaxModelprice').modal('show');
-                            $('#sum_price').val(data.price);
-                            if (data.creditor == null) {
-                                $('#creditor').val(0);
-                            } else {
-                                $('#creditor').val(data.creditor.creditor);
-                            }
+            load_data();
 
-                            $('#customer_idd').val(data.customer_id);
-                            $('#pack_id').val(data.pack_id);
-
-                            $('#takhfif')
-                                .keyup(function () {
-                                    var sum_price = $('#sum_price').val();
-                                    var takhfif = $('#takhfif').val();
-                                    $('#sum').val(sum_price - takhfif);
-                                })
-                                .keyup();
-                        }
-
-
-                    }
-                });
-
-            } else {
-                Swal.fire({
-                    title: 'توجه',
-                    text: 'فاکتوری برای پرداخت انتخاب نشده است!',
-                    icon: 'info',
-                    confirmButtonText: 'تایید'
-                });
-
-
-            }
-
-
-        });
-
-        $("#select_all").change(function () {
-            $(".student_checkbox").prop('checked', $(this).prop('checked'));
-        });
-
-        $('body').on('click', '.detail-eye', function () {
-
-            $('.type').remove();
-            $('.shenase').remove();
-            $('.price').remove();
-            $('.date').remove();
-            $('.actiont').remove();
-            $('.user_name').remove();
-            $('.name').remove();
-            var id_id = $(this).data('id');
-            $.get("{{ route('admin.payment.update') }}" + '/' + id_id, function (data) {
-                $('#gfgf').DataTable().destroy();
-                $('#ajaxModel').modal('show');
-                $('#customer_id').val(id_id);
-                $('#cname').val(data.name.name);
-                $('#cprice').val(data.price);
-                $('#cupdate').val(data.date);
-
-                var table1 = $('.gfgf').DataTable({
+            function load_data(customer_id = '', year = '', month = '') {
+                $('.data-table').DataTable({
                     processing: true,
                     serverSide: true,
                     "ordering": false,
-                    "paging": false,
-                    "info": false,
-                    "scrollY": "150px",
-                    "scrollCollapse": true,
                     "language": {
                         "search": "جستجو:",
                         "lengthMenu": "نمایش _MENU_",
@@ -145,123 +33,256 @@
                         "infoFiltered": "(جستجو از _MAX_ مورد)",
                         "processing": "در حال پردازش اطلاعات"
                     },
+
                     ajax: {
-                        url: "{{ route('admin.payment.list.list') }}",
-                        data: {
-                            id_id: id_id,
-                        },
+                        ajax: "{{ route('admin.payment.list') }}",
+                        data:
+                            {
+                                customer_id: customer_id,
+                                year: year,
+                                month: month,
+                            }
                     },
                     columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                        {data: 'checkbox', orderable: false, searchable: false},
+                        {data: 'customer', name: 'customer'},
+                        {data: 'pack_id', name: 'pack_id'},
+                        {data: 'total', name: 'total'},
                         {data: 'type', name: 'type'},
-                        {data: 'shenase', name: 'shenase'},
-                        {data: 'name', name: 'name'},
-                        {data: 'name_user', name: 'name_user'},
-                        {data: 'price', name: 'price'},
-                        {data: 'date', name: 'date'},
+                        {data: 'sumtotal', name: 'sumtotal'},
+                        {data: 'creditor', name: 'creditor'},
+                        {data: 'action', name: 'action', orderable: false, searchable: false},
                     ],
+                    rowsGroup:
+                        [
+                            1, 5, 6, 7
+                        ],
                 });
+            }
 
-            })
+            $('#filter').click(function () {
+                var customer_id = $('#customer_id').val();
+                var year = $('#year').val();
+                var month = $('#month').val();
+                $('.data-table').DataTable().destroy();
+                load_data(customer_id, year, month);
+            });
 
 
-        });
+            $(document).on('click', '#bulk_delete', function () {
+                var id = [];
+                $('.student_checkbox:checked').each(function () {
+                    id.push($(this).val());
+                });
+                if (id.length > 0) {
+                    $.ajax({
+                        url: "{{ route('admin.payment.list.payment')}}",
+                        method: "get",
+                        data: {id: id},
+                        success: function (data) {
+                            if (data.error_customer) {
+                                Swal.fire({
+                                    title: 'خطا!',
+                                    text: 'لطفا فاکتور های یک مشتری را انتخاب نمایید',
+                                    icon: 'error',
+                                    confirmButtonText: 'تایید'
+                                });
+                            }
 
-        $('#saveprice').click(function (e) {
-            e.preventDefault();
-            $('#saveprice').text('در حال ثبت اطلاعات...');
-            $('#saveprice').prop("disabled", true);
-            $.ajax({
-                data: $('#productFormprice').serialize(),
-                url: "{{ route('admin.payment.store.storepament') }}",
-                type: "POST",
-                dataType: 'json',
-                success: function (data) {
-                    if (data.errors) {
-                        $('#ajaxModelprice').modal('hide');
-                        jQuery.each(data.errors, function (key, value) {
+                            if (data.success) {
+                                $('#ajaxModelprice').modal('show');
+                                $('#sum_price').val(data.price);
+                                if (data.creditor == null) {
+                                    $('#creditor').val(0);
+                                } else {
+                                    $('#creditor').val(data.creditor.creditor);
+                                }
+
+                                $('#customer_idd').val(data.customer_id);
+                                $('#pack_id').val(data.pack_id);
+
+                                $('#takhfif')
+                                    .keyup(function () {
+                                        var sum_price = $('#sum_price').val();
+                                        var takhfif = $('#takhfif').val();
+                                        $('#sum').val(sum_price - takhfif);
+                                    })
+                                    .keyup();
+                            }
+
+
+                        }
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'توجه',
+                        text: 'فاکتوری برای پرداخت انتخاب نشده است!',
+                        icon: 'info',
+                        confirmButtonText: 'تایید'
+                    });
+
+
+                }
+
+
+            });
+
+
+            $("#select_all").change(function () {
+                $(".student_checkbox").prop('checked', $(this).prop('checked'));
+            });
+
+            $('body').on('click', '.detail-eye', function () {
+
+                $('.type').remove();
+                $('.shenase').remove();
+                $('.price').remove();
+                $('.date').remove();
+                $('.actiont').remove();
+                $('.user_name').remove();
+                $('.name').remove();
+                var id_id = $(this).data('id');
+                $.get("{{ route('admin.payment.update') }}" + '/' + id_id, function (data) {
+                    $('#gfgf').DataTable().destroy();
+                    $('#ajaxModel').modal('show');
+                    $('#customer_ider').val(id_id);
+                    $('#cname').val(data.name.name);
+                    $('#cprice').val(data.price);
+                    $('#cupdate').val(data.date);
+
+                    var table1 = $('.gfgf').DataTable({
+                        processing: true,
+                        serverSide: true,
+                        "ordering": false,
+                        "paging": false,
+                        "info": false,
+                        "scrollY": "150px",
+                        "scrollCollapse": true,
+                        "language": {
+                            "search": "جستجو:",
+                            "lengthMenu": "نمایش _MENU_",
+                            "zeroRecords": "موردی یافت نشد!",
+                            "info": "نمایش _PAGE_ از _PAGES_",
+                            "infoEmpty": "موردی یافت نشد",
+                            "infoFiltered": "(جستجو از _MAX_ مورد)",
+                            "processing": "در حال پردازش اطلاعات"
+                        },
+                        ajax: {
+                            url: "{{ route('admin.payment.list.list') }}",
+                            data: {
+                                id_id: id_id,
+                            },
+                        },
+                        columns: [
+                            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                            {data: 'type', name: 'type'},
+                            {data: 'shenase', name: 'shenase'},
+                            {data: 'name', name: 'name'},
+                            {data: 'name_user', name: 'name_user'},
+                            {data: 'price', name: 'price'},
+                            {data: 'date', name: 'date'},
+                        ],
+                    });
+
+                })
+
+
+            });
+
+            $('#saveprice').click(function (e) {
+                e.preventDefault();
+                $('#saveprice').text('در حال ثبت اطلاعات...');
+                $('#saveprice').prop("disabled", true);
+                $.ajax({
+                    data: $('#productFormprice').serialize(),
+                    url: "{{ route('admin.payment.store.storepament') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.errors) {
+                            $('#ajaxModelprice').modal('hide');
+                            jQuery.each(data.errors, function (key, value) {
+                                Swal.fire({
+                                    title: 'خطا!',
+                                    text: value,
+                                    icon: 'error',
+                                    confirmButtonText: 'تایید'
+                                })
+                            });
+                            $('#saveprice').text('ثبت');
+                            $('#saveprice').prop("disabled", false);
+                        }
+                        if (data.error_creditor) {
+                            $('#ajaxModelprice').modal('hide');
                             Swal.fire({
                                 title: 'خطا!',
-                                text: value,
+                                text: 'اعتبار مشتری از جمع مبلغ فاکتورهای انتخابی کمتر میباشد!',
                                 icon: 'error',
-                                confirmButtonText: 'تایید'
-                            })
-                        });
-                        $('#saveprice').text('ثبت');
-                        $('#saveprice').prop("disabled", false);
-                    }
-                    if (data.error_creditor) {
-                        $('#ajaxModelprice').modal('hide');
-                        Swal.fire({
-                            title: 'خطا!',
-                            text: 'اعتبار مشتری از جمع مبلغ فاکتورهای انتخابی کمتر میباشد!',
-                            icon: 'error',
-                            confirmButtonText: 'تایید',
-                        });
-                        $('#saveprice').text('ثبت');
-                        $('#saveprice').prop("disabled", false);
-                    }
-                    if (data.success) {
-                        $('#productFormprice').trigger("reset");
-                        $('#ajaxModelprice').modal('hide');
-                        table.draw();
-                        Swal.fire({
-                            title: 'موفق',
-                            text: 'مشخصات سازنده قالب با موفقیت در سیستم ثبت شد',
-                            icon: 'success',
-                            confirmButtonText: 'تایید',
-                        });
-                        $('#saveprice').text('ثبت');
-                        $('#saveprice').prop("disabled", false);
-                    }
-                }
-            });
-        });
-
-        $('#saveBtn').click(function (e) {
-            e.preventDefault();
-            $('#saveBtn').text('در حال ثبت اطلاعات...');
-            $('#saveBtn').prop("disabled", true);
-            $.ajax({
-                data: $('#productForm').serialize(),
-                url: "{{ route('admin.CustomerAccount.store') }}",
-                type: "POST",
-                dataType: 'json',
-                success: function (data) {
-                    if (data.errors) {
-                        $('#ajaxModel').modal('hide');
-                        jQuery.each(data.errors, function (key, value) {
+                                confirmButtonText: 'تایید',
+                            });
+                            $('#saveprice').text('ثبت');
+                            $('#saveprice').prop("disabled", false);
+                        }
+                        if (data.success) {
+                            $('#productFormprice').trigger("reset");
+                            $('#ajaxModelprice').modal('hide');
+                            $('.data-table').DataTable().draw();
                             Swal.fire({
-                                title: 'خطا!',
-                                text: value,
-                                icon: 'error',
-                                confirmButtonText: 'تایید'
-                            })
-                        });
-                        $('#saveBtn').text('ثبت');
-                        $('#saveBtn').prop("disabled", false);
+                                title: 'موفق',
+                                text: 'مشخصات سازنده قالب با موفقیت در سیستم ثبت شد',
+                                icon: 'success',
+                                confirmButtonText: 'تایید',
+                            });
+                            $('#saveprice').text('ثبت');
+                            $('#saveprice').prop("disabled", false);
+                        }
                     }
-                    if (data.success) {
-                        $('#productForm').trigger("reset");
-                        $('#ajaxModel').modal('hide');
-                        table.draw();
-                        Swal.fire({
-                            title: 'موفق',
-                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
-                            icon: 'success',
-                            confirmButtonText: 'تایید',
-                        });
-                        $('#saveBtn').text('ثبت');
-                        $('#saveBtn').prop("disabled", false);
-                        $('#name').val('');
-                        $('#code').val('');
-                        $('#product').val('');
-                    }
-                }
+                });
             });
-        });
 
-    });
+            $('#saveBtn').click(function (e) {
+                e.preventDefault();
+                $('#saveBtn').text('در حال ثبت اطلاعات...');
+                $('#saveBtn').prop("disabled", true);
+                $.ajax({
+                    data: $('#productForm').serialize(),
+                    url: "{{ route('admin.CustomerAccount.store') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.errors) {
+                            $('#ajaxModel').modal('hide');
+                            jQuery.each(data.errors, function (key, value) {
+                                Swal.fire({
+                                    title: 'خطا!',
+                                    text: value,
+                                    icon: 'error',
+                                    confirmButtonText: 'تایید'
+                                })
+                            });
+                            $('#saveBtn').text('ثبت');
+                            $('#saveBtn').prop("disabled", false);
+                        }
+                        if (data.success) {
+                            $('#productForm').trigger("reset");
+                            $('#ajaxModel').modal('hide');
+                            $('.data-table').DataTable().draw();
+                            Swal.fire({
+                                title: 'موفق',
+                                text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                                icon: 'success',
+                                confirmButtonText: 'تایید',
+                            });
+                            $('#saveBtn').text('ثبت');
+                            $('#saveBtn').prop("disabled", false);
+                        }
+                    }
+                });
+            });
+
+        }
+    );
     $('#payment').addClass('active');
 </script>
 

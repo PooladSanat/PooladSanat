@@ -14,6 +14,15 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                if (parseInt(aData.creditor) < 0) {
+                    $('td:eq(2)', nRow).css('background-color', 'rgba(255,43,28,0.62)');
+                } else if (parseInt(aData.creditor) > 0) {
+                    $('td:eq(2)', nRow).css('background-color', 'rgba(144,221,251,0.99)');
+                } else {
+                    $('td:eq(2)', nRow).css('background-color', 'white');
+                }
+            },
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",

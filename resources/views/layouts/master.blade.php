@@ -687,11 +687,33 @@
                     </li>
                 @endif
 
+
+                <li class="treeview" id="payment">
+                    <a href="#">
+                        <i class="fa fa-credit-card"></i> <span>گزارشات</span>
+                        <span class="pull-left-container">
+<i class="fa fa-angle-right pull-left"></i>
+</span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li><a href="#"><i
+                                    class="fa fa-circle-o"></i>گزارش مالی مشتریان</a>
+                        </li>
+
+                        <li><a href="#"><i
+                                    class="fa fa-circle-o"></i>گزارش فروش</a>
+                        </li>
+
+                    </ul>
+                </li>
+
+
                 @if(Gate::check('بازسازی نرم افزار') || Gate::check('شروع به کار نرم افزار')
-                || Gate::check('پشتیبان گیری از دیتابیس') || Gate::check('مشخصات عمومی سیستم')
-                || Gate::check('لیست حسابهای بانکی') || Gate::check('لیست انبارها')
-                || Gate::check('توقفات ماشین')
-                 )
+                    || Gate::check('پشتیبان گیری از دیتابیس') || Gate::check('مشخصات عمومی سیستم')
+                    || Gate::check('لیست حسابهای بانکی') || Gate::check('لیست انبارها')
+                    || Gate::check('توقفات ماشین')
+                     )
                     <li class="treeview" id="setting">
                         <a href="#">
                             <i class="fa fa-hourglass-start"></i> <span>تنظیمات نرم افزار</span>

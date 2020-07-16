@@ -1,119 +1,103 @@
-<div class="modal fade" id="ffsf" aria-hidden="true">
-    <div class="modal-dialog">
-            <div class="modal-body">
-                <div class="portlet box blue">
-                    <div class="portlet-title">
-                        <div class="caption" id="caption">
-                        </div>
-                        <div class="caption pull-left">
-                            <a data-dismiss="modal">
-                                <i style="color: white" class="pull-left fa fa-close"></i>
-                            </a>
-                        </div>
-
+<div class="modal fade" id="ajaxadmin" aria-hidden="true">
+    <div class="modal-dialog col-md-12">
+        <div class="modal-body col-md-12">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption" id="caption">
+                        تسویه حساب صورت حساب
                     </div>
-                    <div class="portlet-body form">
-                        <div class="form-body">
-                            <div class="form-group">
+                    <div class="caption pull-left">
+                        <a data-dismiss="modal">
+                            <i style="color: white" class="pull-left fa fa-close"></i>
+                        </a>
+                    </div>
 
-                                <form autocomplete="off" id="productForm" name="productForm" class="form-horizontal">
-                                    <input type="hidden" name="id" id="id">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-12">
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                        <div class="form-group">
 
-                                                <label>نام صاحب حساب
-                                                    <span
-                                                        style="color: red"
-                                                        class="required-mark">*</span>
-                                                </label>
-                                                <input type="text" id="name" name="name" class="form-control"
-                                                       placeholder="لطفا نام صاحب حساب را وارد کنید"
-                                                       required>
-
-                                        </div>
-
-                                        <div class="col-md-12">
-
-                                                <label>نام بانک
-                                                    <span
-                                                        style="color: red"
-                                                        class="required-mark">*</span>
-                                                </label>
-                                                <input type="text" id="NameBank" name="NameBank" class="form-control"
-                                                       placeholder="لطفا نام بانک را وارد کنید"
-                                                       required>
-
-                                        </div>
-
-                                        <div class="col-md-12">
-
-                                                <label>شماره کارت
-                                                </label>
-                                                <input type="text" id="CardNumber" name="CardNumber"
-                                                       class="form-control"
-                                                       placeholder="لطفا شماره کارت را وارد کنید"
-                                                       required>
-
-                                        </div>
-                                        <div class="col-md-12">
-
-                                                <label>شماره حساب
-                                                </label>
-                                                <input type="text" id="AccountNumber" name="AccountNumber"
-                                                       class="form-control"
-                                                       placeholder="لطفا شمار حساب را وارد کنید"
-                                                       required>
-
-                                        </div>
-
-                                        <div class="col-md-12">
-
-                                                <label>شماره شبا
-                                                </label>
-                                                <input type="text" id="ShabaNumber" name="ShabaNumber"
-                                                       class="form-control"
-                                                       placeholder="لطفا شماره شبا را وارد کنید"
-                                                       required>
-
-                                        </div>
-
-                                        <div class="col-md-12">
-
-                                                <label>وضعیت حساب
-                                                </label>
-                                                <select class="form-control" name="status" id="status">
-                                                    <option value="1">فعال</option>
-                                                    <option value="2"> غیر فعال</option>
-                                                </select>
-
-                                        </div>
-
+                            <form autocomplete="off" id="productFoerm" name="productFoerm">
+                                <input type="hidden" name="customer_iderr" id="customer_iderr">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>نام مشتری</label>
+                                        <input readonly type="text" name="cnamee" id="cnamee" class="form-control">
 
                                     </div>
-                                    <br/>
-                                    <hr/>
-                                    <div class="modal-footer">
-                                        <div class="text-left">
-
-                                            <button style="width: 130px" type="submit" class="btn btn-success"
-                                                    id="saveBtn" value="ثبت">
-                                                ثبت
-                                            </button>
-
-                                            <button style="width: 130px" type="button" class="btn btn-danger"
-                                                    data-dismiss="modal">
-                                                انصراف
-                                            </button>
-
-                                        </div>
+                                    <div class="col-md-2">
+                                        <label>مبلغ صورت حساب</label>
+                                        <input readonly type="text" name="pricesumm" id="pricesumm"
+                                               class="form-control">
+                                        <input readonly type="hidden" name="pricesummm" id="pricesummm"
+                                               class="form-control">
                                     </div>
-                                </form>
-                            </div>
+                                    <div class="col-md-2">
+                                        <label>پرداختی مشتری بابت صورت حساب</label>
+                                        <input readonly type="text" name="price_customer_payment"
+                                               id="price_customer_payment"
+                                               class="form-control">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>بدهی مشتری بابت صورت حساب</label>
+                                        <input readonly type="text" name="recive_customer_payment"
+                                               id="recive_customer_payment"
+                                               class="form-control">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label> اسناد پرداختی مشتری تا به این امروز</label>
+                                        <input readonly type="text" name="document_customer_payment"
+                                               id="document_customer_payment"
+                                               class="form-control">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label> فاکتور های صادر شده تا به امروز</label>
+                                        <input readonly type="text" name="factor_customer_payment"
+                                               id="factor_customer_payment"
+                                               class="form-control">
+                                        <input readonly type="hidden" name="pricesummm" id="pricesummm"
+                                               class="form-control">
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label>وضعیت</label>
+                                        <select name="status" id="status" class="form-control">
+                                            <option value="1">تایید</option>
+                                            <option value="2">عدم تایید</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-10">
+                                        <label>توضیحات</label>
+                                        <input type="text" name="description_admin" id="description_admin"
+                                               class="form-control">
+                                    </div>
+
+
+                                </div>
+                                <br/>
+                                <hr/>
+                                <div class="modal-footer">
+                                    <div class="text-left">
+                                        <button style="width: 130px" type="submit" class="btn btn-success" id="admin"
+                                                value="ثبت">
+                                            ثبت
+                                        </button>
+
+                                        <button style="width: 130px" type="button" class="btn btn-danger"
+                                                data-dismiss="modal">
+                                            انصراف
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
     </div>
 </div>
@@ -125,7 +109,7 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption" id="caption">
-                        مشخصات پرداخت مشتری
+                        تسویه حساب صورت حساب
                     </div>
                     <div class="caption pull-left">
                         <a data-dismiss="modal">
@@ -150,6 +134,7 @@
                                     <div class="col-md-3">
                                         <label>موجودی مشتری</label>
                                         <input readonly type="text" name="cprice" id="cprice" class="form-control">
+                                        <input readonly type="hidden" name="cpricee" id="cpricee" class="form-control">
 
                                     </div>
                                     <div class="col-md-3">
@@ -161,6 +146,8 @@
                                     <div class="col-md-3">
                                         <label>مبلغ صورت حساب</label>
                                         <input readonly type="text" name="pricesum" id="pricesum" class="form-control">
+                                        <input readonly type="hidden" name="pricesumm" id="pricesumm"
+                                               class="form-control">
 
                                     </div>
 
@@ -197,12 +184,12 @@
                                                 class="table table-responsive table-striped table-bordered">
                                                 <thead>
                                                 <tr>
-                                                    <td>نوع پرداخت</td>
-                                                    <td>شماره چک</td>
+                                                    <td>نوع سند</td>
+                                                    <td>شماره سند</td>
+                                                    <td>تاریخ سند</td>
                                                     <td>نام بانک</td>
                                                     <td>نام صادر کننده</td>
                                                     <td>مبلغ(ریال)</td>
-                                                    <td>تاریخ</td>
                                                     <td>عملیات</td>
                                                 </tr>
                                                 </thead>
@@ -212,10 +199,10 @@
                                                 <tr>
                                                     <td id="typee"></td>
                                                     <td id="shanasee"></td>
+                                                    <td id="datee"></td>
                                                     <td id="namee"></td>
                                                     <td id="user_namee"></td>
                                                     <td id="pricee"></td>
-                                                    <td id="datee"></td>
                                                     <td id="actiontt"></td>
                                                 </tr>
                                                 </tbody>

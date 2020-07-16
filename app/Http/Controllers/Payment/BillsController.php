@@ -16,13 +16,23 @@ class BillsController extends Controller
         if ($request->ajax()) {
 //            $data = DB::select("CALL get_invoices()");
 
-            $data = \DB::table('clearing')->get();
+            $data = \DB::table('clearing')
+                ->where('status', null)
+                ->orWhere('status', 2)
+                ->get();
 
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('price', function ($row) {
                     $price = number_format($row->price);
                     return $price;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->status == 2) {
+                        return 'در انتظار تایید مدیریت';
+                    } elseif ($row->status == null) {
+                        return 'در انتظار بررسی';
+                    }
                 })
                 ->addColumn('customer', function ($row) {
                     $pack_id = \DB::table('clearing_factor')
@@ -58,9 +68,9 @@ class BillsController extends Controller
                        </a>&nbsp;&nbsp;';
 
         $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="تسویه حساب"
+                      data-id="' . $row->id . '" data-original-title="تایید مدیریت"
                        class="detail-admin">
-                       <i class="fa fa-plus fa-lg" title="تسویه حساب"></i>
+                       <i class="fa fa-user fa-lg" title="تایید مدیریت"></i>
                        </a>&nbsp;&nbsp;';
 
 

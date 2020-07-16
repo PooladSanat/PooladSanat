@@ -421,8 +421,13 @@ class PaymentsController extends Controller
             ->where('id', $id)
             ->first();
 
-        $p = number_format($clearing->price);
-
+        if (!empty($clearing)) {
+            $p = number_format($clearing->price);
+            $pp = $clearing->price;
+        } else {
+            $p = number_format(0);
+            $pp = 0;
+        }
 
         $name = Customer::where('id', $detail_id->customer_id)->first();
         $date = DB::table('detail_customer_payment')
@@ -435,11 +440,65 @@ class PaymentsController extends Controller
         }
         $price = CustomerAccount::where('customer_id', $detail_id->customer_id)->first();
         if (!empty($price)) {
-            $pri = number_format($price->creditor) . ' ریال ';
+            $pri = number_format($price->creditor);
+            $prii = $price->creditor;
         } else {
             $pri = number_format(0);
+            $prii = 0;
         }
-        return response()->json(['name' => $name, 'price' => $pri, 'date' => $dat, 'sum' => $p]);
+        return response()->json(['name' => $name, 'price' => $pri, 'pricee' => $prii, 'date' => $dat, 'sum' => $p, 'summ' => $pp]);
+
+    }
+
+    public function StoreAdmin(Request $request)
+    {
+        return \response()->json($request->all());
+
+    }
+
+
+    public function updatee($id)
+    {
+
+
+        $detais = DB::table('clearing_factor')
+            ->where('clearing_id', $id)
+            ->first();
+
+        $detail_id = DB::table('factors')
+            ->where('pack_id', $detais->pack_id)
+            ->first();
+
+        $clearing = DB::table('clearing')
+            ->where('id', $id)
+            ->first();
+
+        if (!empty($clearing)) {
+            $p = number_format($clearing->price);
+            $pp = $clearing->price;
+        } else {
+            $p = number_format(0);
+            $pp = 0;
+        }
+
+        $name = Customer::where('id', $detail_id->customer_id)->first();
+        $date = DB::table('detail_customer_payment')
+            ->where('customer_id', $detail_id->customer_id)
+            ->latest()->first();
+        if (!empty($date)) {
+            $dat = Jalalian::forge($date->created_at)->format('در تاریخ ' . 'Y/m/d' . '  ساعت ' . 'H:i:s');
+        } else {
+            $dat = null;
+        }
+        $price = CustomerAccount::where('customer_id', $detail_id->customer_id)->first();
+        if (!empty($price)) {
+            $pri = number_format($price->creditor);
+            $prii = $price->creditor;
+        } else {
+            $pri = number_format(0);
+            $prii = 0;
+        }
+        return response()->json(['name' => $name, 'price' => $pri, 'pricee' => $prii, 'date' => $dat, 'sum' => $p, 'summ' => $pp]);
 
     }
 

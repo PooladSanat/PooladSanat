@@ -32,6 +32,7 @@
                 {data: 'date', name: 'date'},
                 {data: 'customer', name: 'customer'},
                 {data: 'price', name: 'price'},
+                {data: 'status', name: 'status'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
@@ -52,8 +53,10 @@
                 $('#customer_ider').val(id_id);
                 $('#cname').val(data.name.name);
                 $('#cprice').val(data.price);
+                $('#cpricee').val(data.pricee);
                 $('#cupdate').val(data.date);
                 $('#pricesum').val(data.sum);
+                $('#pricesumm').val(data.summ);
 
                 var table1 = $('.gfgf').DataTable({
                     processing: true,
@@ -98,6 +101,127 @@
 
         });
 
+        $('body').on('click', '.detail-eye', function () {
+
+            $('.type').remove();
+            $('.shenase').remove();
+            $('.price').remove();
+            $('.date').remove();
+            $('.actiont').remove();
+            $('.user_name').remove();
+            $('.name').remove();
+            var id_id = $(this).data('id');
+            $.get("{{ route('admin.payment.update') }}" + '/' + id_id, function (data) {
+                $('#gfgf').DataTable().destroy();
+                $('#ajaxModel').modal('show');
+                $('#customer_ider').val(id_id);
+                $('#cname').val(data.name.name);
+                $('#cprice').val(data.price);
+                $('#cpricee').val(data.pricee);
+                $('#cupdate').val(data.date);
+                $('#pricesum').val(data.sum);
+                $('#pricesumm').val(data.summ);
+
+                var table1 = $('.gfgf').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    "ordering": false,
+                    "paging": false,
+                    "info": false,
+                    "scrollY": "150px",
+                    "scrollCollapse": true,
+                    "language": {
+                        "search": "جستجو:",
+                        "lengthMenu": "نمایش _MENU_",
+                        "zeroRecords": "موردی یافت نشد!",
+                        "info": "نمایش _PAGE_ از _PAGES_",
+                        "infoEmpty": "موردی یافت نشد",
+                        "infoFiltered": "(جستجو از _MAX_ مورد)",
+                        "processing": "در حال پردازش اطلاعات"
+                    },
+                    ajax: {
+                        url: "{{ route('admin.payment.list.list') }}",
+                        data: {
+                            id_id: id_id,
+                        },
+                    },
+                    columns: [
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                        {data: 'pack', name: 'pack'},
+                        {data: 'product', name: 'product'},
+                        {data: 'color', name: 'color'},
+                        {data: 'number', name: 'number'},
+                        {data: 'price', name: 'price'},
+                        {data: 'date', name: 'date'},
+                    ],
+                    rowsGroup:
+                        [
+                            1
+                        ],
+                });
+
+            })
+
+
+        });
+
+        $('body').on('click', '.detail-admin', function () {
+            var id_id = $(this).data('id');
+            $.get("{{ route('admin.payment.updatee') }}" + '/' + id_id, function (data) {
+                $('#ajaxadmin').modal('show');
+                $('#customer_iderr').val(id_id);
+                $('#cnamee').val(data.name.name);
+                $('#cpricee').val(data.price);
+                $('#cpriceee').val(data.pricee);
+                $('#cupdatee').val(data.date);
+                $('#pricesumm').val(data.sum);
+                $('#pricesummm').val(data.summ);
+            })
+        });
+
+
+        $('#admin').click(function (e) {
+            e.preventDefault();
+            $('#admin').text('در حال ثبت اطلاعات...');
+            $('#admin').prop("disabled", true);
+            $.ajax({
+                data: $('#productFoerm').serialize(),
+                url: "{{ route('admin.payment.store.admin') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.errors) {
+                        $('#ajaxadmin').modal('hide');
+                        jQuery.each(data.errors, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#admin').text('ثبت');
+                        $('#admin').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#productFoerm').trigger("reset");
+                        $('#ajaxadmin').modal('hide');
+                        $('.data-table').DataTable().draw();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#admin').text('ثبت');
+                        $('#admin').prop("disabled", false);
+                    }
+                }
+            });
+        });
+
+
+
         $('#createNewProduct').click(function () {
             $('#productForm').trigger("reset");
             $('#ajaxModel').modal('show');
@@ -120,11 +244,15 @@
             })
         });
 
+
+
         $('#saveBtn').click(function (e) {
             e.preventDefault();
+            $('#saveBtn').text('در حال ثبت اطلاعات...');
+            $('#saveBtn').prop("disabled", true);
             $.ajax({
                 data: $('#productForm').serialize(),
-                url: "{{ route('admin.bank.store') }}",
+                url: "{{ route('admin.CustomerAccount.store') }}",
                 type: "POST",
                 dataType: 'json',
                 success: function (data) {
@@ -138,21 +266,26 @@
                                 confirmButtonText: 'تایید'
                             })
                         });
+                        $('#saveBtn').text('ثبت');
+                        $('#saveBtn').prop("disabled", false);
                     }
                     if (data.success) {
                         $('#productForm').trigger("reset");
                         $('#ajaxModel').modal('hide');
-                        table.draw();
+                        $('.data-table').DataTable().draw();
                         Swal.fire({
                             title: 'موفق',
-                            text: 'مشخصات حساب بانکی با موفقیت در سیستم ثبت شد',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
                             icon: 'success',
                             confirmButtonText: 'تایید',
                         });
+                        $('#saveBtn').text('ثبت');
+                        $('#saveBtn').prop("disabled", false);
                     }
                 }
             });
         });
+
 
     });
     $('body').on('click', '.deleteProduct', function () {
@@ -212,8 +345,8 @@
             "<select id=\'type" + a + "\'  name=\"type[]\"\n" +
             "class=\"form-control type\"/>" +
             "<option>انتخاب کنید</option>" +
-            "<option value='1'>نقدی</option>" +
             "<option value='2'>چک</option>" +
+            "<option value='1'>فیش حواله</option>" +
             "</select>" +
             "</div></div></div>";
         document.getElementById('typee').appendChild(myNode);

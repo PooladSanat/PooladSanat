@@ -452,8 +452,11 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/payment/list/list', 'PaymentsController@listdetail')->name('admin.payment.list.list');
         Route::get('payment/payment', 'PaymentsController@payment')->name('admin.payment.list.payment');
         Route::post('payment/storepament', 'PaymentsController@storepament')->name('admin.payment.store.storepament');
+        Route::post('payment/store/admin', 'PaymentsController@StoreAdmin')->name('admin.payment.store.admin');
         Route::post('payment/factor', 'PaymentsController@factor')->name('admin.payment.delete.factor');
         Route::get('/payment/update/{id?}', 'PaymentsController@update')->name('admin.payment.update');
+
+        Route::get('/paymentt/updatee/{id?}', 'PaymentsController@updatee')->name('admin.payment.updatee');
 
         //BillsController
         Route::get('/bills/list', 'BillsController@list')->name('admin.bills.list');

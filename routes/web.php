@@ -455,6 +455,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('payment/factor', 'PaymentsController@factor')->name('admin.payment.delete.factor');
         Route::get('/payment/update/{id?}', 'PaymentsController@update')->name('admin.payment.update');
 
+        //BillsController
+        Route::get('/bills/list', 'BillsController@list')->name('admin.bills.list');
 
 
     });
@@ -550,6 +552,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
 
     Route::get('/testttt', 'TestController@testttt');
+    Route::get('/g', 'TestController@g');
     Route::get('/table', 'TestController@table');
     Route::get('/showDatatable', 'TestController@showDatatable')->name('showDatatable');
     Route::get('/refresh', 'TestController@refresh')->name('admin.table.refresh');

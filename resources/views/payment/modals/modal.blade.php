@@ -144,7 +144,7 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption" id="caption">
-                        فاکتورهای انتخابی برای پرداخت
+                       صدور صورت حساب
                     </div>
                     <div class="caption pull-left">
                         <a data-dismiss="modal">
@@ -179,7 +179,7 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <label>مانده حساب از قبل(ریال)
+                                                <label>مانده حساب مشتری(ریال)
                                                     <span
                                                         style="color: red"
                                                         class="required-mark"></span>
@@ -223,7 +223,7 @@
                                         <button style="width: 130px" type="submit" class="btn btn-success"
                                                 id="saveprice"
                                                 value="ثبت">
-                                            ثبت
+                                             صورت حساب
                                         </button>
                                         <button style="width: 130px" type="button" class="btn btn-danger"
                                                 data-dismiss="modal">

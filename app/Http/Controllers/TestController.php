@@ -98,4 +98,12 @@ class TestController extends Controller
     }
 
 
+    public function g(Request $request)
+    {
+        DB::insert('CALL Sp_Insert_Users (?,?,?,?,?,?)',
+            array(123456, 123456, 123456, 123456, null, null));
+
+    }
+
+
 }

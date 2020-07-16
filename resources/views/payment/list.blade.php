@@ -8,16 +8,28 @@
                 <div class="portlet-title">
 
                     <div class="caption">
-                        خرید های تسویه نشده
+                        فاکتور های تسویه نشده
                     </div>
                     <div class="tools"></div>
                 </div>
 
                 <div class="portlet-body">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-1">
 
                         </div>
+
+                        <div class="col-md-2">
+                            <label>نام فروشنده:</label>
+                            <select class="form-control" id="customer_id" name="customer_id">
+                                <option value="">انتخاب کنید...</option>
+                                @foreach($users as $user)
+                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
                         <div class="col-md-2">
                             <label>نام مشتری:</label>
                             <select class="form-control" id="customer_id" name="customer_id">
@@ -27,59 +39,19 @@
                                 @endforeach
                             </select>
                         </div>
+
                         <div class="col-md-2">
-                            <label>سال:</label>
-                            <select class="form-control" name="year" id="year">
-                                <option value="">انتخاب کنید...</option>
-                                <option value="1398">1398</option>
-                                <option value="1399">1399</option>
-                                <option value="1400">1400</option>
-                                <option value="1401">1401</option>
-                                <option value="1402">1402</option>
-                                <option value="1403">1403</option>
-                                <option value="1404">1404</option>
-                                <option value="1405">1405</option>
-                                <option value="1406">1406</option>
-                                <option value="1407">1407</option>
-                                <option value="1408">1408</option>
-                                <option value="1409">1409</option>
-                                <option value="1410">1410</option>
-                                <option value="1411">1411</option>
-                                <option value="1412">1412</option>
-                                <option value="1413">1413</option>
-                                <option value="1414">1414</option>
-                                <option value="1415">1415</option>
-                                <option value="1416">1416</option>
-                                <option value="1417">1417</option>
-                                <option value="1418">1418</option>
-                                <option value="1419">1419</option>
-                                <option value="1420">1420</option>
-                                <option value="1421">1421</option>
-                                <option value="1422">1422</option>
-                                <option value="1423">1423</option>
-                                <option value="1424">1424</option>
-                                <option value="1425">1425</option>
-                                <option value="1426">1426</option>
-                            </select>
+                            <label>از تاریخ:</label>
+                            <input type="text" id="indate" name="indate" class="form-control">
                         </div>
+
                         <div class="col-md-2">
-                            <label>ماه:</label>
-                            <select class="form-control" name="month" id="month">
-                                <option value="">انتخاب کنید ...</option>
-                                <option value="1">فروردین</option>
-                                <option value="2">اردیبهشت</option>
-                                <option value="3">خرداد</option>
-                                <option value="4">تیر</option>
-                                <option value="5">مرداد</option>
-                                <option value="6">شهریور</option>
-                                <option value="7">مهر</option>
-                                <option value="8">آبان</option>
-                                <option value="9">آذر</option>
-                                <option value="10">دی</option>
-                                <option value="11">بهمن</option>
-                                <option value="12">اسفند</option>
-                            </select>
+                            <label>تا تاریخ:</label>
+                            <input type="text" id="todate" name="todate" class="form-control">
                         </div>
+
+
+
                         <div class="col-md-2">
                             <br/>
                             <button type="button" name="filter" id="filter" class="form-control btn btn-primary">
@@ -96,11 +68,11 @@
                         <tr>
                             <th><input type="checkbox" id="select_all"></th>
                             <th>مشتری</th>
+                            <th>فروشنده</th>
                             <th>فاکتور</th>
+                            <th>تاریخ فاکتور</th>
                             <th>مبلغ(ریال)</th>
                             <th>نحوه پرداخت</th>
-                            <th>جمع مبالغ(ریال)</th>
-                            <th>مانده حساب مشتری(ریال)</th>
                             <th>عملیات</th>
                         </tr>
                         </thead>
@@ -109,7 +81,7 @@
                     </table>
                     <button type="button" name="bulk_delete"
                             id="bulk_delete" class="btn btn-primary"
-                    >تسویه فاکتور ها
+                    >صدور صورت حساب
                     </button>
                 </div>
             </div>

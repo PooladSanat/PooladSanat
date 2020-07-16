@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Payment;
 
+use App\Color;
 use App\Customer;
 use App\CustomerAccount;
 use App\Factors;
 use App\Http\Controllers\Controller;
 use App\Invoice;
 use App\Payments;
+use App\Product;
+use App\User;
 use Carbon\Carbon;
 use DB;
 use Hekmatinasser\Verta\Verta;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 use Morilog\Jalali\Jalalian;
@@ -25,6 +29,7 @@ class PaymentsController extends Controller
         $array_customer = array();
         $v = verta();
         $customers = Customer::all();
+        $users = User::all();
         $array_Year = [1399, 1400, 1401, 1402, 1403, 1404, 1405, 1406, 1407, 1408, 1409, 1410, 1411, 1412, 1413, 1414, 1415, 1416, 1417, 1418, 1419, 1420];
         $array_month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         foreach ($customers as $c) {
@@ -78,16 +83,9 @@ class PaymentsController extends Controller
                         ->sum('sum');
                     return number_format($number);
                 })
-                ->addColumn('creditor', function ($row) {
-                    $number = CustomerAccount::where('customer_id', $row->customer_id)
-                        ->first();
-                    if (!empty($number)) {
-                        return number_format($number->creditor);
-
-                    } else {
-                        return number_format(0);
-
-                    }
+                ->addColumn('user', function ($row) {
+                    $name = User::where('id', $row->user_id)->first();
+                    return $name->name;
                 })
                 ->addColumn('customer', function ($row) {
                     $customer = Customer::where('id', $row->customer_id)->first();
@@ -99,7 +97,7 @@ class PaymentsController extends Controller
                 ->rawColumns(['action', 'checkbox'])
                 ->make(true);
         }
-        return view('payment.list', compact('customers'));
+        return view('payment.list', compact('customers', 'users'));
     }
 
     public function paymentsuccess(Request $request)
@@ -183,43 +181,45 @@ class PaymentsController extends Controller
 
 
         if ($request->ajax()) {
-            $data = DB::table('detail_customer_payment')
-                ->where('customer_id', $request->id_id)
+            $pack_id = array();
+            $clearing_factor = DB::table('clearing_factor')
+                ->where('clearing_id', $request->id_id)
+                ->get();
+            foreach ($clearing_factor as $item) {
+                $pack_id[] = $item->pack_id;
+            }
+            $data = DB::table('schedulings')
+                ->whereIn('pack', $pack_id)
                 ->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('type', function ($row) {
-                    if ($row->type == 1) {
-                        return 'نقدی';
-
-                    } else {
-                        return 'چک';
-
-                    }
+                ->addColumn('product', function ($row) {
+                    $invoice_product = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $name = Product::where('id', $invoice_product->product_id)
+                        ->first();
+                    return $name->label;
+                })
+                ->addColumn('color', function ($row) {
+                    $invoice_product = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $name = Color::where('id', $invoice_product->color_id)
+                        ->first();
+                    return $name->name;
                 })
                 ->addColumn('price', function ($row) {
-                    return number_format($row->price);
+                    $invoice_product = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    return number_format($invoice_product->sumTotal);
                 })
-                ->addColumn('shenase', function ($row) {
-                    if ($row->shenase == null) {
-                        return '----';
-                    } else {
-                        return $row->shenase;
-                    }
-                })
-                ->addColumn('name', function ($row) {
-                    if ($row->name == null) {
-                        return '----';
-                    } else {
-                        return $row->name;
-                    }
-                })
-                ->addColumn('name_user', function ($row) {
-                    if ($row->name_user == null) {
-                        return '----';
-                    } else {
-                        return $row->name_user;
-                    }
+                ->addColumn('price', function ($row) {
+                    $invoice_product = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    return number_format($invoice_product->sumTotal);
                 })
                 ->rawColumns([])
                 ->make(true);
@@ -267,28 +267,25 @@ class PaymentsController extends Controller
 
     public function storepament(Request $request)
     {
-
-
-        if ($request->sum > $request->creditor) {
-            return response()->json(['error_creditor' => 'error_creditor']);
-        }
-
         $string = preg_split("/,+/", "$request->pack_id");
-        $created_at = Carbon::now();
+        $count = count($string);
+        $date = Carbon::now();
         DB::beginTransaction();
         try {
-            DB::table('payments_success')
-                ->insert([
-                    'pack_id' => json_encode($request->pack_id),
-                    'user_id' => auth()->user()->id,
-                    'customer_id' => $request->customer_idd,
-                    'ta' => $request->takhfif,
-                    'created_at' => $created_at,
-                ]);
+            DB::table('clearing')->insert([
+                'date' => Jalalian::forge($date)->format('Y/m/d'),
+                'takhfif' => $request->takhfif,
+                'price' => $request->sum,
+            ]);
 
-            $count = count($string);
+            $id = DB::table('clearing')
+                ->latest('id')->first();
             for ($i = 0; $i < $count; $i++) {
                 try {
+                    DB::table('clearing_factor')->insert([
+                        'clearing_id' => $id->id,
+                        'pack_id' => $string[$i],
+                    ]);
                     DB::table('factors')
                         ->where('pack_id', $string[$i])
                         ->update([
@@ -297,16 +294,72 @@ class PaymentsController extends Controller
                 } catch (Exception $exception) {
                 }
             }
-
-            CustomerAccount::where('customer_id', $request->customer_idd)
-                ->update([
-                    'creditor' => $request->creditor - $request->sum,
-                ]);
             DB::commit();
         } catch (Exception $exception) {
             DB::rollBack();
         }
-        return response()->json(['success' => 'success']);
+        $user = DB::table('factors')
+            ->where('pack_id', $string[0])
+            ->first();
+        $user_id = User::where('id', $user->user_id)->first();
+        $CustomerAccount = DB::table('customer_accounts')->
+        where('customer_id', $request->customer_idd)
+            ->first();
+        if (!empty($CustomerAccount)) {
+            $customeraccount = $CustomerAccount->creditor;
+        } else {
+            $customeraccount = 0;
+        }
+        $price_customer = DB::table('detail_customer_payment')
+            ->where('customer_id', $request->customer_idd)
+            ->sum('price');
+        $customer_name = Customer::where('id', $request->customer_idd)
+            ->first();
+        $factors = DB::table('factors')
+            ->whereIn('pack_id', $string)
+            ->get();
+        $sum_price = $request->sum_price;
+        $takhfif = $request->takhfif;
+        $final = $request->sum_price - $request->takhfif;
+        $view = \View::make('payment.print', compact('user_id', 'customer_name', 'customeraccount', 'price_customer', 'factors', 'sum_price', 'takhfif', 'final'));
+        return $view->render();
+//        if ($request->sum > $request->creditor) {
+//            return response()->json(['error_creditor' => 'error_creditor']);
+//        }
+//        $string = preg_split("/,+/", "$request->pack_id");
+//        $created_at = Carbon::now();
+//        DB::beginTransaction();
+//        try {
+//            DB::table('payments_success')
+//                ->insert([
+//                    'pack_id' => json_encode($request->pack_id),
+//                    'user_id' => auth()->user()->id,
+//                    'customer_id' => $request->customer_idd,
+//                    'ta' => $request->takhfif,
+//                    'created_at' => $created_at,
+//                ]);
+//
+//            $count = count($string);
+//            for ($i = 0; $i < $count; $i++) {
+//                try {
+//                    DB::table('factors')
+//                        ->where('pack_id', $string[$i])
+//                        ->update([
+//                            'status' => 1,
+//                        ]);
+//                } catch (Exception $exception) {
+//                }
+//            }
+//
+//            CustomerAccount::where('customer_id', $request->customer_idd)
+//                ->update([
+//                    'creditor' => $request->creditor - $request->sum,
+//                ]);
+//            DB::commit();
+//        } catch (Exception $exception) {
+//            DB::rollBack();
+//        }
+//        return response()->json(['success' => 'success']);
 
     }
 
@@ -354,22 +407,39 @@ class PaymentsController extends Controller
 
     public function update($id)
     {
-        $name = Customer::where('id', $id)->first();
+
+
+        $detais = DB::table('clearing_factor')
+            ->where('clearing_id', $id)
+            ->first();
+
+        $detail_id = DB::table('factors')
+            ->where('pack_id', $detais->pack_id)
+            ->first();
+
+        $clearing = DB::table('clearing')
+            ->where('id', $id)
+            ->first();
+
+        $p = number_format($clearing->price);
+
+
+        $name = Customer::where('id', $detail_id->customer_id)->first();
         $date = DB::table('detail_customer_payment')
-            ->where('customer_id', $id)
+            ->where('customer_id', $detail_id->customer_id)
             ->latest()->first();
         if (!empty($date)) {
             $dat = Jalalian::forge($date->created_at)->format('در تاریخ ' . 'Y/m/d' . '  ساعت ' . 'H:i:s');
         } else {
             $dat = null;
         }
-        $price = CustomerAccount::where('customer_id', $id)->first();
+        $price = CustomerAccount::where('customer_id', $detail_id->customer_id)->first();
         if (!empty($price)) {
             $pri = number_format($price->creditor) . ' ریال ';
         } else {
             $pri = number_format(0);
         }
-        return response()->json(['name' => $name, 'price' => $pri, 'date' => $dat]);
+        return response()->json(['name' => $name, 'price' => $pri, 'date' => $dat, 'sum' => $p]);
 
     }
 

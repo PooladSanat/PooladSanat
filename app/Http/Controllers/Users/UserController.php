@@ -44,6 +44,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
+
         if (!empty($request->id)) {
             $user = User::find($request->id);
             if ($user->email != $request->email) {
@@ -92,7 +94,6 @@ class UserController extends Controller
         } else {
             $sign = null;
         }
-
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
             $name = time() . '.' . $file->getClientOriginalExtension();
@@ -103,6 +104,7 @@ class UserController extends Controller
 
 
         if ($validator->passes()) {
+
             $users = User::updateOrCreate(['id' => $request->id],
                 [
                     'name' => $request->name,
@@ -214,17 +216,13 @@ class UserController extends Controller
     {
         $roles = Role::all();
         if ($request->ajax()) {
-            $data = User::orderBy('id', 'desc')->get();
+            $data = \DB::table('view_role_user')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('role', function ($row) {
-                    foreach ($row->roles as $role)
-                        return $role->name;
-                })
                 ->addColumn('online', function ($row) {
                     $online = url('/public/icon/online.png');
                     $offline = url('/public/icon/offline.png');
-                    if (\Cache::has('active' . $row->id)) {
+                    if (\Cache::has('active' . $row->user_id)) {
                         return '<img src="' . $online . '" title="انلاین" width="20">';
                     } else
                         return '<img src="' . $offline . '" title="افلاین" width="20">';
@@ -438,13 +436,13 @@ class UserController extends Controller
     {
 
         $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                      data-id="' . $row->user_id . '" data-original-title="ویرایش"
                        class="editProduct">
                        <i class="fa fa-edit fa-lg" title="ویرایش"></i>
                       </a>&nbsp;&nbsp;';
 
         $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->id . '" data-original-title="فعال و غیر فعال کردن کاربر"
+                      data-id="' . $row->user_id . '" data-original-title="فعال و غیر فعال کردن کاربر"
                        class="status">
                         <i class="fa fa-lock fa-lg" title="فعال و غیر فعال کردن کاربر"></i>
                        </a>';

@@ -29,9 +29,7 @@
                 {data: 'adders', name: 'adders'},
                 {data: 'areas', name: 'areas'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
-            ],
-
-            "order": [[0, 'desc']]
+            ]
 
         });
 

@@ -534,10 +534,12 @@ class SchedulingController extends Controller
                     ->insert([
                         'pack_id' => $request->pack[0],
                         'customer_id' => $customer_id->customer_id,
+                        'user_id' => $customer_id->user_id,
                         'sum' => $sum - $s,
                         'status' => 0,
                         'Month' => $verta->month,
                         'Year' => $verta->year,
+                        'date' => Jalalian::forge($date)->format('Y/m/d'),
                         'type' => $customer_id->paymentMethod,
                         'created_at' => $date,
                     ]);

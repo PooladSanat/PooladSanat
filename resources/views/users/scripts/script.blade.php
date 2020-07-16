@@ -38,8 +38,8 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'name', name: 'name'},
-                {data: 'role', name: 'role'},
-                {data: 'email', name: 'email'},
+                {data: 'role_name', name: 'role_name'},
+                {data: 'user_name', name: 'user_name'},
                 {data: 'phone', name: 'phone'},
                 {data: 'online', name: 'online'},
                 {data: 'status', name: 'status'},

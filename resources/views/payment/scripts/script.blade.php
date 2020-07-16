@@ -3,6 +3,8 @@
 <script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
 <script src="{{asset('/public/js/datatab.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/js/row.js')}}" type="text/javascript"></script>
+<link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
+<script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 <meta name="_token" content="{{ csrf_token() }}"/>
 <style>
     .as-console-wrapper {
@@ -29,6 +31,9 @@
                     processing: true,
                     serverSide: true,
                     "ordering": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "bPaginate": false,
                     "language": {
                         "search": "جستجو:",
                         "lengthMenu": "نمایش _MENU_",
@@ -51,16 +56,17 @@
                     columns: [
                         {data: 'checkbox', orderable: false, searchable: false},
                         {data: 'customer', name: 'customer'},
+                        {data: 'user', name: 'user'},
                         {data: 'pack_id', name: 'pack_id'},
+                        {data: 'date', name: 'date'},
                         {data: 'total', name: 'total'},
                         {data: 'type', name: 'type'},
-                        {data: 'sumtotal', name: 'sumtotal'},
-                        {data: 'creditor', name: 'creditor'},
+
                         {data: 'action', name: 'action', orderable: false, searchable: false},
                     ],
                     rowsGroup:
                         [
-                            1, 5, 6, 7
+                            1
                         ],
                 });
             }
@@ -88,7 +94,7 @@
                             if (data.error_customer) {
                                 Swal.fire({
                                     title: 'خطا!',
-                                    text: 'لطفا فاکتور های یک مشتری را انتخاب نمایید',
+                                    text: 'لطفا فاکتور های یک مشتری را انتخاب نمایید!',
                                     icon: 'error',
                                     confirmButtonText: 'تایید'
                                 });
@@ -122,7 +128,7 @@
                 } else {
                     Swal.fire({
                         title: 'توجه',
-                        text: 'فاکتوری برای پرداخت انتخاب نشده است!',
+                        text: 'فاکتوری برای تبدیل شدن به صورتحساب انتخاب نشده است!',
                         icon: 'info',
                         confirmButtonText: 'تایید'
                     });
@@ -203,7 +209,7 @@
                     data: $('#productFormprice').serialize(),
                     url: "{{ route('admin.payment.store.storepament') }}",
                     type: "POST",
-                    dataType: 'json',
+                    dataType: 'html',
                     success: function (data) {
                         if (data.errors) {
                             $('#ajaxModelprice').modal('hide');
@@ -229,16 +235,14 @@
                             $('#saveprice').text('ثبت');
                             $('#saveprice').prop("disabled", false);
                         }
-                        if (data.success) {
-                            $('#productFormprice').trigger("reset");
-                            $('#ajaxModelprice').modal('hide');
+                        if (data) {
                             $('.data-table').DataTable().draw();
-                            Swal.fire({
-                                title: 'موفق',
-                                text: 'مشخصات سازنده قالب با موفقیت در سیستم ثبت شد',
-                                icon: 'success',
-                                confirmButtonText: 'تایید',
-                            });
+                            $('#ajaxModelprice').modal('hide');
+                            w = window.open(window.location.href, "_blank");
+                            w.document.open();
+                            w.document.write(data);
+                            w.document.close();
+                            w.location.reload();
                             $('#saveprice').text('ثبت');
                             $('#saveprice').prop("disabled", false);
                         }
@@ -456,7 +460,20 @@
 
 </script>
 <script>
-    kamaDatepicker('date',
+    kamaDatepicker('indate',
+        {
+            buttonsColor: "red",
+            forceFarsiDigits: false,
+            sync: true,
+            gotoToday: true,
+            highlightSelectedDay: true,
+            markHolidays: true,
+            markToday: true,
+            previousButtonIcon: "fa fa-arrow-circle-left",
+            nextButtonIcon: "fa fa-arrow-circle-right",
+
+        });
+    kamaDatepicker('todate',
         {
             buttonsColor: "red",
             forceFarsiDigits: false,

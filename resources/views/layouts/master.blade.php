@@ -532,32 +532,71 @@
                     </li>
                 @endif
 
-                @if(Gate::check('تسویه شده') || Gate::check('تسویه نشده'))
-                    <li class="treeview" id="payment">
-                        <a href="#">
-                            <i class="fa fa-credit-card"></i> <span>پرداختی ها</span>
-                            <span class="pull-left-container">
-<i class="fa fa-angle-right pull-left"></i>
-</span>
-                        </a>
-                        <ul class="treeview-menu">
-                            @can('تسویه شده')
-                                <li><a href="{{route('admin.paymentsuccess.list')}}"><i
-                                            class="fa fa-circle-o"></i>تسویه شده ها</a>
-                                </li>
-                            @endcan
+                <li class="treeview" id="payment">
+                    <a href="#">
+                        <i class="fa fa-credit-card"></i> <span>مالی</span>
+                        <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
 
 
-                            @can('تسویه نشده')
+                        <li><a href="{{route('admin.payment.list')}}"><i
+                                    class="fa fa-circle-o"></i>فاکتور های تسویه نشده</a>
+                        </li>
 
-                                <li><a href="{{route('admin.payment.list')}}"><i
-                                            class="fa fa-circle-o"></i>تسویه نشده ها</a>
-                                </li>
-                            @endcan
 
-                        </ul>
-                    </li>
-                @endif
+                        <li><a href="#"><i
+                                    class="fa fa-circle-o"></i>فاکتور های تسویه شده</a>
+                        </li>
+
+
+                        <li><a href="{{route('admin.bills.list')}}"><i
+                                    class="fa fa-circle-o"></i>صورت حساب های تسویه نشده</a>
+                        </li>
+
+                        <li><a href="#"><i
+                                    class="fa fa-circle-o"></i>صورت حساب های تسویه شده</a>
+                        </li>
+
+                        <li><a href="#"><i
+                                    class="fa fa-circle-o"></i>اسناد پرداختی</a>
+                        </li>
+
+
+
+                    </ul>
+                </li>
+
+
+
+{{--            @if(Gate::check('تسویه شده') || Gate::check('تسویه نشده'))--}}
+{{--                    <li class="treeview" id="payment">--}}
+{{--                        <a href="#">--}}
+{{--                            <i class="fa fa-credit-card"></i> <span>پرداختی ها</span>--}}
+{{--                            <span class="pull-left-container">--}}
+{{--<i class="fa fa-angle-right pull-left"></i>--}}
+{{--</span>--}}
+{{--                        </a>--}}
+{{--                        <ul class="treeview-menu">--}}
+{{--                            @can('تسویه شده')--}}
+{{--                                <li><a href="{{route('admin.paymentsuccess.list')}}"><i--}}
+{{--                                            class="fa fa-circle-o"></i>تسویه شده ها</a>--}}
+{{--                                </li>--}}
+{{--                            @endcan--}}
+
+
+{{--                            @can('تسویه نشده')--}}
+
+{{--                                <li><a href="{{route('admin.payment.list')}}"><i--}}
+{{--                                            class="fa fa-circle-o"></i>تسویه نشده ها</a>--}}
+{{--                                </li>--}}
+{{--                            @endcan--}}
+
+{{--                        </ul>--}}
+{{--                    </li>--}}
+{{--                @endif--}}
 
                 @if(Gate::check('تولید') || Gate::check('صف تولید')
                 || Gate::check('پلن خطوط تولید') || Gate::check('سفارش تولید')
@@ -640,6 +679,7 @@
                     </li>
                 @endif
 
+
                 @if(Gate::check('انبار مستربچ') || Gate::check('انبار مواد پلیمیری')
                 || Gate::check('انبار کالاهای ساخته شده') || Gate::check('رسید کالای ساخته شده')
                 || Gate::check('انبار موقت') || Gate::check('انبار ضایعات')
@@ -688,12 +728,14 @@
                 @endif
 
 
+
+
                 <li class="treeview" id="payment">
                     <a href="#">
-                        <i class="fa fa-credit-card"></i> <span>گزارشات</span>
+                        <i class="fa fa-file"></i> <span>گزارشات</span>
                         <span class="pull-left-container">
-<i class="fa fa-angle-right pull-left"></i>
-</span>
+                        <i class="fa fa-angle-right pull-left"></i>
+                        </span>
                     </a>
                     <ul class="treeview-menu">
 
@@ -708,12 +750,10 @@
                     </ul>
                 </li>
 
-
                 @if(Gate::check('بازسازی نرم افزار') || Gate::check('شروع به کار نرم افزار')
-                    || Gate::check('پشتیبان گیری از دیتابیس') || Gate::check('مشخصات عمومی سیستم')
-                    || Gate::check('لیست حسابهای بانکی') || Gate::check('لیست انبارها')
-                    || Gate::check('توقفات ماشین')
-                     )
+                || Gate::check('پشتیبان گیری از دیتابیس') || Gate::check('مشخصات عمومی سیستم')
+                || Gate::check('لیست حسابهای بانکی') || Gate::check('لیست انبارها')
+                || Gate::check('توقفات ماشین'))
                     <li class="treeview" id="setting">
                         <a href="#">
                             <i class="fa fa-hourglass-start"></i> <span>تنظیمات نرم افزار</span>

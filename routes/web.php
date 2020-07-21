@@ -235,9 +235,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::delete('/CustomerAccount/delete/{id?}', 'CustomerAccountController@delete')->name('admin.CustomerAccount.delete');
 
 
-
-
-
         //Customer
         Route::get('/customers/index', 'CustomerController@index')->name('admin.customers.index');
         Route::get('/customers/wizard', 'CustomerController@wizard')->name('admin.customers.wizard');
@@ -259,9 +256,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/customers/deleteFileFinal/{id?}', 'CustomerController@deleteFileFinal')->name('admin.customers.delete.fileFinal');
         Route::get('/customers/list/checkcity', 'CustomerController@checkcity')->name('admin.list.check.city');
         Route::get('/customers/list/checkstate', 'CustomerController@checkstate')->name('admin.list.check.state');
-
-
-
 
 
     });
@@ -444,10 +438,18 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
     });
 
+    Route::group(["namespace" => "Report"], function () {
+
+        //CustomerStatusReport
+        Route::get('/CustomerStatusReport/list', 'CustomerStatusReportController@list')->name('admin.CustomerStatusReport.list');
+
+    });
+
     Route::group(["namespace" => "Payment"], function () {
 
         //PaymentsController
         Route::get('/payment/list', 'PaymentsController@list')->name('admin.payment.list');
+        Route::get('/payment/detaillist', 'PaymentsController@detaillist')->name('admin.payment.detaillist');
         Route::get('/payment/paymentsuccess', 'PaymentsController@paymentsuccess')->name('admin.paymentsuccess.list');
         Route::get('/payment/list/list', 'PaymentsController@listdetail')->name('admin.payment.list.list');
         Route::get('payment/payment', 'PaymentsController@payment')->name('admin.payment.list.payment');
@@ -455,12 +457,32 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('payment/store/admin', 'PaymentsController@StoreAdmin')->name('admin.payment.store.admin');
         Route::post('payment/factor', 'PaymentsController@factor')->name('admin.payment.delete.factor');
         Route::get('/payment/update/{id?}', 'PaymentsController@update')->name('admin.payment.update');
-
         Route::get('/paymentt/updatee/{id?}', 'PaymentsController@updatee')->name('admin.payment.updatee');
+
+
+        Route::get('/payment/admin/trash/{id?}', 'PaymentsController@trash')->name('admin.payment.trash');
+        Route::get('/payment/admin/edit/{id?}', 'PaymentsController@edit')->name('admin.payment.edit');
+
+        Route::post('/payment/admin/update', 'PaymentsController@EditUpdate')->name('admin.payment.edit.update');
+
+        Route::get('/payment/list/detail/factor', 'PaymentsController@ListList')->name('admin.payment.list.detail.factor');
+
+        Route::get('/payment/check/list/{id?}', 'PaymentsController@CheckList')->name('admin.payment.check.list');
 
         //BillsController
         Route::get('/bills/list', 'BillsController@list')->name('admin.bills.list');
+        Route::get('/bills/detaillist', 'BillsController@detaillist')->name('admin.bills.detaillist');
+        Route::get('/bills/success/admin/{id?}', 'BillsController@SuccessAdmin')->name('admin.payment.success.admin');
 
+
+
+
+        Route::get('/bills/print/payment/{id?}', 'BillsController@PrintPayment')->name('admin.bills.print.detail');
+
+
+        //PaymentDocumentController
+        Route::get('/PaymentDocument/list', 'PaymentDocumentController@list')->name('admin.PaymentDocument.list');
+        Route::post('/PaymentDocument/store/payment', 'PaymentDocumentController@store')->name('admin.CustomerAccount.store.payment');
 
     });
 
@@ -561,7 +583,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
     Route::get('/refresh', 'TestController@refresh')->name('admin.table.refresh');
     Route::post('/updateOrder', 'TestController@updateOrder')->name('updateOrder');
 
-    Route::get('/send', 'NotifController@toChatAPI');
+    Route::get('/send', 'NotifController@tttt');
 
 
 });

@@ -11,6 +11,9 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
+            "bInfo": false,
+            "paging": false,
+            "bPaginate": false,
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -21,17 +24,16 @@
                 "processing": "در حال پردازش اطلاعات"
             },
             ajax: "{{ route('admin.salesarchive.list') }}",
+            "deferRender": true,
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'invoiceNumber', name: 'invoiceNumber'},
-                {data: 'create', name: 'create'},
-                {data: 'user_id', name: 'user_id'},
-                {data: 'customer_id', name: 'customer_id'},
+                {data: 'date', name: 'date'},
+                {data: 'user_name', name: 'user_name'},
+                {data: 'customer_name', name: 'customer_name'},
                 {data: 'number_sell', name: 'number_sell'},
                 {data: 'paymentMethod', name: 'paymentMethod'},
                 {data: 'price_sell', name: 'price_sell'},
-                {data: 'num_havale', name: 'num_havale'},
-                {data: 'num_factor', name: 'num_factor'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });

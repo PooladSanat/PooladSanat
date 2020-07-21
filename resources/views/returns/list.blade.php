@@ -3,7 +3,7 @@
     @include('message.msg')
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet box blue">
+            <div class="portlet box yellow">
                 <div class="portlet-title">
                     <div class="caption">
                        لیست مرجوعی ها

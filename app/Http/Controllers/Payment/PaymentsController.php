@@ -27,38 +27,200 @@ class PaymentsController extends Controller
     public function list(Request $request)
     {
         $array_customer = array();
+        $array_user = array();
         $v = verta();
         $customers = Customer::all();
         $users = User::all();
-        $array_Year = [1399, 1400, 1401, 1402, 1403, 1404, 1405, 1406, 1407, 1408, 1409, 1410, 1411, 1412, 1413, 1414, 1415, 1416, 1417, 1418, 1419, 1420];
-        $array_month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         foreach ($customers as $c) {
             $array_customer[] = $c->id;
         }
+        foreach ($users as $u) {
+            $array_user[] = $u->id;
+        }
         if ($request->ajax()) {
 //            $data = DB::select("CALL get_invoices()");
-            if ($request->customer_id == null) {
+            if ($request->customer_id == 0) {
                 $customer = $array_customer;
             } else {
                 $customer = [$request->customer_id];
             }
-            if ($request->year == null) {
-                $year = $array_Year;
+            if ($request->user_id == 0) {
+                $user = $array_user;
             } else {
-                $year = [$request->year];
+                $user = [$request->user_id];
             }
-            if ($request->month == null) {
-                $month = $array_month;
+            if (!empty($request->indate)) {
+                $indate = $request->indate;
             } else {
-                $month = [$request->month];
+                $indate = "1370/04/10";
             }
-
+            if (!empty($request->todate)) {
+                $todate = $request->todate;
+            } else {
+                $todate = "1470/04/10";
+            }
             $data = DB::table('factors')
                 ->where('Month', $v->month)
                 ->where('status', 0)
                 ->whereIn('customer_id', $customer)
-                ->whereIn('Year', $year)
-                ->whereIn('Month', $month)
+                ->whereIn('user_id', $user)
+                ->whereBetween('date', array($indate, $todate))
+                ->orderBy('customer_id', 'asc')->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+
+                ->addColumn('checkbox', function ($row) {
+                    $btn = ' <input type="checkbox" id="checkbox"
+                        name="student_checkbox[]"
+                        value=' . $row->pack_id . '
+                       class="student_checkbox">';
+                    return $btn;
+                })
+
+                ->addColumn('total', function ($row) {
+                    return number_format($row->sum);
+                })
+
+                ->addColumn('number', function ($row) {
+                    $number = Factors::where('customer_id', $row->customer_id)
+                        ->count();
+                    return $number;
+                })
+
+                ->addColumn('sumtotal', function ($row) {
+                    $number = Factors::where('customer_id', $row->customer_id)
+                        ->sum('sum');
+                    return number_format($number);
+                })
+
+                ->addColumn('user', function ($row) {
+                    $name = User::where('id', $row->user_id)->first();
+                    return $name->name;
+                })
+
+                ->addColumn('customer', function ($row) {
+                    $customer = Customer::where('id', $row->customer_id)->first();
+                    return $customer->name;
+                })
+
+                ->addColumn('action', function ($row) {
+                    return $this->actions($row);
+                })
+
+                ->rawColumns(['action', 'checkbox'])
+
+                ->make(true);
+        }
+        return view('payment.list', compact('customers', 'users'));
+    }
+
+    public function ListList(Request $request)
+    {
+        if ($request->ajax()) {
+            $pack = array();
+            $clearing_factor = DB::table('clearing_factor')
+                ->where('clearing_id', $request->detail_factor)
+                ->get();
+            foreach ($clearing_factor as $item)
+                $pack[] = $item->pack_id;
+
+            $data = DB::table('schedulings')
+                ->whereIn('pack', $pack)
+                ->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('product', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $product = Product::where('id', $detail->product_id)
+                        ->first();
+                    return $product->label;
+                })
+                ->addColumn('color', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $color = Color::where('id', $detail->color_id)
+                        ->first();
+                    return $color->name;
+                })
+                ->addColumn('customer', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $customer = Invoice::where('id', $detail->invoice_id)
+                        ->first();
+                    $name = User::where('id', $customer->user_id)->first();
+                    return $name->name;
+                })
+                ->addColumn('user', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $customer = Invoice::where('id', $detail->invoice_id)
+                        ->first();
+                    $name = Customer::where('id', $customer->customer_id)->first();
+                    return $name->name;
+
+                })
+                ->addColumn('total', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    return $detail->salesNumber;
+                })
+                ->addColumn('created_at', function ($row) {
+                    return Jalalian::forge($row->created_at)->format('Y/m/d');
+                })
+                ->rawColumns([])
+                ->make(true);
+        }
+
+        return view('bills.list');
+
+    }
+
+    public function detaillist(Request $request)
+    {
+        $array_customer = array();
+        $v = verta();
+        $customers = Customer::all();
+        $users = User::all();
+        foreach ($customers as $c) {
+            $array_customer[] = $c->id;
+        }
+        foreach ($users as $u) {
+            $array_user[] = $u->id;
+        }
+        if ($request->ajax()) {
+//            $data = DB::select("CALL get_invoices()");
+            if ($request->customer_id == 0) {
+                $customer = $array_customer;
+            } else {
+                $customer = [$request->customer_id];
+            }
+            if ($request->user_id == 0) {
+                $user = $array_user;
+            } else {
+                $user = [$request->user_id];
+            }
+            if (!empty($request->indate)) {
+                $indate = $request->indate;
+            } else {
+                $indate = "1370/04/10";
+            }
+            if (!empty($request->todate)) {
+                $todate = $request->todate;
+            } else {
+                $todate = "1470/04/10";
+            }
+            $data = DB::table('factors')
+                ->where('Month', $v->month)
+                ->where('status', 1)
+                ->whereIn('customer_id', $customer)
+                ->whereIn('user_id', $user)
+                ->whereBetween('date', array($indate, $todate))
                 ->orderBy('customer_id', 'asc')->get();
 
             return Datatables::of($data)
@@ -97,7 +259,7 @@ class PaymentsController extends Controller
                 ->rawColumns(['action', 'checkbox'])
                 ->make(true);
         }
-        return view('payment.list', compact('customers', 'users'));
+        return view('payment.detaillist', compact('customers', 'users'));
     }
 
     public function paymentsuccess(Request $request)
@@ -181,47 +343,25 @@ class PaymentsController extends Controller
 
 
         if ($request->ajax()) {
-            $pack_id = array();
-            $clearing_factor = DB::table('clearing_factor')
-                ->where('clearing_id', $request->id_id)
-                ->get();
-            foreach ($clearing_factor as $item) {
-                $pack_id[] = $item->pack_id;
-            }
-            $data = DB::table('schedulings')
-                ->whereIn('pack', $pack_id)
+            $data = DB::table('detail_customer_payment')
+                ->where('payment_id', $request->id_id)
                 ->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('product', function ($row) {
-                    $invoice_product = DB::table('invoice_product')
-                        ->where('id', $row->detail_id)
-                        ->first();
-                    $name = Product::where('id', $invoice_product->product_id)
-                        ->first();
-                    return $name->label;
-                })
-                ->addColumn('color', function ($row) {
-                    $invoice_product = DB::table('invoice_product')
-                        ->where('id', $row->detail_id)
-                        ->first();
-                    $name = Color::where('id', $invoice_product->color_id)
-                        ->first();
-                    return $name->name;
+                ->addColumn('type', function ($row) {
+                    if ($row->type == 1) {
+                        return 'نقدی';
+                    } else {
+                        return 'چکی';
+                    }
                 })
                 ->addColumn('price', function ($row) {
-                    $invoice_product = DB::table('invoice_product')
-                        ->where('id', $row->detail_id)
-                        ->first();
-                    return number_format($invoice_product->sumTotal);
+                    return number_format($row->price);
                 })
-                ->addColumn('price', function ($row) {
-                    $invoice_product = DB::table('invoice_product')
-                        ->where('id', $row->detail_id)
-                        ->first();
-                    return number_format($invoice_product->sumTotal);
+                ->addColumn('actioon', function ($row) {
+                    return $this->actionss($row);
                 })
-                ->rawColumns([])
+                ->rawColumns(['actioon'])
                 ->make(true);
         }
 
@@ -259,7 +399,8 @@ class PaymentsController extends Controller
             $custome = $customer_account;
         }
 
-        return response()->json(['success' => 'success', 'price' => $price
+        return response()->json(['success' => 'success',
+            'name_cusomer' => $check_customer_id[0], 'price' => $price
             , 'creditor' => $custome,
             'customer_id' => $check_customer_id[0], 'pack_id' => $request->id]);
 
@@ -267,6 +408,7 @@ class PaymentsController extends Controller
 
     public function storepament(Request $request)
     {
+
         $string = preg_split("/,+/", "$request->pack_id");
         $count = count($string);
         $date = Carbon::now();
@@ -276,6 +418,8 @@ class PaymentsController extends Controller
                 'date' => Jalalian::forge($date)->format('Y/m/d'),
                 'takhfif' => $request->takhfif,
                 'price' => $request->sum,
+                'status' => 0,
+                'customer_id' => $request->name_cusomer,
             ]);
 
             $id = DB::table('clearing')
@@ -289,7 +433,7 @@ class PaymentsController extends Controller
                     DB::table('factors')
                         ->where('pack_id', $string[$i])
                         ->update([
-                            'status' => 1,
+                            'status' => 3,
                         ]);
                 } catch (Exception $exception) {
                 }
@@ -408,7 +552,14 @@ class PaymentsController extends Controller
     public function update($id)
     {
 
+        $pack_iidd = \DB::table('clearing_factor')
+            ->where('clearing_id', $id)
+            ->first();
 
+        $idd = \DB::table('factors')
+            ->where('pack_id', $pack_iidd->pack_id)
+            ->first();
+        $name_custome = $idd->customer_id;
         $detais = DB::table('clearing_factor')
             ->where('clearing_id', $id)
             ->first();
@@ -446,20 +597,76 @@ class PaymentsController extends Controller
             $pri = number_format(0);
             $prii = 0;
         }
-        return response()->json(['name' => $name, 'price' => $pri, 'pricee' => $prii, 'date' => $dat, 'sum' => $p, 'summ' => $pp]);
+        return response()->json([
+            'name_customer' => $name_custome, 'name' => $name,
+            'price' => $pri, 'pricee' => $prii, 'date' => $dat, 'sum' => $p,
+            'summ' => $pp]);
 
     }
 
     public function StoreAdmin(Request $request)
     {
-        return \response()->json($request->all());
+        $packs = array();
+        $details = \DB::table('clearing_factor')
+            ->where('clearing_id', $request->customer_iderr)
+            ->get();
+        foreach ($details as $detail)
+            $packs[] = $detail->pack_id;
+        $payment = $request->pricessummm - $request->detail_customersa;
+        DB::table('admin_customer')
+            ->insert([
+                'clearing_id' => $request->customer_iderr,
+                'status' => $request->status,
+                'description' => $request->description_admin,
+            ]);
+        if ($request->status == 1) {
+            DB::table('clearing')
+                ->where('id', $request->customer_iderr)
+                ->update([
+                    'status' => 1,
+                ]);
+            \DB::table('factors')
+                ->whereIn('pack_id', $packs)
+                ->update([
+                    'status' => 1,
+                ]);
+            return \response()->json(['success' => 'success']);
+        } else {
+            $customre = DB::table('customer_accounts')
+                ->where('customer_id', $request->cid)
+                ->first();
+            DB::table('customer_accounts')
+                ->where('customer_id', $request->cid)
+                ->update([
+                    'creditor' => $request->detail_customersa + $customre->creditor + $payment,
+                ]);
+            DB::table('clearing')
+                ->where('id', $request->customer_iderr)
+                ->update([
+                    'status' => 0,
+                ]);
+            return \response()->json(['success' => 'success']);
+        }
+
 
     }
-
 
     public function updatee($id)
     {
 
+
+        $detail_customer_payment = DB::table('detail_customer_payment')
+            ->where('payment_id', $id)
+            ->sum('price');
+
+
+        if (!empty($detail_customer_payment)) {
+            $detail_customer = number_format($detail_customer_payment);
+            $detail_customersa = $detail_customer_payment;
+        } else {
+            $detail_customer = 0;
+            $detail_customersa = 0;
+        }
 
         $detais = DB::table('clearing_factor')
             ->where('clearing_id', $id)
@@ -481,6 +688,9 @@ class PaymentsController extends Controller
             $pp = 0;
         }
 
+        $recive_customers = $pp - $detail_customersa;
+        $recive_customer_payment = number_format($recive_customers);
+
         $name = Customer::where('id', $detail_id->customer_id)->first();
         $date = DB::table('detail_customer_payment')
             ->where('customer_id', $detail_id->customer_id)
@@ -498,17 +708,126 @@ class PaymentsController extends Controller
             $pri = number_format(0);
             $prii = 0;
         }
-        return response()->json(['name' => $name, 'price' => $pri, 'pricee' => $prii, 'date' => $dat, 'sum' => $p, 'summ' => $pp]);
+
+        $detail_customer_payment_sum = DB::table('detail_customer_payment')
+            ->where('customer_id', $detail_id->customer_id)
+            ->where('payment_id', '!=', $id)
+            ->sum('price');
+        $detail_customer_payment_summ = number_format($detail_customer_payment_sum);
+
+
+        $payment_customer = DB::table('detail_customer_payment')
+            ->where('customer_id', $detail_id->customer_id)
+            ->sum('price');
+
+        if (!empty($payment_customer)) {
+            $customer_payment = number_format($payment_customer);
+        } else {
+            $customer_payment = 0;
+        }
+
+
+        $factor_customer = DB::table('factors')
+            ->where('customer_id', $detail_id->customer_id)
+            ->count();
+
+        $final = $detail_customer_payment_sum + $detail_customersa - $pp;
+        $fina = number_format(abs($final));
+
+
+        return response()->json(['recive_customer' => $recive_customer_payment,
+            'detail_customer' => $detail_customer, 'name' => $name,
+            'price' => $pri, 'pricee' => $prii, 'date' => $dat, 'final' => $fina,
+            'detail_customer_payment_sum' => $detail_customer_payment_summ,
+            'sum' => $p, 'summ' => $pp, 'factor_customer' => $factor_customer,
+            'customer_payment' => $customer_payment, 'detail_customersa' => $detail_customersa]);
+
+    }
+
+    public function trash($id)
+    {
+        $detail = DB::table('detail_customer_payment')
+            ->where('id', $id)
+            ->first();
+        $customer = DB::table('customer_accounts')
+            ->where('customer_id', $detail->customer_id)
+            ->first();
+        DB::table('customer_accounts')
+            ->where('customer_id', $detail->customer_id)
+            ->update([
+                'creditor' => $customer->creditor - $detail->price,
+            ]);
+        $detail = DB::table('detail_customer_payment')
+            ->where('id', $id)
+            ->delete();
+
+
+        return \response()->json($detail);
+
+    }
+
+    public function edit($id)
+    {
+        $detail = DB::table('detail_customer_payment')
+            ->where('id', $id)
+            ->first();
+        return \response()->json($detail);
+
+    }
+
+    public function EditUpdate(Request $request)
+    {
+        $detail = DB::table('detail_customer_payment')
+            ->where('id', $request->id_detail)
+            ->first();
+        $customer = DB::table('customer_accounts')
+            ->where('customer_id', $detail->customer_id)
+            ->first();
+        DB::table('customer_accounts')
+            ->where('customer_id', $detail->customer_id)
+            ->update([
+                'creditor' => $customer->creditor - $detail->price + $request->prricee,
+            ]);
+        DB::table('detail_customer_payment')
+            ->where('id', $request->id_detail)
+            ->update([
+                'type' => $request->tyypee,
+                'shenase' => $request->shenasee,
+                'date' => $request->daatee,
+                'name' => $request->naamee,
+                'name_user' => $request->name_userr,
+                'price' => $request->prricee,
+            ]);
+        return \response()->json(['success' => 'success']);
 
     }
 
     public function actions($row)
     {
 
+
+        $btn = '<a href="' . route('admin.Scheduling.print', $row->pack_id) . '" target="_blank">
+                       <i class="fa fa-print fa-lg" title="چاپ فاکتور فروش"></i>
+                       </a>&nbsp;&nbsp;';
+
+
+        return $btn;
+
+    }
+
+    public function actionss($row)
+    {
+
         $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $row->customer_id . '" data-original-title="مشاهده"
-                       class="detail-eye">
-                       <i class="fa fa-plus fa-lg" title="افزایش موجودی مشتری"></i>
+                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                       class="detail-edit">
+                       <i class="fa fa-edit fa-lg" title="ویرایش"></i>
+                       </a>&nbsp;&nbsp;';
+
+        $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="حذف"
+                       class="detail-trash">
+                       <i class="fa fa-trash fa-lg" title="حذف"></i>
                        </a>&nbsp;&nbsp;';
 
 

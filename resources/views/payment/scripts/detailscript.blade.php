@@ -12,7 +12,11 @@
     }
 </style>
 <script type="text/javascript">
-
+    <?php
+    $month = verta();
+    ?>
+    $('#month').val({{$month->month}});
+    $('#year').val({{$month->year}});
     $(function () {
             $.ajaxSetup({
                 headers: {
@@ -22,7 +26,7 @@
 
             load_data();
 
-            function load_data(user_id = '', customer_id = '', indate = '', todate = '') {
+        function load_data(user_id = '', customer_id = '', indate = '', todate = '') {
                 $('.data-table').DataTable({
                     processing: true,
                     serverSide: true,
@@ -41,7 +45,7 @@
                     },
 
                     ajax: {
-                        ajax: "{{ route('admin.payment.list') }}",
+                        ajax: "{{ route('admin.payment.detaillist') }}",
                         data:
                             {
                                 user_id: user_id,
@@ -51,13 +55,14 @@
                             }
                     },
                     columns: [
-                        {data: 'checkbox', orderable: false, searchable: false},
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                         {data: 'customer', name: 'customer'},
                         {data: 'user', name: 'user'},
                         {data: 'pack_id', name: 'pack_id'},
                         {data: 'date', name: 'date'},
                         {data: 'total', name: 'total'},
                         {data: 'type', name: 'type'},
+                        {data: 'action', name: 'action', orderable: false, searchable: false},
 
                     ],
                     rowsGroup:
@@ -100,7 +105,6 @@
                             if (data.success) {
                                 $('#ajaxModelprice').modal('show');
                                 $('#sum_price').val(data.price);
-                                $('#name_cusomer').val(data.name_cusomer);
                                 if (data.creditor == null) {
                                     $('#creditor').val(0);
                                 } else {

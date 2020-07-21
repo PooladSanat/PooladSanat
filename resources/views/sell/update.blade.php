@@ -51,7 +51,7 @@
                                 <div class="form-group">
                                     <label>نام خریدار
                                     </label>
-                                    <select id="customer_id" name="customer_id" class="form-control"
+                                    <select  dir="rtl" id="customer_id" name="customer_id" class="form-control"
                                             required>
                                         @foreach($customers as $customer)
                                             <option value="{{$customer->id}}"

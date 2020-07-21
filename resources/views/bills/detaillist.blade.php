@@ -3,10 +3,10 @@
     @include('message.msg')
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet box red-sunglo">
+            <div class="portlet box green">
                 <div class="portlet-title">
                     <div class="caption">
-                        صورت حسابهای تسویه نشده
+                        صورت حسابهای تسویه شده
                     </div>
                     <div class="tools"></div>
                 </div>
@@ -47,7 +47,6 @@
                             <th>تاریخ صدور</th>
                             <th>مشتری</th>
                             <th>مبلغ(ریال)</th>
-                            <th>وضعیت</th>
                             <th>عملیات</th>
                         </tr>
                         </thead>
@@ -59,5 +58,5 @@
         </div>
     </div>
     @include('bills.modals.modal')
-    @include('bills.scripts.script')
+    @include('bills.scripts.detailscript')
 @endsection

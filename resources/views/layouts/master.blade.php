@@ -531,72 +531,81 @@
                         </ul>
                     </li>
                 @endif
-
-                <li class="treeview" id="payment">
-                    <a href="#">
-                        <i class="fa fa-credit-card"></i> <span>مالی</span>
-                        <span class="pull-left-container">
+                @if(Gate::check('فاکتور های تسویه نشده') || Gate::check('صورت حساب های تسویه نشده')
+                               || Gate::check('فاکتور های تسویه شده') || Gate::check('صورت حساب های تسویه شده')
+                               || Gate::check('اسناد پرداختی')
+                                || Gate::check('صورت وضعیت مشتریان'))
+                    <li class="treeview" id="payment">
+                        <a href="#">
+                            <i class="fa fa-credit-card"></i> <span>مالی</span>
+                            <span class="pull-left-container">
                         <i class="fa fa-angle-right pull-left"></i>
                         </span>
-                    </a>
-                    <ul class="treeview-menu">
+                        </a>
+                        <ul class="treeview-menu">
+
+                            @can('فاکتور های تسویه نشده')
+                                <li><a href="{{route('admin.payment.list')}}"><i
+                                            class="fa fa-circle-o"></i>فاکتور های تسویه نشده</a>
+                                </li>
+                            @endcan
+                            @can('فاکتور های تسویه شده')
+                                <li><a href="{{route('admin.payment.detaillist')}}"><i
+                                            class="fa fa-circle-o"></i>فاکتور های تسویه شده</a>
+                                </li>
+                            @endcan
+                            @can('صورت حساب های تسویه نشده')
+                                <li><a href="{{route('admin.bills.list')}}"><i
+                                            class="fa fa-circle-o"></i>صورت حساب های تسویه نشده</a>
+                                </li>
+                            @endcan
+                            @can('صورت حساب های تسویه شده')
+                                <li><a href="{{route('admin.bills.detaillist')}}"><i
+                                            class="fa fa-circle-o"></i>صورت حساب های تسویه شده</a>
+                                </li>
+                            @endcan
+                            @can('اسناد پرداختی')
+                                <li><a href="{{route('admin.PaymentDocument.list')}}"><i
+                                            class="fa fa-circle-o"></i>اسناد پرداختی</a>
+                                </li>
+                            @endcan
+                            @can('صورت وضعیت مشتریان')
+                                <li><a href="{{route('admin.CustomerStatusReport.list')}}"><i
+                                            class="fa fa-circle-o"></i>صورت وضعیت مشتریان</a>
+                                </li>
+                            @endcan
 
 
-                        <li><a href="{{route('admin.payment.list')}}"><i
-                                    class="fa fa-circle-o"></i>فاکتور های تسویه نشده</a>
-                        </li>
+                        </ul>
+                    </li>
+                @endif
+
+                {{--            @if(Gate::check('تسویه شده') || Gate::check('تسویه نشده'))--}}
+                {{--                    <li class="treeview" id="payment">--}}
+                {{--                        <a href="#">--}}
+                {{--                            <i class="fa fa-credit-card"></i> <span>پرداختی ها</span>--}}
+                {{--                            <span class="pull-left-container">--}}
+                {{--<i class="fa fa-angle-right pull-left"></i>--}}
+                {{--</span>--}}
+                {{--                        </a>--}}
+                {{--                        <ul class="treeview-menu">--}}
+                {{--                            @can('تسویه شده')--}}
+                {{--                                <li><a href="{{route('admin.paymentsuccess.list')}}"><i--}}
+                {{--                                            class="fa fa-circle-o"></i>تسویه شده ها</a>--}}
+                {{--                                </li>--}}
+                {{--                            @endcan--}}
 
 
-                        <li><a href="#"><i
-                                    class="fa fa-circle-o"></i>فاکتور های تسویه شده</a>
-                        </li>
+                {{--                            @can('تسویه نشده')--}}
 
+                {{--                                <li><a href="{{route('admin.payment.list')}}"><i--}}
+                {{--                                            class="fa fa-circle-o"></i>تسویه نشده ها</a>--}}
+                {{--                                </li>--}}
+                {{--                            @endcan--}}
 
-                        <li><a href="{{route('admin.bills.list')}}"><i
-                                    class="fa fa-circle-o"></i>صورت حساب های تسویه نشده</a>
-                        </li>
-
-                        <li><a href="#"><i
-                                    class="fa fa-circle-o"></i>صورت حساب های تسویه شده</a>
-                        </li>
-
-                        <li><a href="#"><i
-                                    class="fa fa-circle-o"></i>اسناد پرداختی</a>
-                        </li>
-
-
-
-                    </ul>
-                </li>
-
-
-
-{{--            @if(Gate::check('تسویه شده') || Gate::check('تسویه نشده'))--}}
-{{--                    <li class="treeview" id="payment">--}}
-{{--                        <a href="#">--}}
-{{--                            <i class="fa fa-credit-card"></i> <span>پرداختی ها</span>--}}
-{{--                            <span class="pull-left-container">--}}
-{{--<i class="fa fa-angle-right pull-left"></i>--}}
-{{--</span>--}}
-{{--                        </a>--}}
-{{--                        <ul class="treeview-menu">--}}
-{{--                            @can('تسویه شده')--}}
-{{--                                <li><a href="{{route('admin.paymentsuccess.list')}}"><i--}}
-{{--                                            class="fa fa-circle-o"></i>تسویه شده ها</a>--}}
-{{--                                </li>--}}
-{{--                            @endcan--}}
-
-
-{{--                            @can('تسویه نشده')--}}
-
-{{--                                <li><a href="{{route('admin.payment.list')}}"><i--}}
-{{--                                            class="fa fa-circle-o"></i>تسویه نشده ها</a>--}}
-{{--                                </li>--}}
-{{--                            @endcan--}}
-
-{{--                        </ul>--}}
-{{--                    </li>--}}
-{{--                @endif--}}
+                {{--                        </ul>--}}
+                {{--                    </li>--}}
+                {{--                @endif--}}
 
                 @if(Gate::check('تولید') || Gate::check('صف تولید')
                 || Gate::check('پلن خطوط تولید') || Gate::check('سفارش تولید')
@@ -726,8 +735,6 @@
                         </ul>
                     </li>
                 @endif
-
-
 
 
                 <li class="treeview" id="payment">
@@ -899,6 +906,54 @@
             },
         },
         placeholder: "لطفا کاربر را انتخاب کنین",
+    });
+    $(document).ready(function () {
+        $('#customer_id').select2({
+            width: '100%',
+            dir: 'rtl',
+            placeholder: 'مشتریان',
+            language: {
+                noResults: function () {
+                    return 'مشتری با این نام یافت نشد';
+                },
+            },
+        });
+    });
+    $(document).ready(function () {
+        $('#user_id').select2({
+            width: '100%',
+            dir: 'rtl',
+            placeholder: 'کاربران',
+            language: {
+                noResults: function () {
+                    return 'کاربری با این نام یافت نشد';
+                },
+            },
+        });
+    });
+    $(document).ready(function () {
+        $('#country').select2({
+            width: '100%',
+            dir: 'rtl',
+            placeholder: 'کشورها',
+            language: {
+                noResults: function () {
+                    return 'کشوری با این نام یافت نشد';
+                },
+            },
+        });
+    });
+    $(document).ready(function () {
+        $('#city').select2({
+            width: '100%',
+            dir: 'rtl',
+            placeholder: 'استان',
+            language: {
+                noResults: function () {
+                    return 'استانی با این نام یافت نشد';
+                },
+            },
+        });
     });
 </script>
 

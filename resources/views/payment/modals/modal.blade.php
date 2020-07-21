@@ -161,6 +161,7 @@
                             >
                                 <input type="hidden" name="customer_idd" id="customer_idd">
                                 <input type="hidden" name="pack_id" id="pack_id">
+                                <input type="hidden" name="name_cusomer" id="name_cusomer">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">

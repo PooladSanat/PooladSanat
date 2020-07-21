@@ -9,7 +9,9 @@
     .as-console-wrapper {
         display: none !important;
     }
+
 </style>
+
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
     @php
@@ -30,7 +32,7 @@
         });
         load_data();
 
-        function load_data(from_check = '', from_date = '{{$date}}') {
+        function load_data(from_check = '', from_date = '{{$date}}', to = '{{$date}}') {
             $('#data-table').DataTable({
 
                 processing: true,
@@ -41,27 +43,27 @@
                 "bPaginate": false,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     if (aData.status == 'عدم خروج') {
-                        $('td:eq(11)', nRow).css('background-color', 'rgba(255,106,107,0.65)');
+                        $('td:eq(12)', nRow).css('background-color', 'rgba(255,106,107,0.65)');
                     } else if (aData.status == 'خروج کامل') {
-                        $('td:eq(11)', nRow).css('background-color', 'rgba(204,255,141,0.65)');
+                        $('td:eq(12)', nRow).css('background-color', 'rgba(204,255,141,0.65)');
                     } else if (aData.status == 'خروج ناقص') {
-                        $('td:eq(11)', nRow).css('background-color', 'rgba(255,250,130,0.65)');
+                        $('td:eq(12)', nRow).css('background-color', 'rgba(255,250,130,0.65)');
                     } else if (aData.status == 'اتمام یافته') {
-                        $('td:eq(11)', nRow).css('background-color', 'rgba(255,163,239,0.65)');
+                        $('td:eq(12)', nRow).css('background-color', 'rgba(255,163,239,0.65)');
                     } else if (aData.status == 'تایید حواله') {
-                        $('td:eq(11)', nRow).css('background-color', 'rgba(0,183,255,0.66)');
+                        $('td:eq(12)', nRow).css('background-color', 'rgba(0,183,255,0.66)');
                     } else {
                         $('td', nRow).css('background-color', 'white');
                     }
 
                     if (parseInt(aData.total) == parseInt(aData.number)) {
-                        $('td:eq(6)', nRow).css('background-color', 'rgba(204,255,141,0.65)');
+                        $('td:eq(7)', nRow).css('background-color', 'rgba(204,255,141,0.65)');
                     } else if (parseInt(aData.total) == parseInt("0")) {
-                        $('td:eq(6)', nRow).css('background-color', 'rgba(255,106,107,0.64)');
+                        $('td:eq(7)', nRow).css('background-color', 'rgba(255,106,107,0.64)');
                     } else if (parseInt(aData.total) < parseInt(aData.number)) {
-                        $('td:eq(6)', nRow).css('background-color', 'rgba(255,250,130,0.65)');
+                        $('td:eq(7)', nRow).css('background-color', 'rgba(255,250,130,0.65)');
                     } else {
-                        $('td:eq(6)', nRow).css('background-color', 'white');
+                        $('td:eq(7)', nRow).css('background-color', 'white');
                     }
                 }
                 ,
@@ -86,15 +88,18 @@
                     ajax: "{{ route('admin.scheduling.list') }}",
                     data:
                         {
+                            from_check: from_check,
                             from_date: from_date,
-                            from_check: from_check
+                            to: to,
+
                         }
                 },
+                "deferRender": true,
                 columns: [
                     {data: 'detail_id', name: 'detail_id'},
-                    {data: 'pack', name: 'pack', visible: false},
+                    {data: 'pack', name: 'pack'},
                     {data: 'user', name: 'user'},
-                    {data: 'customer_id', name: 'customer_id'},
+                    {data: 'customer_name', name: 'customer_name'},
                     {data: 'product', name: 'product'},
                     {data: 'color', name: 'color'},
                     {data: 'number', name: 'number'},
@@ -118,8 +123,9 @@
         $('#filter').click(function () {
             var from_check = $('#list').val();
             var from_date = $('#from_date').val();
+            var to = '';
             $('#data-table').DataTable().destroy();
-            load_data(from_check, from_date);
+            load_data(from_check, from_date, to);
         });
 
         $('body').on('click', '.change-date', function () {
@@ -348,7 +354,7 @@
                                     myNode.innerHTML += "<div class='form-group'>" +
                                         "<input type=\"text\" id=\'product" + a + "\' readonly  name=\"product[]\"\n" +
                                         "class=\"form-control product\" />" +
-                                        "<input type='hidden' id=\'producte" + a + "\' name='producte[]'>"+
+                                        "<input type='hidden' id=\'producte" + a + "\' name='producte[]'>" +
                                         "</div></div></div>";
                                     document.getElementById('productt').appendChild(myNode);
                                     $('#product' + a + '').val(products[p].label);

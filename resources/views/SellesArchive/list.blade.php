@@ -3,7 +3,7 @@
     @include('message.msg')
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet box blue">
+            <div class="portlet box yellow">
                 <div class="portlet-title">
                     <div class="caption">
                         آرشیو فروش
@@ -22,8 +22,6 @@
                             <th>تعداد</th>
                             <th>نوع فاکتور</th>
                             <th>جمع کل(ریال)</th>
-                            <th>شماره حواله راهکاران</th>
-                            <th>شماره فاکتور راهکاران</th>
                             <th>عملیات</th>
                         </tr>
                         </thead>

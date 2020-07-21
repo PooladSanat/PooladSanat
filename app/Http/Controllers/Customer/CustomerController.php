@@ -491,6 +491,7 @@ class CustomerController extends Controller
                         'phone_personel.required' => 'لطفا شماره تماس مشتری را وارد کنید',
                     ]);
         if ($type->type == 1) {
+
             if ($request->hasFile('certificate_documents_company')) {
                 $file = $request->file('certificate_documents_company');
                 $name = time() . '.' . $file->getClientOriginalExtension();

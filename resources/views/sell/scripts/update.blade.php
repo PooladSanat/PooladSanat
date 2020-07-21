@@ -498,4 +498,15 @@
             nextButtonIcon: "fa fa-arrow-circle-right",
 
         });
+    $(document).ready(function () {
+        $('#customer_id').select2({
+            width: '100%',
+            placeholder: 'مشتریان',
+            language: {
+                noResults: function () {
+                    return 'مشتری با این نام یافت نشد';
+                },
+            },
+        });
+    });
 </script>

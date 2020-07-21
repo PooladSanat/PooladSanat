@@ -5,7 +5,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet box blue">
+            <div class="portlet box red-pink">
                 <div class="portlet-title">
                     <div class="caption">
                         لیست پیش فاکتور های لغو شده

@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 class NotifController extends Controller
 {
 
+    public function tttt()
+    {
+        \DB::table('schedulings')
+            ->where('user_id', null)
+            ->update([
+                'user_id' => 12,
+            ]);
+
+    }
 
     public function toChatAPI()
     {

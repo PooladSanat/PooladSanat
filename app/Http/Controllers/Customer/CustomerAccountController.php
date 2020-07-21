@@ -43,6 +43,13 @@ class CustomerAccountController extends Controller
 
     public function store(Request $request)
     {
+        $packs = array();
+        $details = \DB::table('clearing_factor')
+            ->where('clearing_id', $request->customer_ider)
+            ->get();
+        foreach ($details as $detail)
+            $packs[] = $detail->pack_id;
+
 
         $created = Carbon::now()->timezone('Asia/Tehran');
         $price = null;
@@ -61,46 +68,68 @@ class CustomerAccountController extends Controller
             ]);
         $payment_id = \DB::table('payments')
             ->latest('id')->first();
-        $count = count($request->price);
-        for ($i = 0; $i < $count; $i++) {
-            try {
-                $price = $price + $request->price[$i];
-                \DB::table('detail_customer_payment')
-                    ->insert([
-                        'customer_id' => $request->customer_ider,
-                        'payment_id' => $payment_id->id,
-                        'type' => $request->type[$i],
-                        'shenase' => $request->shenase[$i],
-                        'price' => $request->price[$i],
-                        'date' => $request->date[$i],
-                        'name' => $request->name[$i],
-                        'name_user' => $request->user_name[$i],
-                        'created_at' => $created,
-                    ]);
-            } catch (Exception $exception) {
+        if (!empty($request->price)) {
+            $count = count($request->price);
+            for ($i = 0; $i < $count; $i++) {
+                try {
+                    $price = $price + $request->price[$i];
+                    \DB::table('detail_customer_payment')
+                        ->insert([
+                            'customer_id' => $pack->customer_id,
+                            'payment_id' => $payment_id->clearing_id,
+                            'type' => $request->type[$i],
+                            'shenase' => $request->shenase[$i],
+                            'price' => $request->price[$i],
+                            'date' => $request->date[$i],
+                            'name' => $request->name[$i],
+                            'name_user' => $request->user_name[$i],
+                            'created_at' => $created,
+                            'status' => 1,
+                        ]);
+                } catch (Exception $exception) {
+                }
             }
-        }
-        $sum = $price + $request->cpricee;
-        if (empty($CustomerAccount)) {
-            CustomerAccount::create([
-                'customer_id' => $pack->customer_id,
-                'creditor' => $sum - $request->pricesumm,
-            ]);
-        } else {
-            CustomerAccount::where('customer_id', $pack->customer_id)
-                ->update([
-                    'creditor' => $sum - $request->pricesumm,
-                ]);
-        }
 
-        if ($sum < $request->pricesumm) {
+        }
+        $sum = $price + $request->cpriicee;
+        if ($sum < $request->pricesuumm) {
+            if (empty($CustomerAccount)) {
+                CustomerAccount::create([
+                    'customer_id' => $pack->customer_id,
+                    'creditor' => $sum,
+                ]);
+            } else {
+                CustomerAccount::where('customer_id', $pack->customer_id)
+                    ->update([
+                        'creditor' => $sum,
+                    ]);
+            }
             \DB::table('clearing')
                 ->where('id', $request->customer_ider)
                 ->update([
-                    'status' => 2,
+                    'status' => 3,
                 ]);
 
         } else {
+            if (empty($CustomerAccount)) {
+                CustomerAccount::create([
+                    'customer_id' => $pack->customer_id,
+                    'creditor' => $sum - $request->pricesuumm,
+                ]);
+            } else {
+                CustomerAccount::where('customer_id', $pack->customer_id)
+                    ->update([
+                        'creditor' => $sum - $request->pricesuumm,
+                    ]);
+                \DB::table('factors')
+                    ->whereIn('pack_id', $packs)
+                    ->update([
+                        'status' => 1,
+                    ]);
+
+            }
+
+
             \DB::table('clearing')
                 ->where('id', $request->customer_ider)
                 ->update([
@@ -108,6 +137,8 @@ class CustomerAccountController extends Controller
                 ]);
         }
         return response()->json(['success' => 'success']);
+
+
     }
 
     public function detail(Request $request)

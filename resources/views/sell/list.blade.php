@@ -3,10 +3,10 @@
     @include('message.msg')
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet box blue">
+            <div class="portlet box red-sunglo">
                 <div class="portlet-title">
                     <div class="caption">
-                        لیست پیش فاکتور ها
+                        لیست پیش فاکتورهای تایید نشده
                     </div>
                     <div class="tools"></div>
                 </div>

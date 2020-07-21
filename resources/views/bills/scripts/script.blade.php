@@ -7,311 +7,335 @@
 <script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
+    var id_id = null;
     $(function () {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            load_data();
+
+            function load_data(customer_id = '', indate = '', todate = '') {
+                $('.data-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    "ordering": false,
+                    "bInfo": false,
+                    "paging": false,
+                    "bPaginate": false,
+                    "language": {
+                        "search": "جستجو:",
+                        "lengthMenu": "نمایش _MENU_",
+                        "zeroRecords": "موردی یافت نشد!",
+                        "info": "نمایش _PAGE_ از _PAGES_",
+                        "infoEmpty": "موردی یافت نشد",
+                        "infoFiltered": "(جستجو از _MAX_ مورد)",
+                        "processing": "در حال پردازش اطلاعات"
+                    },
+
+                    ajax: {
+                        ajax: "{{ route('admin.bills.list') }}",
+                        data:
+                            {
+                                customer_id: customer_id,
+                                indate: indate,
+                                todate: todate,
+                            }
+                    },
+                    columns: [
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                        {data: 'id', name: 'id'},
+                        {data: 'date', name: 'date'},
+                        {data: 'customer', name: 'customer'},
+                        {data: 'price', name: 'price'},
+                        {data: 'status', name: 'status'},
+                        {data: 'action', name: 'action', orderable: false, searchable: false},
+                    ]
+                });
             }
-        });
-        var table = $('.data-table').DataTable({
-            processing: true,
-            serverSide: true,
-            "language": {
-                "search": "جستجو:",
-                "lengthMenu": "نمایش _MENU_",
-                "zeroRecords": "موردی یافت نشد!",
-                "info": "نمایش _PAGE_ از _PAGES_",
-                "infoEmpty": "موردی یافت نشد",
-                "infoFiltered": "(جستجو از _MAX_ مورد)",
-                "processing": "در حال پردازش اطلاعات"
-            },
-            ajax: "{{ route('admin.bills.list') }}",
-            columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'id', name: 'id'},
-                {data: 'date', name: 'date'},
-                {data: 'customer', name: 'customer'},
-                {data: 'price', name: 'price'},
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
-            ]
-        });
 
-        $('body').on('click', '.detail-eye', function () {
-
-            $('.type').remove();
-            $('.shenase').remove();
-            $('.price').remove();
-            $('.date').remove();
-            $('.actiont').remove();
-            $('.user_name').remove();
-            $('.name').remove();
-            var id_id = $(this).data('id');
-            $.get("{{ route('admin.payment.update') }}" + '/' + id_id, function (data) {
-                $('#gfgf').DataTable().destroy();
-                $('#ajaxModel').modal('show');
-                $('#customer_ider').val(id_id);
-                $('#cname').val(data.name.name);
-                $('#cprice').val(data.price);
-                $('#cpricee').val(data.pricee);
-                $('#cupdate').val(data.date);
-                $('#pricesum').val(data.sum);
-                $('#pricesumm').val(data.summ);
-
-                var table1 = $('.gfgf').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    "ordering": false,
-                    "paging": false,
-                    "info": false,
-                    "scrollY": "150px",
-                    "scrollCollapse": true,
-                    "language": {
-                        "search": "جستجو:",
-                        "lengthMenu": "نمایش _MENU_",
-                        "zeroRecords": "موردی یافت نشد!",
-                        "info": "نمایش _PAGE_ از _PAGES_",
-                        "infoEmpty": "موردی یافت نشد",
-                        "infoFiltered": "(جستجو از _MAX_ مورد)",
-                        "processing": "در حال پردازش اطلاعات"
-                    },
-                    ajax: {
-                        url: "{{ route('admin.payment.list.list') }}",
-                        data: {
-                            id_id: id_id,
-                        },
-                    },
-                    columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                        {data: 'pack', name: 'pack'},
-                        {data: 'product', name: 'product'},
-                        {data: 'color', name: 'color'},
-                        {data: 'number', name: 'number'},
-                        {data: 'price', name: 'price'},
-                        {data: 'date', name: 'date'},
-                    ],
-                    rowsGroup:
-                        [
-                            1
-                        ],
-                });
-
-            })
-
-
-        });
-
-        $('body').on('click', '.detail-eye', function () {
-
-            $('.type').remove();
-            $('.shenase').remove();
-            $('.price').remove();
-            $('.date').remove();
-            $('.actiont').remove();
-            $('.user_name').remove();
-            $('.name').remove();
-            var id_id = $(this).data('id');
-            $.get("{{ route('admin.payment.update') }}" + '/' + id_id, function (data) {
-                $('#gfgf').DataTable().destroy();
-                $('#ajaxModel').modal('show');
-                $('#customer_ider').val(id_id);
-                $('#cname').val(data.name.name);
-                $('#cprice').val(data.price);
-                $('#cpricee').val(data.pricee);
-                $('#cupdate').val(data.date);
-                $('#pricesum').val(data.sum);
-                $('#pricesumm').val(data.summ);
-
-                var table1 = $('.gfgf').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    "ordering": false,
-                    "paging": false,
-                    "info": false,
-                    "scrollY": "150px",
-                    "scrollCollapse": true,
-                    "language": {
-                        "search": "جستجو:",
-                        "lengthMenu": "نمایش _MENU_",
-                        "zeroRecords": "موردی یافت نشد!",
-                        "info": "نمایش _PAGE_ از _PAGES_",
-                        "infoEmpty": "موردی یافت نشد",
-                        "infoFiltered": "(جستجو از _MAX_ مورد)",
-                        "processing": "در حال پردازش اطلاعات"
-                    },
-                    ajax: {
-                        url: "{{ route('admin.payment.list.list') }}",
-                        data: {
-                            id_id: id_id,
-                        },
-                    },
-                    columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                        {data: 'pack', name: 'pack'},
-                        {data: 'product', name: 'product'},
-                        {data: 'color', name: 'color'},
-                        {data: 'number', name: 'number'},
-                        {data: 'price', name: 'price'},
-                        {data: 'date', name: 'date'},
-                    ],
-                    rowsGroup:
-                        [
-                            1
-                        ],
-                });
-
-            })
-
-
-        });
-
-        $('body').on('click', '.detail-admin', function () {
-            var id_id = $(this).data('id');
-            $.get("{{ route('admin.payment.updatee') }}" + '/' + id_id, function (data) {
-                $('#ajaxadmin').modal('show');
-                $('#customer_iderr').val(id_id);
-                $('#cnamee').val(data.name.name);
-                $('#cpricee').val(data.price);
-                $('#cpriceee').val(data.pricee);
-                $('#cupdatee').val(data.date);
-                $('#pricesumm').val(data.sum);
-                $('#pricesummm').val(data.summ);
-            })
-        });
-
-
-        $('#admin').click(function (e) {
-            e.preventDefault();
-            $('#admin').text('در حال ثبت اطلاعات...');
-            $('#admin').prop("disabled", true);
-            $.ajax({
-                data: $('#productFoerm').serialize(),
-                url: "{{ route('admin.payment.store.admin') }}",
-                type: "POST",
-                dataType: 'json',
-                success: function (data) {
-                    if (data.errors) {
-                        $('#ajaxadmin').modal('hide');
-                        jQuery.each(data.errors, function (key, value) {
-                            Swal.fire({
-                                title: 'خطا!',
-                                text: value,
-                                icon: 'error',
-                                confirmButtonText: 'تایید'
-                            })
-                        });
-                        $('#admin').text('ثبت');
-                        $('#admin').prop("disabled", false);
-                    }
-                    if (data.success) {
-                        $('#productFoerm').trigger("reset");
-                        $('#ajaxadmin').modal('hide');
-                        $('.data-table').DataTable().draw();
-                        Swal.fire({
-                            title: 'موفق',
-                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
-                            icon: 'success',
-                            confirmButtonText: 'تایید',
-                        });
-                        $('#admin').text('ثبت');
-                        $('#admin').prop("disabled", false);
-                    }
-                }
+            $('#filter').click(function () {
+                var customer_id = $('#customer_id').val();
+                var indate = $('#indate').val();
+                var todate = $('#todate').val();
+                $('.data-table').DataTable().destroy();
+                load_data(customer_id, indate, todate);
             });
-        });
+
+            $('body').on('click', '.detail-eye', function () {
+
+                $('.type').remove();
+                $('.shenase').remove();
+                $('.price').remove();
+                $('.date').remove();
+                $('.actiont').remove();
+                $('.user_name').remove();
+                $('.name').remove();
+                id_id = $(this).data('id');
+                $.get("{{ route('admin.payment.update') }}" + '/' + id_id, function (data) {
+                    $('#gfgf').DataTable().destroy();
+                    $('#ajaxModel').modal('show');
+                    $('#customer_ider').val(id_id);
+                    $('#cname').val(data.name.name);
+                    $('#cprice').val(data.price);
+                    $('#cpriicee').val(data.pricee);
+                    $('#cupdate').val(data.date);
+                    $('#pricesum').val(data.sum);
+                    $('#pricesuumm').val(data.summ);
+                    $('#customer_ideeeer').val(data.name_customer);
 
 
+                    var table1 = $('.gfgf').DataTable({
+                        processing: true,
+                        serverSide: true,
+                        "ordering": false,
+                        "paging": false,
+                        "info": false,
+                        "scrollY": "150px",
+                        "scrollCollapse": true,
+                        "language": {
+                            "search": "جستجو:",
+                            "lengthMenu": "نمایش _MENU_",
+                            "zeroRecords": "موردی یافت نشد!",
+                            "info": "نمایش _PAGE_ از _PAGES_",
+                            "infoEmpty": "موردی یافت نشد",
+                            "infoFiltered": "(جستجو از _MAX_ مورد)",
+                            "processing": "در حال پردازش اطلاعات"
+                        },
+                        ajax: {
+                            url: "{{ route('admin.payment.list.list') }}",
+                            data: {
+                                id_id: id_id,
+                            },
+                        },
+                        columns: [
+                            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                            {data: 'type', name: 'type'},
+                            {data: 'shenase', name: 'shenase'},
+                            {data: 'date', name: 'date'},
+                            {data: 'name', name: 'name'},
+                            {data: 'name_user', name: 'name_user'},
+                            {data: 'price', name: 'price'},
+                            {data: 'actioon', name: 'actioon'},
+                        ]
+                    });
 
-        $('#createNewProduct').click(function () {
-            $('#productForm').trigger("reset");
-            $('#ajaxModel').modal('show');
-            $('#caption').text('افزودن حساب بانکی');
-            $('#id').val('');
-        });
-
-        $('body').on('click', '.editProduct', function () {
-            var id = $(this).data('id');
-            $.get("{{ route('admin.bank.update') }}" + '/' + id, function (data) {
-                $('#ajaxModel').modal('show');
-                $('#caption').text('ویرایش حساب بانکی');
-                $('#id').val(data.id);
-                $('#name').val(data.name);
-                $('#NameBank').val(data.NameBank);
-                $('#CardNumber').val(data.CardNumber);
-                $('#AccountNumber').val(data.AccountNumber);
-                $('#ShabaNumber').val(data.ShabaNumber);
-                $('#status').val(data.status);
-            })
-        });
+                })
 
 
-
-        $('#saveBtn').click(function (e) {
-            e.preventDefault();
-            $('#saveBtn').text('در حال ثبت اطلاعات...');
-            $('#saveBtn').prop("disabled", true);
-            $.ajax({
-                data: $('#productForm').serialize(),
-                url: "{{ route('admin.CustomerAccount.store') }}",
-                type: "POST",
-                dataType: 'json',
-                success: function (data) {
-                    if (data.errors) {
-                        $('#ajaxModel').modal('hide');
-                        jQuery.each(data.errors, function (key, value) {
-                            Swal.fire({
-                                title: 'خطا!',
-                                text: value,
-                                icon: 'error',
-                                confirmButtonText: 'تایید'
-                            })
-                        });
-                        $('#saveBtn').text('ثبت');
-                        $('#saveBtn').prop("disabled", false);
-                    }
-                    if (data.success) {
-                        $('#productForm').trigger("reset");
-                        $('#ajaxModel').modal('hide');
-                        $('.data-table').DataTable().draw();
-                        Swal.fire({
-                            title: 'موفق',
-                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
-                            icon: 'success',
-                            confirmButtonText: 'تایید',
-                        });
-                        $('#saveBtn').text('ثبت');
-                        $('#saveBtn').prop("disabled", false);
-                    }
-                }
             });
-        });
+
+            $('body').on('click', '.detail-admin', function () {
+                var id_id = $(this).data('id');
+                $.get("{{ route('admin.payment.updatee') }}" + '/' + id_id, function (data) {
+                    $('#ajaxadmin').modal('show');
+                    $('#customer_iderr').val(id_id);
+                    $('#cnamee').val(data.name.name);
+                    $('#cid').val(data.name.id);
+                    $('#cpricee').val(data.price);
+                    $('#cpriceee').val(data.pricee);
+                    $('#cupdatee').val(data.date);
+                    $('#pricesumm').val(data.sum);
+                    $('#pricesummm').val(data.summ);
+                    $('#pricessummm').val(data.summ);
+                    $('#price_customer_payment').val(data.detail_customer);
+                    $('#detail_customersa').val(data.detail_customersa);
+                    $('#recive_customer_payment').val(data.recive_customer);
+                    $('#document_customer_payment').val(data.customer_payment);
+                    $('#factor_customer_payment').val(data.factor_customer);
+                    $('#b1').text(data.sum);
+                    $('#p1').text(data.detail_customer);
+                    $('#m1').text(data.detail_customer_payment_sum);
+                    $('#f1').text(data.final);
+                })
+            });
+
+            $('#admin').click(function (e) {
+                e.preventDefault();
+                $('#admin').text('در حال ثبت اطلاعات...');
+                $('#admin').prop("disabled", true);
+                $.ajax({
+                    data: $('#productFoerm').serialize(),
+                    url: "{{ route('admin.payment.store.admin') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.errors) {
+                            $('#ajaxadmin').modal('hide');
+                            jQuery.each(data.errors, function (key, value) {
+                                Swal.fire({
+                                    title: 'خطا!',
+                                    text: value,
+                                    icon: 'error',
+                                    confirmButtonText: 'تایید'
+                                })
+                            });
+                            $('#admin').text('ثبت');
+                            $('#admin').prop("disabled", false);
+                        }
+                        if (data.success) {
+                            $('#productFoerm').trigger("reset");
+                            $('#ajaxadmin').modal('hide');
+                            $('.data-table').DataTable().draw();
+                            Swal.fire({
+                                title: 'موفق',
+                                text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                                icon: 'success',
+                                confirmButtonText: 'تایید',
+                            });
+                            $('#admin').text('ثبت');
+                            $('#admin').prop("disabled", false);
+                        }
+                    }
+                });
+            });
+
+            $('#createNewProduct').click(function () {
+                $('#productForm').trigger("reset");
+                $('#ajaxModel').modal('show');
+                $('#caption').text('افزودن حساب بانکی');
+                $('#id').val('');
+            });
+
+            $('body').on('click', '.editProduct', function () {
+                var id = $(this).data('id');
+                $.get("{{ route('admin.bank.update') }}" + '/' + id, function (data) {
+                    $('#ajaxModel').modal('show');
+                    $('#caption').text('ویرایش حساب بانکی');
+                    $('#id').val(data.id);
+                    $('#name').val(data.name);
+                    $('#NameBank').val(data.NameBank);
+                    $('#CardNumber').val(data.CardNumber);
+                    $('#AccountNumber').val(data.AccountNumber);
+                    $('#ShabaNumber').val(data.ShabaNumber);
+                    $('#status').val(data.status);
+                })
+            });
+
+            $('#saveBtn').click(function (e) {
+                e.preventDefault();
+                $('#saveBtn').text('در حال ثبت اطلاعات...');
+                $('#saveBtn').prop("disabled", true);
+                $.ajax({
+                    data: $('#productForm').serialize(),
+                    url: "{{ route('admin.CustomerAccount.store') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.errors) {
+                            $('#ajaxModel').modal('hide');
+                            jQuery.each(data.errors, function (key, value) {
+                                Swal.fire({
+                                    title: 'خطا!',
+                                    text: value,
+                                    icon: 'error',
+                                    confirmButtonText: 'تایید'
+                                })
+                            });
+                            $('#saveBtn').text('ثبت');
+                            $('#saveBtn').prop("disabled", false);
+                        }
+                        if (data.success) {
+                            $('#productForm').trigger("reset");
+                            $('#ajaxModel').modal('hide');
+                            $('.data-table').DataTable().draw();
+                            Swal.fire({
+                                title: 'موفق',
+                                text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                                icon: 'success',
+                                confirmButtonText: 'تایید',
+                            });
+                            $('#saveBtn').text('ثبت');
+                            $('#saveBtn').prop("disabled", false);
+                        }
+                    }
+                });
+            });
+
+            $('#saveBtnedit').click(function (e) {
+                e.preventDefault();
+                $('#ajaxModel').modal('hide');
+                $('#saveBtnedit').text('در حال ثبت اطلاعات...');
+                $('#saveBtnedit').prop("disabled", true);
+                $.ajax({
+                    data: $('#productFormedit').serialize(),
+                    url: "{{ route('admin.payment.edit.update') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.errors) {
+                            $('#ajaxModel').modal('hide');
+                            jQuery.each(data.errors, function (key, value) {
+                                Swal.fire({
+                                    title: 'خطا!',
+                                    text: value,
+                                    icon: 'error',
+                                    confirmButtonText: 'تایید'
+                                })
+                            });
+                            $('#saveBtnedit').text('ثبت');
+                            $('#saveBtnedit').prop("disabled", false);
+                        }
+                        if (data.success) {
+                            $('#productFormedit').trigger("reset");
+                            $('#ajaxModeledit').modal('hide');
+                            $('#gfgf').DataTable().draw();
+                            Swal.fire({
+                                title: 'موفق',
+                                text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                                icon: 'success',
+                                confirmButtonText: 'تایید',
+                            }).then((result) => {
+                                $('#gfgf').DataTable().draw();
+                                $.get("{{ route('admin.payment.update') }}" + '/' + id_id, function (data) {
+                                    $('#gfgf').DataTable().destroy();
+                                    $('#ajaxModel').modal('show');
+                                    $('#customer_ider').val(id_id);
+                                    $('#cname').val(data.name.name);
+                                    $('#cprice').val(data.price);
+                                    $('#cpriicee').val(data.pricee);
+                                    $('#cupdate').val(data.date);
+                                    $('#pricesum').val(data.sum);
+                                    $('#pricesuumm').val(data.summ);
+                                    $('#customer_ideeeer').val(data.name_customer);
+                                })
+                            });
+                            $('#saveBtnedit').text('ثبت');
+                            $('#saveBtnedit').prop("disabled", false);
+                        }
+                    }
+                });
+            });
+
+        }
+    );
 
 
-    });
-    $('body').on('click', '.deleteProduct', function () {
+    $('body').on('click', '.detail-gate-admin', function () {
         var id = $(this).data("id");
         Swal.fire({
-            title: 'حذف حساب بانکی؟',
-            text: "مشخصات حذف شده قابل بازیابی نیستند!",
+            title: 'ارجاع به مدیریت برای تایید نهایی!',
+            text: "صورت حساب برای تایید نهایی به مدیریت ارسال میشود!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'حذف',
+            confirmButtonText: 'تایید',
             cancelButtonText: 'انصراف',
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    type: 'DELETE',
-                    url: "{{route('admin.bank.delete')}}" + '/' + id,
+                    type: 'GET',
+                    url: "{{route('admin.payment.success.admin')}}" + '/' + id,
                     data: {
                         '_token': $('input[name=_token]').val(),
                     },
                     success: function (data) {
-                        $('#data-table').DataTable().ajax.reload();
+                        $('.data-table').DataTable().draw();
                         Swal.fire({
                             title: 'موفق',
-                            text: 'مشخصات حساب بانکی با موفقیت از سیستم حذف شد',
+                            text: 'صورت حساب با موفقیت به مدیریت ارسال شد',
                             icon: 'success',
                             confirmButtonText: 'تایید'
                         })
@@ -321,7 +345,127 @@
         })
     });
 
-    jQuery(function($){
+    $('body').on('click', '.detail-trash', function () {
+        $('#ajaxModel').modal('hide');
+        var id = $(this).data("id");
+        Swal.fire({
+            title: 'حذف پرداخت مشتری!',
+            text: "پرداخت مشتری از حسابش کم خواهد شد!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'تایید',
+            cancelButtonText: 'انصراف',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'GET',
+                    url: "{{route('admin.payment.trash')}}" + '/' + id,
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                    },
+                    success: function (data) {
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'پرداخت مشتری با موفقیت از سیستم حذف شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید'
+                        }).then((result) => {
+                            $('#gfgf').DataTable().draw();
+                            $.get("{{ route('admin.payment.update') }}" + '/' + id_id, function (data) {
+                                $('#gfgf').DataTable().destroy();
+                                $('#ajaxModel').modal('show');
+                                $('#customer_ider').val(id_id);
+                                $('#cname').val(data.name.name);
+                                $('#cprice').val(data.price);
+                                $('#cpriicee').val(data.pricee);
+                                $('#cupdate').val(data.date);
+                                $('#pricesum').val(data.sum);
+                                $('#pricesuumm').val(data.summ);
+                                $('#customer_ideeeer').val(data.name_customer);
+                            })
+                        });
+                    }
+                });
+            } else {
+                $('#gfgf').DataTable().draw();
+                $.get("{{ route('admin.payment.update') }}" + '/' + id_id, function (data) {
+                    $('#gfgf').DataTable().destroy();
+                    $('#ajaxModel').modal('show');
+                    $('#customer_ider').val(id_id);
+                    $('#cname').val(data.name.name);
+                    $('#cprice').val(data.price);
+                    $('#cpriicee').val(data.pricee);
+                    $('#cupdate').val(data.date);
+                    $('#pricesum').val(data.sum);
+                    $('#pricesuumm').val(data.summ);
+                    $('#customer_ideeeer').val(data.name_customer);
+                })
+            }
+        })
+    });
+
+    $('body').on('click', '.detail-edit', function () {
+        var id = $(this).data('id');
+        $.get("{{ route('admin.payment.edit') }}" + '/' + id, function (data) {
+            $('#ajaxModeledit').modal('show');
+            $('#id_detail').val(id);
+            $('#tyypee').val(data.type);
+            $('#shenasee').val(data.shenase);
+            $('#naamee').val(data.name);
+            $('#daatee').val(data.date);
+            $('#name_userr').val(data.name_user);
+            $('#prricee').val(data.price);
+        })
+    });
+
+    $('body').on('click', '.detail-factor', function () {
+
+        var detail_factor = $(this).data('id');
+        $('#ajaxModellistr').modal('show');
+        $('#factor').DataTable().destroy();
+        $('.factor').DataTable({
+            processing: true,
+            serverSide: true,
+            "ordering": false,
+            "paging": false,
+            "info": false,
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                url: "{{ route('admin.payment.list.detail.factor') }}",
+                data: {
+                    detail_factor: detail_factor,
+                },
+            },
+            columns: [
+                {data: 'pack', name: 'pack'},
+                {data: 'customer', name: 'customer'},
+                {data: 'user', name: 'user'},
+                {data: 'product', name: 'product'},
+                {data: 'color', name: 'color'},
+                {data: 'total', name: 'total'},
+                {data: 'created_at', name: 'created_at'},
+            ],
+            rowsGroup:
+                [
+                    0, 1, 2
+                ],
+
+        });
+
+
+    });
+
+    jQuery(function ($) {
         $("#CardNumber").mask("9999-9999-9999-9999");
     });
 
@@ -519,4 +663,16 @@
             nextButtonIcon: "fa fa-arrow-circle-right",
 
         });
+    $(document).ready(function () {
+        $('#customer_id').select2({
+            width: '100%',
+            dir: 'rtl',
+            placeholder: 'مشتریان',
+            language: {
+                noResults: function () {
+                    return 'مشتری با این نام یافت نشد';
+                },
+            },
+        });
+    });
 </script>

@@ -25,134 +25,34 @@ class SalesArchiveController extends Controller
             ->first();
         $banks = Bank::where('status', 1)->get();
         $selectstores = SelectStore::where('status', 1)->get();
-        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی") {
-            if ($request->ajax()) {
-                $data = Invoice::where('status', 1)
-                    ->orderBy('id', 'DESC')
-                    ->get();
-                return Datatables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('user_id', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
-                        return $user->name;
-                    })
-                    ->addColumn('customer_id', function ($row) {
-                        $customer = Customer::where('id', $row->customer_id)->first();
-                        return $customer->name;
-                    })
-                    ->addColumn('price_sell', function ($row) {
-                        return number_format($row->price_sell);
-                    })
-                    ->addColumn('num_factor', function ($row) {
-                        $invoice_products = \DB::table('invoice_product')
-                            ->where('invoice_id', $row->id)
-                            ->whereNotNull('end')
-                            ->get();
-                        foreach ($invoice_products as $invoice_product)
-                            $ids = \DB::table('schedulings')
-                                ->where('detail_id', $invoice_product->id)
-                                ->whereNotNull('end')
-                                ->get();
-                        foreach ($ids as $id)
-                            $factor = \DB::table('exitproductbarnfacs')
-                                ->where('detail_id', $id->pack)
-                                ->get();
-                        foreach ($factor as $item)
-                            return $item->number_fac;
-
-
-                    })
-                    ->addColumn('num_havale', function ($row) {
-                        $invoice_products = \DB::table('invoice_product')
-                            ->where('invoice_id', $row->id)
-                            ->whereNotNull('end')
-                            ->get();
-                        foreach ($invoice_products as $invoice_product)
-                            $ids = \DB::table('schedulings')
-                                ->where('detail_id', $invoice_product->id)
-                                ->whereNotNull('end')
-                                ->get();
-                        foreach ($ids as $id)
-                            $factor = \DB::table('_success_number_invoice')
-                                ->where('scheduling_id', $id->pack)
-                                ->get();
-                        foreach ($factor as $item)
-                            return $item->number;
-
-
-                    })
-                    ->addColumn('action', function ($row) {
-                        return $this->actions($row);
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
-            }
-            return view('SellesArchive.list', compact('banks', 'selectstores'));
+        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی" or $role->name == "مسئول حمل و نقل" or $role->name == "مدیر انبار") {
+            $user_id = [12, 13, 14, 15, 16, 17, 18, 19, 22, 24, 25];
         }
         if ($role->name == "کارشناس فروش") {
-            if ($request->ajax()) {
-                $data = Invoice::where('user_id', $id)->where('status', 1)
-                    ->orderBy('id', 'DESC')
-                    ->get();
-                return Datatables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('user_id', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
-                        return $user->name;
-                    })
-                    ->addColumn('customer_id', function ($row) {
-                        $customer = Customer::where('id', $row->customer_id)->first();
-                        return $customer->name;
-                    })
-                    ->addColumn('price_sell', function ($row) {
-                        return number_format($row->price_sell);
-                    })
-                    ->addColumn('num_factor', function ($row) {
-                        $invoice_products = \DB::table('invoice_product')
-                            ->where('invoice_id', $row->id)
-                            ->whereNotNull('end')
-                            ->get();
-                        foreach ($invoice_products as $invoice_product)
-                            $ids = \DB::table('schedulings')
-                                ->where('detail_id', $invoice_product->id)
-                                ->whereNotNull('end')
-                                ->get();
-                        foreach ($ids as $id)
-                            $factor = \DB::table('exitproductbarnfacs')
-                                ->where('detail_id', $id->pack)
-                                ->get();
-                        foreach ($factor as $item)
-                            return $item->number_fac;
-
-
-                    })
-                    ->addColumn('num_havale', function ($row) {
-                        $invoice_products = \DB::table('invoice_product')
-                            ->where('invoice_id', $row->id)
-                            ->whereNotNull('end')
-                            ->get();
-                        foreach ($invoice_products as $invoice_product)
-                            $ids = \DB::table('schedulings')
-                                ->where('detail_id', $invoice_product->id)
-                                ->whereNotNull('end')
-                                ->get();
-                        foreach ($ids as $id)
-                            $factor = \DB::table('_success_number_invoice')
-                                ->where('scheduling_id', $id->pack)
-                                ->get();
-                        foreach ($factor as $item)
-                            return $item->number;
-
-
-                    })
-                    ->addColumn('action', function ($row) {
-                        return $this->actions($row);
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
-            }
-            return view('SellesArchive.list', compact('banks', 'selectstores'));
+            $user_id = [auth()->user()->id];
         }
+
+        if ($request->ajax()) {
+            $data = DB::table('View_SalesArchive')
+                ->whereIn('user_id', $user_id)
+                ->where('status', 1)
+                ->orderBy('id', 'DESC')
+                ->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('price_sell', function ($row) {
+                    return number_format($row->price_sell);
+                })
+
+                ->addColumn('action', function ($row) {
+                    return $this->actions($row);
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('SellesArchive.list', compact('banks', 'selectstores'));
+
     }
 
     public function actions($row)

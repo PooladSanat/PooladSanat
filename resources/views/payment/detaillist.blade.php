@@ -3,17 +3,33 @@
     @include('message.msg')
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet box red-sunglo">
+            <div class="portlet box green">
+
                 <div class="portlet-title">
+
                     <div class="caption">
-                        صورت حسابهای تسویه نشده
+                        فاکتور های تسویه شده
                     </div>
                     <div class="tools"></div>
                 </div>
+
                 <div class="portlet-body">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-1">
+
                         </div>
+
+                        <div class="col-md-2">
+                            <label>نام فروشنده:</label>
+                            <select class="form-control" id="user_id" name="user_id">
+                                <option value="0">تمام فروشنده ها</option>
+                                @foreach($users as $user)
+                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
                         <div class="col-md-2">
                             <label>نام مشتری:</label>
                             <select class="form-control" id="customer_id" name="customer_id">
@@ -23,31 +39,39 @@
                                 @endforeach
                             </select>
                         </div>
+
                         <div class="col-md-2">
                             <label>از تاریخ:</label>
                             <input type="text" id="indate" name="indate" class="form-control">
                         </div>
+
                         <div class="col-md-2">
                             <label>تا تاریخ:</label>
                             <input type="text" id="todate" name="todate" class="form-control">
                         </div>
+
+
+
                         <div class="col-md-2">
                             <br/>
                             <button type="button" name="filter" id="filter" class="form-control btn btn-primary">
                                 جستجو
                             </button>
                         </div>
+
                     </div>
                     <br/>
-                    <table class="table table-striped table-bordered data-table" id="data-table">
+                    <table class="table table-striped table-bordered cell-border stripe display data-table"
+                           id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
                             <th>ردیف</th>
-                            <th>کد صورت حساب</th>
-                            <th>تاریخ صدور</th>
                             <th>مشتری</th>
+                            <th>فروشنده</th>
+                            <th>فاکتور</th>
+                            <th>تاریخ فاکتور</th>
                             <th>مبلغ(ریال)</th>
-                            <th>وضعیت</th>
+                            <th>نحوه پرداخت</th>
                             <th>عملیات</th>
                         </tr>
                         </thead>
@@ -58,6 +82,6 @@
             </div>
         </div>
     </div>
-    @include('bills.modals.modal')
-    @include('bills.scripts.script')
+    @include('payment.modals.modal')
+    @include('payment.scripts.detailscript')
 @endsection

@@ -1,6 +1,7 @@
 <script src="{{asset('/public/js/2.js')}}"></script>
 <link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
 <script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
+
 <script type="text/javascript">
     @php
         $dat = \Carbon\Carbon::now();
@@ -477,4 +478,5 @@
             nextButtonIcon: "fa fa-arrow-circle-right",
 
         });
+
 </script>

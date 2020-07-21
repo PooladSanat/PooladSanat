@@ -20,8 +20,8 @@
 
             processing: true,
             serverSide: true,
-
-
+            "paging": false,
+            "info": false,
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -32,6 +32,7 @@
                 "processing": "در حال پردازش اطلاعات"
             },
             ajax: "{{ route('admin.invoice.index') }}",
+            "deferRender": true,
             columns: [
                 {data: 'invoiceNumber', name: 'invoiceNumber'},
                 {data: 'create', name: 'create'},

@@ -34,169 +34,51 @@ class SchedulingController extends Controller
         $role = DB::table('roles')
             ->where('id', $role_id->role_id)
             ->first();
+
         if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی" or $role->name == "مسئول حمل و نقل" or $role->name == "مدیر انبار") {
-            if ($request->ajax()) {
-                if (!empty($request->from_check)) {
-                    $data = Scheduling::whereIn('status', $request->from_check)
-                        ->orderBy('id', 'desc')
-                        ->get();
-                } elseif (empty($request->from_check) and !empty($request->from_date)) {
-                    $data = Scheduling::where('date', $this->convert2english($request->from_date))
-                        ->orderBy('id', 'desc')
-                        ->get();
-                } else {
-                    $data = DB::table('schedulings')->get();
-
-                }
-                return Datatables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('product', function ($row) {
-                        $product_id = \DB::table('invoice_product')
-                            ->where('id', $row->detail_id)
-                            ->first();
-                        $name = Product::where('id', $product_id->product_id)->first();
-                        return $name->label;
-                    })
-                    ->addColumn('invoice', function ($row) {
-                        $product_id = \DB::table('invoice_product')
-                            ->where('id', $row->detail_id)
-                            ->first();
-                        $name = Invoice::where('id', $product_id->invoice_id)->first();
-                        return $name->invoiceNumber;
-                    })
-                    ->addColumn('color', function ($row) {
-                        $product_id = \DB::table('invoice_product')
-                            ->where('id', $row->detail_id)
-                            ->first();
-                        $name = Color::where('id', $product_id->color_id)->first();
-                        return $name->name;
-                    })
-                    ->addColumn('user', function ($row) {
-                        $product_id = \DB::table('invoice_product')
-                            ->where('id', $row->detail_id)
-                            ->first();
-                        $name = Invoice::where('id', $product_id->invoice_id)->first();
-                        $username = User::where('id', $name->user_id)->first();
-                        return $username->name;
-                    })
-                    ->addColumn('customer_id', function ($row) {
-                        $product_id = \DB::table('invoice_product')
-                            ->where('id', $row->detail_id)
-                            ->first();
-                        $name = Invoice::where('id', $product_id->invoice_id)->first();
-                        $username = Customer::where('id', $name->customer_id)->first();
-
-                        $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $username->id . '" data-original-title="ثبت تعداد خروجی"
-                       class="customer">
-                  ' . $username->name . '
-                       </a>&nbsp;&nbsp;';
-                        return $btn;
-                    })
-                    ->addColumn('status', function ($row) {
-                        if ($row->status != 6) {
-                            if (!empty($row->statusfull)) {
-                                if ($row->statusfull == 8) {
-                                    return 'خروج کامل';
-                                } elseif ($row->statusfull == 9) {
-                                    return 'خروج ناقص';
-                                }
-                            } else {
-                                if ($row->status == 0) {
-                                    return 'ثبت اولیه';
-                                } elseif ($row->status == 1) {
-                                    return 'تایید ثبت';
-                                } elseif ($row->status == 2) {
-                                    return 'تایید حواله';
-                                } elseif ($row->status == 3) {
-                                    return 'خروج کامل';
-                                } elseif ($row->status == 4) {
-                                    return 'خروج ناقص';
-                                } elseif ($row->status == 5) {
-                                    return 'عدم خروج';
-                                } elseif ($row->status == 6) {
-                                    return 'اتمام یافته';
-                                }
-                            }
-
-                        } else {
-                            return 'اتمام یافته';
-                        }
-
-                    })
-                    ->addColumn('action', function ($row) {
-                        return $this->actions($row);
-                    })
-                    ->rawColumns(['action', 'customer_id'])
-                    ->make(true);
-            }
-            return view('Scheduling.list');
+            $user_id = [12, 13, 14, 15, 16, 17, 18, 19, 22, 24, 25];
         }
+
         if ($role->name == "کارشناس فروش") {
-            if ($request->ajax()) {
+            $user_id = [auth()->user()->id];
+        }
 
-                if (!empty($request->from_check)) {
-                    $data = Scheduling::whereIn('status', $request->from_check)
-                        ->where('user_id', $id)
-                        ->orderBy('id', 'desc')
-                        ->get();
-                } elseif (empty($request->from_check) and !empty($request->from_date)) {
-                    $data = Scheduling::where('user_id', $id)->where('date', $this->convert2english($request->from_date))
-                        ->orderBy('id', 'desc')
-                        ->get();
-                } else {
+        if (!empty($request->from_date)) {
+            $indate = [$request->from_date];
+            $todate = [$request->from_date];
+        } else {
+            $indate = "1395/04/10";
+            $todate = "1450/04/01";
+        }
 
-                    $data = DB::table('schedulings')
-                        ->where('user_id', $id)
-                        ->get();
-                }
+        if (!empty($request->from_check)) {
+            $indate = "1395/04/10";
+            $todate = "1450/04/01";
+            $list = $request->from_check;
+        } else {
 
-                return Datatables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('product', function ($row) {
-                        $product_id = \DB::table('invoice_product')
-                            ->where('id', $row->detail_id)
-                            ->first();
-                        $name = Product::where('id', $product_id->product_id)->first();
-                        return $name->label;
-                    })
-                    ->addColumn('invoice', function ($row) {
-                        $product_id = \DB::table('invoice_product')
-                            ->where('id', $row->detail_id)
-                            ->first();
-                        $name = Invoice::where('id', $product_id->invoice_id)->first();
-                        return $name->invoiceNumber;
-                    })
-                    ->addColumn('color', function ($row) {
-                        $product_id = \DB::table('invoice_product')
-                            ->where('id', $row->detail_id)
-                            ->first();
-                        $name = Color::where('id', $product_id->color_id)->first();
-                        return $name->name;
-                    })
-                    ->addColumn('user', function ($row) {
-                        $product_id = \DB::table('invoice_product')
-                            ->where('id', $row->detail_id)
-                            ->first();
-                        $name = Invoice::where('id', $product_id->invoice_id)->first();
-                        $username = User::where('id', $name->user_id)->first();
-                        return $username->name;
-                    })
-                    ->addColumn('customer_id', function ($row) {
-                        $product_id = \DB::table('invoice_product')
-                            ->where('id', $row->detail_id)
-                            ->first();
-                        $name = Invoice::where('id', $product_id->invoice_id)->first();
-                        $username = Customer::where('id', $name->customer_id)->first();
-                        $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"
-                      data-id="' . $username->id . '" data-original-title="ثبت تعداد خروجی"
+            $list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        }
+
+        if ($request->ajax()) {
+            $data = DB::table('View_Scheduling')
+                ->whereIn('user_id', $user_id)
+                ->whereIn('status', $list)
+                ->whereBetween('date', array($indate, $todate))
+                ->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('customer_name', function ($row) {
+
+                    $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->customer_id . '" data-original-title="ثبت تعداد خروجی"
                        class="customer">
-                  ' . $username->name . '
+                  ' . $row->customer_name . '
                        </a>&nbsp;&nbsp;';
-                        return $btn;
-                    })
-                    ->addColumn('status', function ($row) {
-
+                    return $btn;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->status != 6) {
                         if (!empty($row->statusfull)) {
                             if ($row->statusfull == 8) {
                                 return 'خروج کامل';
@@ -221,15 +103,18 @@ class SchedulingController extends Controller
                             }
                         }
 
-                    })
-                    ->addColumn('action', function ($row) {
-                        return $this->actions($row);
-                    })
-                    ->rawColumns(['action', 'customer_id'])
-                    ->make(true);
-            }
-            return view('Scheduling.list');
+                    } else {
+                        return 'اتمام یافته';
+                    }
+
+                })
+                ->addColumn('action', function ($row) {
+                    return $this->actions($row);
+                })
+                ->rawColumns(['action', 'customer_name'])
+                ->make(true);
         }
+        return view('Scheduling.list');
 
     }
 

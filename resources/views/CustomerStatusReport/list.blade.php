@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('content')
     @include('message.msg')
+
     <div class="row">
         <div class="col-md-12">
             <div class="portlet box blue">
@@ -42,7 +43,7 @@
                     <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>ردیف</th>
+                            <th style="width: 1px">ردیف</th>
                             <th>کد صورت حساب</th>
                             <th>تاریخ صدور</th>
                             <th>مبلغ صورت حساب(ریال)</th>
@@ -52,26 +53,62 @@
                         </thead>
                         <tbody>
                         </tbody>
-                        <tfoot>
+
+                        <tfoot align="right">
                         <tr>
-                            <th colspan="5">جمع کل</th>
-                            <th>0</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
+                        {{--                        <tr>--}}
+                        {{--                            <th colspan="5">مانده حساب(مانده حساب مشتری از قبل در سیستم)</th>--}}
+                        {{--                            <th id="sum_customer">0</th>--}}
+                        {{--                        </tr>--}}
                         <tr>
-                            <th colspan="5">جمع مبالغ در جریان</th>
-                            <th>0</th>
+                            <th colspan="5">جمع مبالغ فاکتورهای در جریان</th>
+                            <th id="sum_j">0</th>
                         </tr>
                         <tr>
                             <th colspan="5">صورت وضعیت</th>
-                            <th>0</th>
+                            <th id="summ">0</th>
                         </tr>
                         </tfoot>
                     </table>
+                    <br/>
+                    <hr/>
+                    <br/>
+
+                    <table class="table table-striped table-bordered data" id="data">
+                        <thead style="background-color: #e8ecff">
+                        <tr>
+                            <th colspan="13">
+                                <center style="text-align: center">پرداختی های مشتری</center>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="width: 1px">ردیف</th>
+                            <th>نوع سند</th>
+                            <th>شماره سند</th>
+                            <th>تاریخ سر رسید</th>
+                            <th>بانک</th>
+                            <th>نام صادر کننده</th>
+                            <th>مبلغ</th>
+                            <th>وصول</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+
                     <div class="text-left">
 
-                        <button style="width: 130px" type="submit" class="btn btn-success"
-                                id="saveBtn" value="ثبت">
-                            چاپ صورت وضعیت
+                        <button type="button" name="bulk_delete"
+                                id="bulk_delete" class="btn btn-success"
+                        >چاپ صورت وضعیت
                         </button>
                     </div>
                 </div>

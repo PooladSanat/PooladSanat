@@ -35,7 +35,15 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
+            "bInfo": false,
+            "paging": false,
+            "bPaginate": false,
+            "columnDefs": [
+                {"orderable": false, "targets": 0},
+            ],
+            "order": [[ 8, "desc" ]],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
                 if (aData.status == 'اتمام یافته') {
                     $('td:eq(7)', nRow).css('background-color', 'rgba(0,183,255,0.64)');
                 } else if (aData.status == 'در حال برسی') {

@@ -37,11 +37,16 @@
 
                 processing: true,
                 serverSide: true,
-                "ordering": false,
                 "bInfo": false,
                 "paging": false,
                 "bPaginate": false,
+                "columnDefs": [
+                    {"orderable": false, "targets": 0},
+                ],
+                "order": [[ 13, "desc" ]],
+                "ordering": false,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                    $('td:eq(0)', nRow).css('background-color', '#e8ecff');
                     if (aData.status == 'عدم خروج') {
                         $('td:eq(12)', nRow).css('background-color', 'rgba(255,106,107,0.65)');
                     } else if (aData.status == 'خروج کامل') {

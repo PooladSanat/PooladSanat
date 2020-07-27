@@ -56,11 +56,16 @@
         var table = $('#data-table').DataTable({
             processing: true,
             serverSide: true,
-
             "bInfo": false,
             "paging": false,
             "bPaginate": false,
+            "columnDefs": [
+                {"orderable": false, "targets": 0},
+            ],
+            "order": [[ 10, "desc" ]],
+            "ordering": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
                 if (parseInt(aData.barn) < parseInt(aData.salesNumber)) {
                     $('td:eq(9)', nRow).css('color', '#fb8000');
                 } else if (parseInt(aData.barn) >= parseInt(aData.salesNumber)) {

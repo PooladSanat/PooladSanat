@@ -94,7 +94,7 @@
                            id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>مشتری</th>
+                            <th style="width: 1px">مشتری</th>
                             <th>فاکتور</th>
                             <th>مبلغ(ریال)</th>
                             <th>نحوه پرداخت</th>

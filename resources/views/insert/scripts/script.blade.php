@@ -11,6 +11,16 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+            },
+            "bInfo": false,
+            "paging": false,
+            "bPaginate": false,
+            "columnDefs": [
+                {"orderable": false, "targets": 0},
+            ],
+            "order": [[ 5, "desc" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",

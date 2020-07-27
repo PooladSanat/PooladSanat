@@ -14,7 +14,15 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
+            "bInfo": false,
+            "paging": false,
+            "bPaginate": false,
+            "columnDefs": [
+                {"orderable": false, "targets": 0},
+            ],
+            "order": [[ 3, "desc" ]],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
                 if (parseInt(aData.creditor) < 0) {
                     $('td:eq(2)', nRow).css('background-color', 'rgba(255,43,28,0.62)');
                 } else if (parseInt(aData.creditor) > 0) {
@@ -145,9 +153,16 @@
         var table1 = $('.ee').DataTable({
             processing: true,
             serverSide: true,
-            "ordering": false,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+            },
+            "bInfo": false,
             "paging": false,
-            "info": false,
+            "bPaginate": false,
+            "columnDefs": [
+                {"orderable": false, "targets": 0},
+            ],
+            "order": [[ 9, "desc" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",

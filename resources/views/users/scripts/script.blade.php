@@ -25,6 +25,16 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+            },
+            "bInfo": false,
+            "paging": false,
+            "bPaginate": false,
+            "columnDefs": [
+                {"orderable": false, "targets": 0},
+            ],
+            "order": [[7, "desc"]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -44,7 +54,8 @@
                 {data: 'online', name: 'online'},
                 {data: 'status', name: 'status'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
-            ]
+            ],
+
         });
         $('body').on('click', '.editProduct', function () {
             var product_id = $(this).data('id');
@@ -138,7 +149,7 @@
                 }
             });
         });
-        jQuery(function($){
+        jQuery(function ($) {
             $("#phone").mask("99999999999");
         });
         $('#admin-user').addClass('active');

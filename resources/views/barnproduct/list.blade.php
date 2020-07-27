@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('content')
     @include('message.msg')
+
     <div class="row">
         <div class="col-md-12">
             <div class="portlet box blue">
@@ -14,15 +15,15 @@
                     <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>ردیف</th>
+                            <th style="width: 1px">ردیف</th>
                             <th>محصول</th>
                             <th>رنگ</th>
                             <th>موجودی فیزیکی</th>
                             <th>تعداد تقاضا داده شده</th>
                             <th>موجودی قابل فروش</th>
-                            @can('ویرایش موجودی انبار')
+
                                 <th>عملیات</th>
-                            @endcan
+
                         </tr>
                         </thead>
                         <tbody>

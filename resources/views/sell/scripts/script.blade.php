@@ -20,8 +20,17 @@
 
             processing: true,
             serverSide: true,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+            },
+            "bInfo": false,
             "paging": false,
-            "info": false,
+            "bPaginate": false,
+            "columnDefs": [
+                {"orderable": false, "targets": 0},
+            ],
+            "order": [[ 9, "desc" ]],
+            "ordering": false,
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -45,7 +54,6 @@
                 {data: 'price_sell', name: 'price_sell'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ],
-            "order": [[0, 'desc']]
         });
 
         $('body').on('click', '.SuccessCustomer', function () {

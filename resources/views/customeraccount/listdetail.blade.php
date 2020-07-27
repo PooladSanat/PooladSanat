@@ -15,7 +15,7 @@
                     <table class="table table-striped table-bordered ee" id="ee">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>ردیف</th>
+                            <th style="width: 1px">ردیف</th>
                             <th>نام مشتری</th>
                             <td>نوع پرداخت</td>
                             <td>شماره چک</td>

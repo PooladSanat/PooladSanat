@@ -42,10 +42,10 @@
 
                     </form>
 
-                    <table class="table table-striped table-bordered cell-border stripe display data-table" id="data-table">
+                    <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>کد</th>
+                            <th style="width: 1px">کد</th>
                             <th>شماره فاکتور</th>
                             <th>فروشنده</th>
                             <th>خریدار</th>

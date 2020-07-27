@@ -16,13 +16,13 @@
                           name="productForm" class="form-horizontal">
                         @csrf
                     </form>
-                    <table class="table table-striped table-bordered cell-border stripe display data-table " id="data-table">
+                    <table class="table table-striped table-bordered data-table " id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
                             <th>
                                 <input type="checkbox" id="select_all">
                             </th>
-                            <th>شماره فروش</th>
+                            <th style="width: 1px">شماره فروش</th>
                             <th>شماره فاکتور</th>
                             <th>نام فروشنده</th>
                             <th>نام خریدار</th>

@@ -12,7 +12,15 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
+            "bInfo": false,
+            "paging": false,
+            "bPaginate": false,
+            "columnDefs": [
+                {"orderable": false, "targets": 0},
+            ],
+            "order": [[ 6, "desc" ]],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
                 if (parseInt(aData.PhysicalInventory) <= parseInt(aData.minimum)) {
                     $('td', nRow).css('background-color', '#fb8000');
                 } else if (parseInt(aData.PhysicalInventory) >= parseInt(aData.maximum)) {

@@ -14,7 +14,7 @@
                     <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>شماره پیش فاکتور</th>
+                            <th style="width: 1px;">شماره پیش فاکتور</th>
                             <th>تاریخ صدور</th>
                             <th>نام فروشنده</th>
                             <th>نام خریدار</th>

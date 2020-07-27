@@ -20,6 +20,7 @@
                             <form autocomplete="off" id="productFoerm" name="productFoerm">
                                 <input type="hidden" name="customer_iderr" id="customer_iderr">
                                 <input type="hidden" name="cid" id="cid">
+                                <input type="hidden" name="p11" id="p11">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-5">
@@ -195,13 +196,14 @@
                                         <table class="table table-striped table-bordered gfgf" id="gfgf">
                                             <thead style="background-color: #e8ecff">
                                             <tr>
-                                                <th>ردیف</th>
+                                                <th style="width: 1px">ردیف</th>
                                                 <td>نوع سند</td>
                                                 <td>شماره سند</td>
-                                                <td>تاریخ سند</td>
+                                                <td>تاریخ سر رسید</td>
                                                 <td>نام بانک</td>
                                                 <td>نام صادر کننده</td>
                                                 <td>مبلغ(ریال)</td>
+                                                <td>شرح</td>
                                                 <td>عملیات</td>
                                             </tr>
                                             </thead>
@@ -221,10 +223,11 @@
                                                 <tr>
                                                     <td>نوع سند</td>
                                                     <td>شماره سند</td>
-                                                    <td>تاریخ سند</td>
+                                                    <td>تاریخ سر رسید</td>
                                                     <td>نام بانک</td>
                                                     <td>نام صادر کننده</td>
                                                     <td>مبلغ(ریال)</td>
+                                                    <td>شرح</td>
                                                     <td>عملیات</td>
                                                 </tr>
                                                 </thead>
@@ -238,6 +241,7 @@
                                                     <td id="namee"></td>
                                                     <td id="user_namee"></td>
                                                     <td id="pricee"></td>
+                                                    <td id="descriptionn"></td>
                                                     <td id="actiontt"></td>
                                                 </tr>
                                                 </tbody>
@@ -434,7 +438,7 @@
                                         <table class="table table-striped table-bordered factor" id="factor">
                                             <thead style="background-color: #e8ecff">
                                             <tr>
-                                                <td>شماره فاکتور</td>
+                                                <td style="width: 1px">شماره فاکتور</td>
                                                 <td>فروشنده</td>
                                                 <td>خریدار</td>
                                                 <td>محصول</td>

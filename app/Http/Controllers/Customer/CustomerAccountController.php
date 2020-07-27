@@ -17,15 +17,10 @@ class CustomerAccountController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
+
             $data = Customer::orderBy('id', 'desc')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('debtor', function ($row) {
-                    $debtor = \DB::table('factors')
-                        ->where('customer_id', $row->id)
-                        ->sum('sum');
-                    return number_format($debtor);
-                })
                 ->addColumn('creditor', function ($row) {
                     $creditor = \DB::table('customer_accounts')
                         ->where('customer_id', $row->id)
@@ -81,8 +76,10 @@ class CustomerAccountController extends Controller
                             'shenase' => $request->shenase[$i],
                             'price' => $request->price[$i],
                             'date' => $request->date[$i],
+                            'datee' => Jalalian::forge($created)->format('Y/m/d'),
                             'name' => $request->name[$i],
                             'name_user' => $request->user_name[$i],
+                            'descriptionn' => $request->descriptionnn[$i],
                             'created_at' => $created,
                             'status' => 1,
                         ]);
@@ -125,6 +122,7 @@ class CustomerAccountController extends Controller
                     ->whereIn('pack_id', $packs)
                     ->update([
                         'status' => 1,
+                        'end' => 1,
                     ]);
 
             }

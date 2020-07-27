@@ -20,10 +20,16 @@
                 $('.data-table').DataTable({
                     processing: true,
                     serverSide: true,
-                    "ordering": false,
+                    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                        $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+                    },
                     "bInfo": false,
                     "paging": false,
                     "bPaginate": false,
+                    "columnDefs": [
+                        {"orderable": false, "targets": 0},
+                    ],
+                    "order": [[ 6, "desc" ]],
                     "language": {
                         "search": "جستجو:",
                         "lengthMenu": "نمایش _MENU_",
@@ -89,9 +95,16 @@
                     var table1 = $('.gfgf').DataTable({
                         processing: true,
                         serverSide: true,
-                        "ordering": false,
+                        "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                            $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+                        },
+                        "bInfo": false,
                         "paging": false,
-                        "info": false,
+                        "bPaginate": false,
+                        "columnDefs": [
+                            {"orderable": false, "targets": 0},
+                        ],
+                        "order": [[ 6, "desc" ]],
                         "scrollY": "150px",
                         "scrollCollapse": true,
                         "language": {
@@ -117,6 +130,7 @@
                             {data: 'name', name: 'name'},
                             {data: 'name_user', name: 'name_user'},
                             {data: 'price', name: 'price'},
+                            {data: 'descriptionn', name: 'descriptionn'},
                             {data: 'actioon', name: 'actioon'},
                         ]
                     });
@@ -146,7 +160,8 @@
                     $('#factor_customer_payment').val(data.factor_customer);
                     $('#b1').text(data.sum);
                     $('#p1').text(data.detail_customer);
-                    $('#m1').text(data.detail_customer_payment_sum);
+                    $('#p11').val(data.detail_customersa);
+                    $('#m1').text(data.baghi);
                     $('#f1').text(data.final);
                 })
             });
@@ -602,10 +617,22 @@
 
 
         var myNode = document.createElement('div');
+        myNode.id = 'descriptionn' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'descriptionnn" + a + "\'  name=\"descriptionnn[]\"\n" +
+            "class=\"form-control date\"/>" +
+            "</div></div></div>";
+        document.getElementById('descriptionn').appendChild(myNode);
+
+
+        var myNode = document.createElement('div');
         myNode.id = 'actiontt' + a;
         myNode.innerHTML += "<div class='form-group'>" +
             "<button onclick='deleteService2(" + a + ", event)' class=\"form-control btn btn-danger actiont\"><i class=\"fa fa-remove\"></button></div>";
         document.getElementById('actiontt').appendChild(myNode);
+
+
+
 
     }
 
@@ -617,6 +644,7 @@
         $('#shanasee' + id).remove();
         $('#pricee' + id).remove();
         $('#datee' + id).remove();
+        $('#descriptionn' + id).remove();
         $('#actiontt' + id).remove();
 
     }
@@ -637,6 +665,8 @@
 
 </script>
 <script>
+
+
     kamaDatepicker('indate',
         {
             buttonsColor: "red",

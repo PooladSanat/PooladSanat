@@ -40,20 +40,20 @@
                     <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>
+                            <th style="width: 1px">
                                 <input type="checkbox" id="select_all">
                             </th>
-                            <th>شماره پیش فاکتور</th>
-                            <th>تاریخ صدور</th>
-                            <th>نام فروشنده</th>
-                            <th>نام خریدار</th>
-                            <th>تعداد(عدد)</th>
-                            <th>مبلغ محصولات(ریال)</th>
-                            <th>نحوه پرداخت</th>
-                            <th>نوع فاکتور</th>
-                            <th>وضعیت</th>
-                            <th>جمع کل(ریال)</th>
-                            <th>عملیات</th>
+                            <th style="width: 1px;">شماره <br/>پیش فاکتور</th>
+                            <th style="width: 1px">تاریخ صدور</th>
+                            <th style="width: 1px">نام <br/> فروشنده</th>
+                            <th style="width: 1px">نام <br/> خریدار</th>
+                            <th style="width: 1px">تعداد(عدد)</th>
+                            <th style="width: 1px">مبلغ <br/>محصولات(ریال)</th>
+                            <th style="width: 1px">نحوه پرداخت</th>
+                            <th style="width: 1px">نوع فاکتور</th>
+                            <th style="width: 1px">وضعیت</th>
+                            <th style="width: 1px">جمع کل(ریال)</th>
+                            <th style="width: 1px">عملیات</th>
                         </tr>
                         </thead>
                         <tbody>

@@ -1212,7 +1212,7 @@ table.dataTable.fixedHeader-floating {
 .table > tfoot > tr > td, .table > tfoot > tr > th {
     border-bottom: 0;
     padding: 10px 18px;
-    border-top: 1px solid #e7ecf1;
+    border-top: 1px solid black;
     font-weight: 600
 }
 

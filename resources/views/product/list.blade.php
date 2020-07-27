@@ -15,7 +15,7 @@
                     <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>ردیف</th>
+                            <th style="width: 1px">ردیف</th>
                             <th>کد</th>
                             <th>گروه کالایی</th>
                             <th>مشخصه محصول</th>

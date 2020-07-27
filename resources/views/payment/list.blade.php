@@ -51,14 +51,16 @@
                         </div>
                     </div>
                     <br/>
-                    <table class="table table-striped table-bordered cell-border stripe display data-table"
+                    <table class="table table-striped table-bordered data-table"
                            id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th><input type="checkbox" id="select_all"></th>
+                            <th style="width: 1px"><input type="checkbox" id="select_all"></th>
                             <th>مشتری</th>
                             <th>فروشنده</th>
                             <th>فاکتور</th>
+                            <th>شماره حواله</th>
+                            <th>شماره فاکتور راهکاران</th>
                             <th>تاریخ فاکتور</th>
                             <th>مبلغ(ریال)</th>
                             <th>نحوه پرداخت</th>

@@ -61,11 +61,11 @@
 
                     </div>
                     <br/>
-                    <table class="table table-striped table-bordered cell-border stripe display data-table"
+                    <table class="table table-striped table-bordered data-table"
                            id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>ردیف</th>
+                            <th style="width: 1px">ردیف</th>
                             <th>مشتری</th>
                             <th>فروشنده</th>
                             <th>فاکتور</th>

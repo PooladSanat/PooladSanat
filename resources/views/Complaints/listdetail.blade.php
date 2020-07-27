@@ -140,7 +140,7 @@
                     <table class="table table-fluid" id="mTable">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>ردیف</th>
+                            <th style="width: 1px">ردیف</th>
                             <th>تاریخ اقدام</th>
                             <th>اقدام کننده</th>
                             <th>مخاطب</th>
@@ -178,7 +178,7 @@
                             @if($complaint_action->user_id == auth()->user()->id or
                              in_array($user,$array) or in_array($user,$arrays))
                                 <tr>
-                                    <td>{{$number++}}</td>
+                                    <td style="background-color: #e8ecff">{{$number++}}</td>
                                     <td>{{\Morilog\Jalali\Jalalian::forge($complaint_action->created_at)->format('Y/m/d')}}</td>
                                     <td>
                                         @foreach($users as $user)

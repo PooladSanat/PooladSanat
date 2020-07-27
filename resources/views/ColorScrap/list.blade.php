@@ -14,7 +14,7 @@
                     <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>ردیف</th>
+                            <th style="width: 1px">ردیف</th>
                             <th>قالب</th>
                             <th>از رنگ</th>
                             <th>به رنگ</th>

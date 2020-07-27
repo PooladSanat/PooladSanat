@@ -12,6 +12,16 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+            },
+            "bInfo": false,
+            "paging": false,
+            "bPaginate": false,
+            "columnDefs": [
+                {"orderable": false, "targets": 0},
+            ],
+            "order": [[ 5, "desc" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -31,7 +41,6 @@
                 {data: 'action', name: 'action'},
             ]
         });
-
 
         $('body').on('click', '.checkProduct', function () {
             var id = $(this).data("id");
@@ -64,6 +73,53 @@
                     });
                 }
             })
+        });
+
+        $('#createNewProduct').click(function () {
+            $('#productForm').trigger("reset");
+            $('#ajaxModel').modal('show');
+            $('#caption').text('افزودن رنگ');
+            $('#product_id').val('');
+        });
+
+        $('#saveBbtn').click(function (e) {
+            e.preventDefault();
+            $('#saveBbtn').text('در حال ثبت اطلاعات...');
+            $('#saveBbtn').prop("disabled", true);
+            $.ajax({
+                data: $('#productFormv').serialize(),
+                url: "{{ route('admin.barnproduct.restore') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.errors) {
+                        $('#ajaxModel').modal('hide');
+                        jQuery.each(data.errors, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#saveBbtn').text('ثبت');
+                        $('#saveBbtn').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#productFormv').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        table.draw();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveBbtn').text('ثبت');
+                        $('#saveBbtn').prop("disabled", false);
+                    }
+                }
+            });
         });
 
 

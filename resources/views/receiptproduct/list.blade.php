@@ -14,7 +14,7 @@
                     <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>ردیف</th>
+                            <th style="width: 1px">ردیف</th>
                             <th>محصول</th>
                             <th>رنگ</th>
                             <th>تعداد</th>
@@ -25,6 +25,7 @@
                         <tbody>
                         </tbody>
                     </table>
+                    <a class="btn btn-primary" href="javascript:void(0)" id="createNewProduct">تعریف محصول جدید</a>
                 </div>
             </div>
         </div>

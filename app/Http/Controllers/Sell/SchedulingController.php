@@ -65,6 +65,7 @@ class SchedulingController extends Controller
                 ->whereIn('user_id', $user_id)
                 ->whereIn('status', $list)
                 ->whereBetween('date', array($indate, $todate))
+                ->orderBy('id', 'DESC')
                 ->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -170,6 +171,9 @@ class SchedulingController extends Controller
 
     public function StoreExit(Request $request)
     {
+
+
+        $total = null;
         $verta = verta();
         $date = Carbon::now();
 
@@ -186,6 +190,7 @@ class SchedulingController extends Controller
                     $id = Scheduling::where('id', $request->get('id_invoi')[$i])->first();
                     $id_p = \DB::table('invoice_product')
                         ->where('id', $id->detail_id)->first();
+                    $total += $request->numberexit[$i] * $id_p->salesPrice;
                     $barn = \DB::table('barns_products')
                         ->where('product_id', $id_p->product_id)
                         ->where('color_id', $id_p->color_id)
@@ -283,7 +288,50 @@ class SchedulingController extends Controller
                     } catch (Exception $exception) {
                         \DB::rollBack();
                     }
+
                 }
+                $p = array();
+                $sum = null;
+                $customer = DB::table('schedulings')
+                    ->where('pack', $request->pack[0])
+                    ->first();
+
+                $invoice = DB::table('invoice_product')
+                    ->where('id', $customer->detail_id)
+                    ->first();
+
+                $customer_id = DB::table('invoices')
+                    ->where('id', $invoice->invoice_id)
+                    ->first();
+
+                $color = count($request->color);
+
+                for ($u = 0; $u < $color; $u++) {
+                    $price = DB::table('products')
+                        ->where('id', $request->producte[$u])
+                        ->first();
+                    $r = $request->numberexit[$u] * $price->price;
+                    $p[] += $r;
+                }
+                $v = count($p);
+                for ($w = 0; $w < $v; $w++) {
+                    $sum += $p[$w];
+                }
+
+                $s = $total - $customer_id->ta;
+                DB::table('factors')
+                    ->insert([
+                        'pack_id' => $request->pack[0],
+                        'customer_id' => $customer_id->customer_id,
+                        'user_id' => $customer_id->user_id,
+                        'sum' => $s ,
+                        'status' => 0,
+                        'Month' => $verta->month,
+                        'Year' => $verta->year,
+                        'date' => Jalalian::forge($date)->format('Y/m/d'),
+                        'type' => $customer_id->paymentMethod,
+                        'created_at' => $date,
+                    ]);
                 return response()->json(['success' => 'success']);
             }
             return Response::json(['errors' => $validator->errors()]);
@@ -293,6 +341,9 @@ class SchedulingController extends Controller
                     $id = Scheduling::where('id', $request->get('id_invoi')[$i])->first();
                     $id_p = \DB::table('invoice_product')
                         ->where('id', $id->detail_id)->first();
+
+                    $total += $request->numberexit[$i] * $id_p->salesPrice;
+
                     $barn = \DB::table('barns_products')
                         ->where('product_id', $id_p->product_id)
                         ->where('color_id', $id_p->color_id)
@@ -351,6 +402,7 @@ class SchedulingController extends Controller
                                     'NumberSold' => $barn->NumberSold - $id->number,
                                 ]);
 
+
                             if (!empty($id->statusfull)) {
                                 if ($id->statusfull == 8) {
                                     Scheduling::where('pack', $id->pack)->update([
@@ -371,6 +423,7 @@ class SchedulingController extends Controller
                                 'end' => 2,
                                 'total' => $request->get('numberexit')[$i],
                             ]);
+
 
                         }
                         \DB::commit();
@@ -414,13 +467,14 @@ class SchedulingController extends Controller
                 } elseif ($customer_id->paymentMethod == "بصورت چک 3 ماهه") {
                     $takhfif = 17;
                 }
-                $s = $sum * $takhfif / 100;
+                $s = $total * $takhfif / 100;
+                $summ = $total - $s;
                 DB::table('factors')
                     ->insert([
                         'pack_id' => $request->pack[0],
                         'customer_id' => $customer_id->customer_id,
                         'user_id' => $customer_id->user_id,
-                        'sum' => $sum - $s,
+                        'sum' => $summ,
                         'status' => 0,
                         'Month' => $verta->month,
                         'Year' => $verta->year,

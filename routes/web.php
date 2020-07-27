@@ -430,6 +430,9 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/barnproduct/update/list/{id?}', 'BarnProductController@update')->name('admin.barnproduct.update');
 
 
+        Route::post('/barnproduct/restore', 'BarnProductController@restore')->name('admin.barnproduct.restore');
+
+
         //BarnTemporaryController
         Route::get('/barntemporary/list', 'BarnTemporaryController@list')->name('admin.barntemporary.list');
 
@@ -442,6 +445,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
         //CustomerStatusReport
         Route::get('/CustomerStatusReport/list', 'CustomerStatusReportController@list')->name('admin.CustomerStatusReport.list');
+        Route::get('CustomerStatusReport/print', 'CustomerStatusReportController@print')->name('admin.CustomerStatusReport.print');
+        Route::get('/CustomerStatusReport/list/detail', 'CustomerStatusReportController@detail')->name('admin.CustomerStatusReport.list.detail');
 
     });
 
@@ -473,8 +478,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/bills/list', 'BillsController@list')->name('admin.bills.list');
         Route::get('/bills/detaillist', 'BillsController@detaillist')->name('admin.bills.detaillist');
         Route::get('/bills/success/admin/{id?}', 'BillsController@SuccessAdmin')->name('admin.payment.success.admin');
-
-
 
 
         Route::get('/bills/print/payment/{id?}', 'BillsController@PrintPayment')->name('admin.bills.print.detail');

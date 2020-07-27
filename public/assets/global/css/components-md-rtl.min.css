@@ -15089,7 +15089,7 @@ body[ng-controller] .modal {
     width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
-    border: 1px solid #e7ecf1;
+    border: 1px solid #080808;
     margin: 10px 0 !important
 }
 

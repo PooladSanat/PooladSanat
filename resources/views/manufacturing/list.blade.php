@@ -18,7 +18,7 @@
                     <table class="table table-striped table-bordered device1" id="device1">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>اولویت</th>
+                            <th style="width: 1px">اولویت</th>
                             <th>محصول</th>
                             <th>رنگ</th>
                             <th>تعداد</th>

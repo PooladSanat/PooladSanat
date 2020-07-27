@@ -6,6 +6,8 @@ use App\BarnsProduct;
 use App\Color;
 use App\Http\Controllers\Controller;
 use App\Product;
+use Carbon\Carbon;
+use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 use Morilog\Jalali\Jalalian;
@@ -96,6 +98,8 @@ class BarnProductController extends Controller
 
     public function receiptproduct(Request $request)
     {
+        $colors = Color::all();
+        $products = Product::all();
         if ($request->ajax()) {
             $data = \DB::table('receiptproduct')
                 ->whereNull('status')
@@ -115,19 +119,20 @@ class BarnProductController extends Controller
                     return $created;
                 })
                 ->addColumn('action', function ($row) {
-                    return $this->actions($row);
+                    return $this->action($row);
                 })
                 ->rawColumns(['action'])
                 ->make(true);
 
         }
-        return view('receiptproduct.list');
+        return view('receiptproduct.list', compact('products', 'colors'));
 
 
     }
 
     public function receiptwizard($id)
     {
+
         $barn = \DB::table('receiptproduct')
             ->where('id', $id)->first();
         $check = \DB::table('barns_products')
@@ -170,8 +175,23 @@ class BarnProductController extends Controller
         }
     }
 
+    public function restore(Request $request)
+    {
+        $carbon = Carbon::now();
+        \DB::table('receiptproduct')
+            ->insert([
+                'product_id' => $request->product,
+                'color_id' => $request->color,
+                'number' => $request->PhysicalInventory,
+                'date' => Jalalian::forge($carbon)->format('Y/m/d'),
+                'created_at' => $carbon,
+            ]);
+        return response()->json(['success' => 'success']);
+    }
+
     public function actions($row)
     {
+
         $btn = null;
         if (\Gate::check('ویرایش موجودی انبار')) {
             $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
@@ -180,6 +200,22 @@ class BarnProductController extends Controller
                        <i class="fa fa-edit fa-lg" title="ویرایش"></i>
                        </a>&nbsp;&nbsp;';
         }
+
+        return $btn;
+
+    }
+
+    public function action($row)
+    {
+
+        $btn = null;
+
+        $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                       class="checkProduct">
+                       <i class="fa fa-check fa-lg" title="تاییده"></i>
+                       </a>&nbsp;&nbsp;';
+
 
         return $btn;
 

@@ -56,6 +56,7 @@
             background: transparent !important;
         }
     </style>
+
     <link rel="shortcut icon" type="image/x-icon" href="{{url('/public/icon/logo.png')}}"/>
     <link href="{{asset('/public/assets/persian-datepicker.css')}}" rel="stylesheet" type="text/css"/>
     <style>
@@ -747,7 +748,7 @@
                     <ul class="treeview-menu">
 
                         <li><a href="#"><i
-                                    class="fa fa-circle-o"></i>گزارش مالی مشتریان</a>
+                                    class="fa fa-circle-o"></i>گزارش عملکرد ماهانه</a>
                         </li>
 
                         <li><a href="#"><i

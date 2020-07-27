@@ -62,13 +62,13 @@ class PaymentsController extends Controller
             $data = DB::table('factors')
                 ->where('Month', $v->month)
                 ->where('status', 0)
+                ->where('end', null)
                 ->whereIn('customer_id', $customer)
                 ->whereIn('user_id', $user)
                 ->whereBetween('date', array($indate, $todate))
                 ->orderBy('customer_id', 'asc')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-
                 ->addColumn('checkbox', function ($row) {
                     $btn = ' <input type="checkbox" id="checkbox"
                         name="student_checkbox[]"
@@ -76,39 +76,54 @@ class PaymentsController extends Controller
                        class="student_checkbox">';
                     return $btn;
                 })
-
                 ->addColumn('total', function ($row) {
                     return number_format($row->sum);
                 })
+                ->addColumn('havale', function ($row) {
+                    $code = DB::table('_success_number_invoice')
+                        ->where('scheduling_id', $row->pack_id)
+                        ->first();
+                    if (!empty($code)) {
+                        return $code->number;
+                    } else {
+                        return 'شماره حواله ثبت نشده است';
+                    }
 
+                })
+                ->addColumn('rahkaran', function ($row) {
+                    $code = DB::table('exitproductbarnfacs')
+                        ->where('detail_id', $row->pack_id)
+                        ->first();
+                    if (!empty($code)) {
+                        return $code->number_fac;
+                    } else {
+                        return 'شماره فاکتور ثبت نشده است';
+                    }
+
+
+                })
                 ->addColumn('number', function ($row) {
                     $number = Factors::where('customer_id', $row->customer_id)
                         ->count();
                     return $number;
                 })
-
                 ->addColumn('sumtotal', function ($row) {
                     $number = Factors::where('customer_id', $row->customer_id)
                         ->sum('sum');
                     return number_format($number);
                 })
-
                 ->addColumn('user', function ($row) {
                     $name = User::where('id', $row->user_id)->first();
                     return $name->name;
                 })
-
                 ->addColumn('customer', function ($row) {
                     $customer = Customer::where('id', $row->customer_id)->first();
                     return $customer->name;
                 })
-
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
                 })
-
                 ->rawColumns(['action', 'checkbox'])
-
                 ->make(true);
         }
         return view('payment.list', compact('customers', 'users'));
@@ -217,7 +232,7 @@ class PaymentsController extends Controller
             }
             $data = DB::table('factors')
                 ->where('Month', $v->month)
-                ->where('status', 1)
+                ->where('status', 3)
                 ->whereIn('customer_id', $customer)
                 ->whereIn('user_id', $user)
                 ->whereBetween('date', array($indate, $todate))
@@ -606,6 +621,10 @@ class PaymentsController extends Controller
 
     public function StoreAdmin(Request $request)
     {
+
+        $account = DB::table('customer_accounts')
+            ->where('customer_id', $request->cid)
+            ->first();
         $packs = array();
         $details = \DB::table('clearing_factor')
             ->where('clearing_id', $request->customer_iderr)
@@ -620,6 +639,13 @@ class PaymentsController extends Controller
                 'description' => $request->description_admin,
             ]);
         if ($request->status == 1) {
+
+            DB::table('customer_accounts')
+                ->where('customer_id', $request->cid)
+                ->update([
+                    'creditor' => $account->creditor - $request->pricesummm,
+                ]);
+
             DB::table('clearing')
                 ->where('id', $request->customer_iderr)
                 ->update([
@@ -629,6 +655,7 @@ class PaymentsController extends Controller
                 ->whereIn('pack_id', $packs)
                 ->update([
                     'status' => 1,
+                    'end' => 1,
                 ]);
             return \response()->json(['success' => 'success']);
         } else {
@@ -709,6 +736,9 @@ class PaymentsController extends Controller
             $prii = 0;
         }
 
+        $baghi = number_format($prii - $detail_customersa);
+        $baghii = $prii - $detail_customersa;
+
         $detail_customer_payment_sum = DB::table('detail_customer_payment')
             ->where('customer_id', $detail_id->customer_id)
             ->where('payment_id', '!=', $id)
@@ -731,12 +761,12 @@ class PaymentsController extends Controller
             ->where('customer_id', $detail_id->customer_id)
             ->count();
 
-        $final = $detail_customer_payment_sum + $detail_customersa - $pp;
+        $final = $baghii + $detail_customersa - $pp;
         $fina = number_format(abs($final));
 
 
         return response()->json(['recive_customer' => $recive_customer_payment,
-            'detail_customer' => $detail_customer, 'name' => $name,
+            'detail_customer' => $detail_customer, 'name' => $name, 'baghi' => $baghi,
             'price' => $pri, 'pricee' => $prii, 'date' => $dat, 'final' => $fina,
             'detail_customer_payment_sum' => $detail_customer_payment_summ,
             'sum' => $p, 'summ' => $pp, 'factor_customer' => $factor_customer,

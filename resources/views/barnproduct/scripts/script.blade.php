@@ -1,6 +1,7 @@
 <script src="{{asset('/public/js/a1.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/js/a2.js')}}" type="text/javascript"></script>
 <meta name="_token" content="{{ csrf_token() }}"/>
+
 <script type="text/javascript">
     $(function () {
         $.ajaxSetup({
@@ -12,6 +13,16 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+            },
+            "bInfo": false,
+            "paging": false,
+            "bPaginate": false,
+            "columnDefs": [
+                {"orderable": false, "targets": 0},
+            ],
+            "order": [[ 6, "desc" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -29,14 +40,18 @@
                 {data: 'Inventory', name: 'Inventory'},
                 {data: 'NumberSold', name: 'NumberSold'},
                 {data: 'true', name: 'true'},
-                    @can('ویرایش موجودی انبار')
+
                 {
                     data: 'action', name: 'action', orderable: false, searchable: false
+
+
                 },
 
-                @endcan
+
             ]
         });
+
+
 
 
         $('#createNewProduct').click(function () {
@@ -135,5 +150,6 @@
             }
         })
     });
+
     $('#barn').addClass('active');
 </script>

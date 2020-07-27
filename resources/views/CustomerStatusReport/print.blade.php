@@ -100,112 +100,174 @@
 <br/>
 <div class="container-fluid">
     <div class="container-fluid">
-
         <div class="container-fluid">
-
-            <img width="130" src="{{asset('/public/icon/logo.jpeg')}}">
-            <br/>
-            <strong>
-                <center>بسمه تعالی</center>
-            </strong>
-            <!-- Control the column width, and how they should appear on different devices -->
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-md-12">
+
+
+                    <strong>
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <center> صورت وضعیت : {{$name->name}}</center>
+                            </div>
+                            <div class="col-md-4">
+                                <center> از تاریخ : {{$in}}</center>
+                            </div>
+                            <div class="col-md-4">
+                                <center> تا تاریخ : {{$to}}</center>
+                            </div>
+
+                        </div>
+
+                    </strong>
                     <br/>
-                    <strong>از : شرکت قطعات پلاستیک پولاد پویش</strong>
                     <br/>
-                    <strong> به : </strong>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>ردیف</th>
+                            <th>کد صورت حساب</th>
+                            <th>تاریخ صدور</th>
+                            <th>مبلغ صورت حساب(ریال)</th>
+                            <th>جمع اسناد دریافتی(ریال)</th>
+                            <th>مانده حساب(ریال)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        $number = 1;
+                        $total = null;
+                        ?>
+                        @foreach($clearings as $clearing)
+                            <tr>
+                                <th>{{$number ++}}</th>
+                                <th>{{$clearing->id}}</th>
+                                <th>{{$clearing->date}}</th>
+                                <th>{{number_format($clearing->price)}}</th>
+                                <th>
+                                    {{number_format(DB::table('detail_customer_payment')
+                                       ->where('payment_id',$clearing->id)
+                                       ->sum('price'))}}
+                                </th>
+
+                                <?php
+                                $s = DB::table('detail_customer_payment')
+                                        ->where('payment_id', $clearing->id)
+                                        ->sum('price') - $clearing->price;
+                                ?>
+                                @if($s == 0)
+                                    <th style="background-color: rgba(144,221,251,0.73)">
+                                        {{number_format($s)}}
+                                    </th>
+                                @elseif($s < 0)
+                                    <th style="background-color: rgba(255,106,107,0.6)">
+                                        {{number_format($s)}}
+                                    </th>
+                                @else
+                                    <th style="background-color: rgba(204,255,141,0.67)">
+                                        {{number_format($s)}}
+                                    </th>
+                                @endif
+
+                                <?php
+                                $total += $s;
+                                ?>
+
+                            </tr>
+                        @endforeach
+                        </tbody>
+                        <tfoot align="right">
+                        <tr>
+                        <tr>
+                            <th colspan="5">جمع کل</th>
+                            <th id="sum_j">{{number_format($total)}}</th>
+                        </tr>
+                        <tr>
+                            <th colspan="5">جمع مبالغ فاکتورهای در جریان</th>
+                            <th id="sum_j">{{number_format($sumtotal)}}</th>
+                        </tr>
+                        <tr>
+                            <th colspan="5">صورت وضعیت</th>
+                            @if($sumcustomer->creditor - $sum == 0)
+                                <th style="background-color: rgba(144,221,251,0.73)">
+                                    {{number_format($sumcustomer->creditor - $sum)}}
+                                </th>
+                            @elseif($sumcustomer->creditor - $sum < 0)
+                                <th style="background-color: rgba(255,106,107,0.6)">
+                                    {{number_format($sumcustomer->creditor - $sum)}}
+                                </th>
+                            @else
+                                <th style="background-color: rgba(204,255,141,0.67)">
+                                    { {{number_format($sumcustomer->creditor - $sum)}}
+                                </th>
+                            @endif
+                        </tr>
+                        </tfoot>
+                    </table>
+
                     <br/>
-                    <strong>موضوع : صورت حساب</strong>
-                </div>
-                <div class="col-sm-4">
                     <br/>
-                    <strong> تاریخ: {{\Morilog\Jalali\Jalalian::forge(\Carbon\Carbon::now())->format('Y/m/d')}}</strong>
+
+                    <table>
+                        <thead style="background-color: #e8ecff">
+                        <tr>
+                            <th colspan="13">
+                                <center style="text-align: center">پرداختی های مشتری</center>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="width: 1px">ردیف</th>
+                            <th>نوع سند</th>
+                            <th>شماره سند</th>
+                            <th>تاریخ سر رسید</th>
+                            <th>بانک</th>
+                            <th>نام صادر کننده</th>
+                            <th>مبلغ</th>
+                            <th>وصول</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <?php
+                            $number = 1;
+                            ?>
+                            @foreach($detail_customer_payments as $detail_customer_payment)
+                                <th>{{$number ++}}</th>
+                                <th>
+                                    @if($detail_customer_payment->type == 1)
+                                        نقدی
+                                    @else
+                                        چکی
+                                    @endif
+                                </th>
+                                <th>{{$detail_customer_payment->shenase}}</th>
+                                <th>{{$detail_customer_payment->date}}</th>
+                                <th>{{$detail_customer_payment->name}}</th>
+                                <th>{{$detail_customer_payment->name_user}}</th>
+                                <th>{{number_format($detail_customer_payment->price)}}</th>
+                                <th>
+                                    @if($detail_customer_payment->status == 1)
+                                        بدون وضعیت
+                                    @elseif($detail_customer_payment->status == 2)
+                                        پرداخت شده
+                                    @else
+                                        برگشت خورده
+                                    @endif
+                                </th>
+
+                            @endforeach
+                        </tr>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
-            <br/>
-            <p>احتراما، بدینوسیله صورت حساب اقلام خریداری شده آن شرکت جهت بررسی تقدیم حضور می گردد. خواهشمند است در صورت
-                تایید ذیل این برگه را مهر و امضا نموده به شماره 77327573 نمابر نمایید.</p>
-            <table>
-                <thead>
-                <tr>
-                    <th>ردیف</th>
-                    <th>شماره فاکتور</th>
-                    <th>تاریخ فاکتور</th>
-                    <th>مبلغ فاکتور(ریال)</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                $number = 1;
-                $sum = 1;
-                $sum_price = 0;
-                ?>
-                @foreach($factors as $factor)
-                    <tr>
-                        <td>{{$number++}}</td>
-                        <td>{{$factor->pack_id}}</td>
-                        <td>{{$factor->date}}</td>
-                        <td>{{number_format($factor->sum)}}</td>
-                    </tr>
-                    <?php
-                    $sum_price += $factor->sum;
-                    ?>
-                @endforeach
-                </tbody>
-                <tfoot>
-                <tr>
-                    <th colspan="3">جمع صورتحساب</th>
-                    <th>{{number_format($sum_price)}}</th>
-                </tr>
-
-
-
-
-                </tfoot>
-            </table>
-            <br/>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-6">
-                <textarea disabled rows="10" cols="50">
-                    در صورت تایید با درج نام خود مهر و امضا نمایید
-                </textarea>
-                    </div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-4">
-                        <p style="font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;با
-                            تشکر</p>
-                        <p style="font-size: 20px">شرکت قطعات پلاستیک پولاد پویش</p>
-
-
-                        <img src="" width="270">
-
-
-                        <p style="font-size: 11px">تهران ، تهرانپارس ، خیابان ناهــید ، خیابان میوه ، خیابان صـبوری ،
-                            شماره
-                            1</p>
-                        <p style="font-size: 10px">تلفن:02177333337&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;www.pooladimm.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;کد
-                            پستی:1658614511</p>
-                        <p style="font-size: 10px">فکس:77327573&nbsp;&nbsp;&nbsp;info@pooladimm.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;صندوق
-                            پستی:16895111</p>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
-
     </div>
-
-
 </div>
-
-
 </body>
 </html>
-
-
 <script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
 <script src="{{asset('/public/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
 <script>

@@ -216,7 +216,8 @@ class UserController extends Controller
     {
         $roles = Role::all();
         if ($request->ajax()) {
-            $data = \DB::table('view_role_user')->get();
+            $data = \DB::select( \DB::raw("SELECT * FROM view_role_user") );
+
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('online', function ($row) {

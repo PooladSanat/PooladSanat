@@ -107,12 +107,12 @@ class BarnProductController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('product_id', function ($row) {
-                    $name = Product::find($row->product_id)->first();
+                    $name = Product::where('id', $row->product_id)->first();
                     return $name->label;
                 })
                 ->addColumn('color_id', function ($row) {
-                    $name = Color::find($row->color_id)->first();
-                    return $name->manufacturer . ' - ' . $name->name;
+                    $name = Color::where('id', $row->color_id)->first();
+                    return $name->name;
                 })
                 ->addColumn('created', function ($row) {
                     $created = Jalalian::forge($row->created_at)->format('Y/m/d');
@@ -146,6 +146,7 @@ class BarnProductController extends Controller
                     ->where('id', $check->id)
                     ->update([
                         'Inventory' => $check->Inventory + $barn->number,
+                        'NumberSold' => $check->NumberSold,
                     ]);
                 \DB::table('receiptproduct')
                     ->where('id', $id)
@@ -213,7 +214,7 @@ class BarnProductController extends Controller
         $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->id . '" data-original-title="ویرایش"
                        class="checkProduct">
-                       <i class="fa fa-check fa-lg" title="تاییده"></i>
+                       <i class="fa fa-check fa-lg" title="تایید رسید"></i>
                        </a>&nbsp;&nbsp;';
 
 

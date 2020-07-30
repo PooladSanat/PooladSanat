@@ -471,7 +471,37 @@
                                     </div>
 
                                 </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <ul class="trees">
+                                            <li class="has-child">
+                                                <input id="tree-controll1" type="checkbox" class="custom-control-input"><span
+                                                    class="tree-control"></span>
+                                                <label>
+                                                    <input type="checkbox" class="check" id="sells"/>
+                                                    <i class="fa fa-user light-blue"></i>گزارشات
+                                                </label>
+                                                <ul>
+                                                    @foreach($permissions as $value)
+                                                        @if(!empty($value))
+                                                            @if($value->label == "report")
 
+                                                                <li>
+                                                                    <label>{{ Form::checkbox('permission[]',$value->id,in_array($value->id,$rolePermission)? true : false , array('class'=>'sell')) }}
+                                                                        {{$value->name}}
+                                                                    </label>
+                                                                </li>
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+
+
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>

@@ -115,7 +115,7 @@
 
                                         <select class="form-control" id="color" name="color">
                                             @foreach($colors as $color)
-                                                <option value="{{$color->id}}">{{$color->name}} - {{$color->manufacturer}} - {{$color->masterbatch}}</option>
+                                                <option value="{{$color->id}}">{{$color->name}}</option>
                                             @endforeach
                                         </select>
 

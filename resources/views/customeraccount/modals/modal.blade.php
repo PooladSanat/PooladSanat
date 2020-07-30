@@ -140,6 +140,7 @@
                                                 <option value="بانک صنعت و معدن">بانک صنعت و معدن</option>
                                                 <option value="بانک کشاورزی">بانک کشاورزی</option>
                                                 <option value="بانک مسکن">بانک مسکن</option>
+                                                <option value="بانک آینده">بانک آینده</option>
                                                 <option value="بانک توسعه صادرات ایران">بانک توسعه صادرات ایران</option>
                                                 <option value="بانک توسعه تعاون">بانک توسعه تعاون</option>
                                                 <option value="پست بانک ایران">پست بانک ایران</option>

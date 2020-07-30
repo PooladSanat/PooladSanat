@@ -738,25 +738,26 @@
                 @endif
 
 
-                <li class="treeview" id="payment">
-                    <a href="#">
-                        <i class="fa fa-file"></i> <span>گزارشات</span>
-                        <span class="pull-left-container">
+                @if(Gate::check('گزارش عملکرد ماهانه'))
+
+                    <li class="treeview" id="report">
+                        <a href="#">
+                            <i class="fa fa-file"></i> <span>گزارشات</span>
+                            <span class="pull-left-container">
                         <i class="fa fa-angle-right pull-left"></i>
                         </span>
-                    </a>
-                    <ul class="treeview-menu">
+                        </a>
+                        <ul class="treeview-menu">
+                            @can('گزارش عملکرد ماهانه')
+                                <li><a href="{{route('admin.ReportMonthly.list')}}"><i
+                                            class="fa fa-circle-o"></i>گزارش عملکرد ماهانه</a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </li>
 
-                        <li><a href="#"><i
-                                    class="fa fa-circle-o"></i>گزارش عملکرد ماهانه</a>
-                        </li>
 
-                        <li><a href="#"><i
-                                    class="fa fa-circle-o"></i>گزارش فروش</a>
-                        </li>
-
-                    </ul>
-                </li>
+                @endif
 
                 @if(Gate::check('بازسازی نرم افزار') || Gate::check('شروع به کار نرم افزار')
                 || Gate::check('پشتیبان گیری از دیتابیس') || Gate::check('مشخصات عمومی سیستم')
@@ -1101,6 +1102,7 @@
             },
         });
     });
+
     $(document).ready(function () {
         $('#select2-exampl').select2({
             width: '100%',

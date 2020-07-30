@@ -22,6 +22,14 @@
                 serverSide: true,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+
+                    if (aData.status == "وصول نشده") {
+                        $('td:eq(10)', nRow).css('background-color', '#ffffff');
+                    } else if (aData.status == "وصول شده") {
+                        $('td:eq(10)', nRow).css('background-color', '#ccff8d');
+                    } else {
+                        $('td:eq(10)', nRow).css('background-color', '#ff6a6b');
+                    }
                 },
                 "bInfo": false,
                 "paging": false,
@@ -29,7 +37,7 @@
                 "columnDefs": [
                     {"orderable": false, "targets": 0},
                 ],
-                "order": [[ 11, "desc" ]],
+                "order": [[11, "desc"]],
                 "language": {
                     "search": "جستجو:",
                     "lengthMenu": "نمایش _MENU_",
@@ -275,7 +283,6 @@
                 }
             });
         });
-
 
 
         $('#createNewProduct').click(function () {

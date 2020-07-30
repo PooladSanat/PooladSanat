@@ -428,8 +428,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/barnproduct/receiptwizard/{id?}', 'BarnProductController@receiptwizard')->name('admin.receiptproduct.wizard');
         Route::post('/barnproduct/store', 'BarnProductController@store')->name('admin.barnproduct.store');
         Route::get('/barnproduct/update/list/{id?}', 'BarnProductController@update')->name('admin.barnproduct.update');
-
-
         Route::post('/barnproduct/restore', 'BarnProductController@restore')->name('admin.barnproduct.restore');
 
 
@@ -447,6 +445,9 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/CustomerStatusReport/list', 'CustomerStatusReportController@list')->name('admin.CustomerStatusReport.list');
         Route::get('CustomerStatusReport/print', 'CustomerStatusReportController@print')->name('admin.CustomerStatusReport.print');
         Route::get('/CustomerStatusReport/list/detail', 'CustomerStatusReportController@detail')->name('admin.CustomerStatusReport.list.detail');
+
+        //ReportMonthly
+        Route::get('/ReportMonthly/list', 'ReportMonthlyController@list')->name('admin.ReportMonthly.list');
 
     });
 

@@ -18,18 +18,24 @@
         $month = $months;
     }
     ?>
-    $('#indate').val({{$year}}+'/' + '{{$m}}'+{{$month}}+'/' + '01');
-    $('#todate').val({{$year}}+'/' + '{{$m}}'+{{$month}}+'/' + '31');
-
-
-
+    $('#indate').val({{$year}}+'/' + '{{$m}}'+{{$month}}+
+    '/' + '01'
+    )
+    ;
+    $('#todate').val({{$year}}+'/' + '{{$m}}'+{{$month}}+
+    '/' + '31'
+    )
+    ;
 
 
     function formatNumber(num) {
         return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
-var ind = {{$year}}+'/' + '{{$m}}'+{{$month}}+'/' + '01';
-var tod = {{$year}}+'/' + '{{$m}}'+{{$month}}+'/' + '31';
+
+    var ind = {{$year}}+'/' + '{{$m}}'+{{$month}}+
+    '/' + '01';
+    var tod = {{$year}}+'/' + '{{$m}}'+{{$month}}+
+    '/' + '31';
 
     $(function () {
 
@@ -125,7 +131,8 @@ var tod = {{$year}}+'/' + '{{$m}}'+{{$month}}+'/' + '31';
                     {data: 'sa', name: 'sa'},
                     {data: 'as', name: 'as'},
 
-                ]
+                ],
+                "order": [[0, "desc"]]
             });
         }
 

@@ -150,6 +150,7 @@
                     $('#cpricee').val(data.price);
                     $('#cpriceee').val(data.pricee);
                     $('#cupdatee').val(data.date);
+                    $('#des').val(data.clearing.description);
                     $('#pricesumm').val(data.sum);
                     $('#pricesummm').val(data.summ);
                     $('#pricessummm').val(data.summ);

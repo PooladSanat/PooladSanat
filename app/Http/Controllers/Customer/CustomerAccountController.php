@@ -105,6 +105,7 @@ class CustomerAccountController extends Controller
                 ->where('id', $request->customer_ider)
                 ->update([
                     'status' => 3,
+                    'description' => $request->des,
                 ]);
 
         } else {

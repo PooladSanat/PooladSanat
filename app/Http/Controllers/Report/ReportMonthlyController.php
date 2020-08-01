@@ -13,7 +13,6 @@ class ReportMonthlyController extends Controller
     public function list(Request $request)
     {
 
-
         if (!empty($request->indate)) {
             $indate = $request->indate;
         } else {
@@ -25,14 +24,13 @@ class ReportMonthlyController extends Controller
             $todate = "1470/04/10";
         }
 
-
         if ($request->ajax()) {
 
             $data = \DB::table('view_unionreportmontly')
                 ->whereBetween('date', array($indate, $todate))
                 ->distinct()
+                ->orderBy('date', 'ASC')
                 ->get(['date']);
-
 
             return DataTables::of($data)
                 ->addIndexColumn()

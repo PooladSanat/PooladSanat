@@ -766,6 +766,7 @@ class PaymentsController extends Controller
 
 
         return response()->json(['recive_customer' => $recive_customer_payment,
+            'clearing' => $clearing,
             'detail_customer' => $detail_customer, 'name' => $name, 'baghi' => $baghi,
             'price' => $pri, 'pricee' => $prii, 'date' => $dat, 'final' => $fina,
             'detail_customer_payment_sum' => $detail_customer_payment_summ,

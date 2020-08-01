@@ -45,6 +45,18 @@
                                         <input readonly type="hidden" name="pricesummm" id="pricesummm"
                                                class="form-control">
                                     </div>
+
+                                    <div class="col-md-12">
+                                        <label>توضیحات ثبت کننده:</label>
+                                        <input readonly type="text" name="des"
+                                               id="des"
+                                               class="form-control">
+                                    </div>
+
+
+                                    <br/>
+                                    <br/>
+                                    <br/>
                                     <br/>
                                     <br/>
                                     <br/>
@@ -186,6 +198,17 @@
 
                                     </div>
 
+
+                                    <div class="col-md-12">
+                                        <label>توضیحات ثبت کننده:</label>
+                                        <input type="text" name="des" id="des" class="form-control">
+
+                                    </div>
+
+
+                                    <br/>
+                                    <br/>
+                                    <br/>
                                     <br/>
                                     <br/>
                                     <br/>

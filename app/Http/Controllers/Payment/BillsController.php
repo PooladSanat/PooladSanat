@@ -64,7 +64,9 @@ class BillsController extends Controller
                         return 'در انتظار بررسی';
                     }
                 })
+
                 ->addColumn('customer', function ($row) {
+
                     $pack_id = \DB::table('clearing_factor')
                         ->where('clearing_id', $row->id)
                         ->first();
@@ -79,6 +81,7 @@ class BillsController extends Controller
                     return $name->name;
 
                 })
+
                 ->addColumn('action', function ($row) {
                     return $this->action($row);
                 })

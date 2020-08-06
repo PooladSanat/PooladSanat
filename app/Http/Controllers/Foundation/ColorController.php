@@ -46,6 +46,13 @@ class ColorController extends Controller
      */
     public function store(Request $request)
     {
+        $string = preg_split("/,/", "$request->price");
+        $count = count($string);
+        $number = null;
+        for ($i = 0; $i < $count; $i++) {
+            $number .= $string[$i];
+        }
+
         if (!empty($request->product_id)) {
             $color = Color::find($request->product_id);
             if ($color->code != $request->code) {
@@ -74,7 +81,7 @@ class ColorController extends Controller
                     'masterbatch' => $request->masterbatchc,
                     'combination' => $request->combination,
                     'manufacturer' => $request->masterbatchn,
-                    'price' => $request->price,
+                    'price' => $number,
                     'color' => $request->color,
                     'name' => $color_id->name,
                     'minimum' => $request->minimum,

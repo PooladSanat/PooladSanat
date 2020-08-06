@@ -100,6 +100,7 @@
 <br/>
 <div class="container-fluid">
     <div class="container-fluid">
+
         <img width="130" src="{{asset('/public/icon/logo.jpeg')}}">
         <br/>
         <strong>
@@ -250,10 +251,10 @@
                         تشکر</p>
                     <p style="font-size: 20px">شرکت قطعات پلاستیک پولاد پویش</p>
 
-                        @if(!empty($user_id->sign))
+                    @if(!empty($user_id->sign))
 
-                            <img src="{{url($user_id->sign)}}" width="270">
-                        @endif
+                        <img src="{{url($user_id->sign)}}" width="270">
+                    @endif
 
                     <p style="font-size: 11px">تهران ، تهرانپارس ، خیابان ناهــید ، خیابان میوه ، خیابان صـبوری ،
                         شماره

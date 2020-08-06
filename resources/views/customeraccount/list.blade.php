@@ -11,6 +11,10 @@
                     <div class="tools"></div>
                 </div>
                 <div class="portlet-body">
+                    <a href="{{route('admin.customeraccount.print')}}" class="btn btn-primary"
+                       target="_blank"
+                    >چاپ و نمایش
+                    </a>
                     <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>

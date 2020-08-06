@@ -11,6 +11,7 @@ use App\Invoice;
 use App\Payments;
 use App\Product;
 use App\User;
+use Cache;
 use Carbon\Carbon;
 use DB;
 use Hekmatinasser\Verta\Verta;
@@ -38,6 +39,7 @@ class PaymentsController extends Controller
             $array_user[] = $u->id;
         }
         if ($request->ajax()) {
+
 //            $data = DB::select("CALL get_invoices()");
             if ($request->customer_id == 0) {
                 $customer = $array_customer;
@@ -59,7 +61,8 @@ class PaymentsController extends Controller
             } else {
                 $todate = "1470/04/10";
             }
-            $data = DB::table('factors')
+
+            $data = DB::table('View_Factors')
                 ->where('Month', $v->month)
                 ->where('status', 0)
                 ->where('end', null)
@@ -67,6 +70,8 @@ class PaymentsController extends Controller
                 ->whereIn('user_id', $user)
                 ->whereBetween('date', array($indate, $todate))
                 ->orderBy('customer_id', 'asc')->get();
+
+
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
@@ -80,45 +85,21 @@ class PaymentsController extends Controller
                     return number_format($row->sum);
                 })
                 ->addColumn('havale', function ($row) {
-                    $code = DB::table('_success_number_invoice')
-                        ->where('scheduling_id', $row->pack_id)
-                        ->first();
-                    if (!empty($code)) {
-                        return $code->number;
+                    if (!empty($row->havale)) {
+                        return $row->havale;
                     } else {
                         return 'شماره حواله ثبت نشده است';
                     }
 
                 })
                 ->addColumn('rahkaran', function ($row) {
-                    $code = DB::table('exitproductbarnfacs')
-                        ->where('detail_id', $row->pack_id)
-                        ->first();
-                    if (!empty($code)) {
-                        return $code->number_fac;
+                    if (!empty($row->rahkaran)) {
+                        return $row->rahkaran;
                     } else {
                         return 'شماره فاکتور ثبت نشده است';
                     }
 
 
-                })
-                ->addColumn('number', function ($row) {
-                    $number = Factors::where('customer_id', $row->customer_id)
-                        ->count();
-                    return $number;
-                })
-                ->addColumn('sumtotal', function ($row) {
-                    $number = Factors::where('customer_id', $row->customer_id)
-                        ->sum('sum');
-                    return number_format($number);
-                })
-                ->addColumn('user', function ($row) {
-                    $name = User::where('id', $row->user_id)->first();
-                    return $name->name;
-                })
-                ->addColumn('customer', function ($row) {
-                    $customer = Customer::where('id', $row->customer_id)->first();
-                    return $customer->name;
                 })
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
@@ -230,7 +211,9 @@ class PaymentsController extends Controller
             } else {
                 $todate = "1470/04/10";
             }
-            $data = DB::table('factors')
+
+
+            $data = DB::table('View_Factors')
                 ->where('Month', $v->month)
                 ->where('status', 3)
                 ->whereIn('customer_id', $customer)
@@ -250,23 +233,25 @@ class PaymentsController extends Controller
                 ->addColumn('total', function ($row) {
                     return number_format($row->sum);
                 })
-                ->addColumn('number', function ($row) {
-                    $number = Factors::where('customer_id', $row->customer_id)
-                        ->count();
-                    return $number;
-                })
                 ->addColumn('sumtotal', function ($row) {
                     $number = Factors::where('customer_id', $row->customer_id)
                         ->sum('sum');
                     return number_format($number);
                 })
-                ->addColumn('user', function ($row) {
-                    $name = User::where('id', $row->user_id)->first();
-                    return $name->name;
+                ->addColumn('havale', function ($row) {
+                    if (!empty($row->havale)) {
+                        return $row->havale;
+                    } else {
+                        return 'شماره حواله ثبت نشده است';
+                    }
+
                 })
-                ->addColumn('customer', function ($row) {
-                    $customer = Customer::where('id', $row->customer_id)->first();
-                    return $customer->name;
+                ->addColumn('rahkaran', function ($row) {
+                    if (!empty($row->rahkaran)) {
+                        return $row->rahkaran;
+                    } else {
+                        return 'شماره فاکتور ثبت نشده است';
+                    }
                 })
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
@@ -685,7 +670,6 @@ class PaymentsController extends Controller
         $detail_customer_payment = DB::table('detail_customer_payment')
             ->where('payment_id', $id)
             ->sum('price');
-
 
         if (!empty($detail_customer_payment)) {
             $detail_customer = number_format($detail_customer_payment);

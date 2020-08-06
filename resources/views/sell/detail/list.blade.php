@@ -449,7 +449,7 @@
             </td>
             <td width="121">
                 @if(!empty($users->sign))
-                    <img src="{{url($users->sign)}}" width="100" class="user-image" alt="User Image">
+                    <img src="{{url($users->sign)}}" width="100" style="background: white">
                 @endif
             </td>
         </tr>

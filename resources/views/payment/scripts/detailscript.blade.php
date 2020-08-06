@@ -39,7 +39,8 @@
                     "columnDefs": [
                         {"orderable": false, "targets": 0},
                     ],
-                    "order": [[ 7, "desc" ]],
+                    "order": [[ 1, "ASC" ]],
+                    "ordering": false,
                     "language": {
                         "search": "جستجو:",
                         "lengthMenu": "نمایش _MENU_",
@@ -62,9 +63,11 @@
                     },
                     columns: [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                        {data: 'customer', name: 'customer'},
+                        {data: 'customer_name', name: 'customer_name'},
                         {data: 'user', name: 'user'},
                         {data: 'pack_id', name: 'pack_id'},
+                        {data: 'havale', name: 'havale'},
+                        {data: 'rahkaran', name: 'rahkaran'},
                         {data: 'date', name: 'date'},
                         {data: 'total', name: 'total'},
                         {data: 'type', name: 'type'},

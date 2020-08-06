@@ -221,18 +221,17 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
         //CustomerAccountController
         Route::get('/CustomerAccount/index', 'CustomerAccountController@index')->name('admin.CustomerAccount.index');
-
         Route::get('/CustomerAccount/detail', 'CustomerAccountController@detail')->name('admin.CustomerAccount.list.detail');
-
         Route::post('/CustomerAccount/store', 'CustomerAccountController@store')->name('admin.CustomerAccount.store');
-
+        Route::post('/CustomerAccount/storee', 'CustomerAccountController@storee')->name('admin.CustomerAccount.storee');
         Route::post('/CustomerAccount/edit', 'CustomerAccountController@edit')->name('admin.CustomerAccount.edit');
-
+        Route::post('/CustomerAccount/edit', 'CustomerAccountController@edit')->name('admin.CustomerAccount.edit');
+        Route::post('/CustomerAccount/payment/update', 'CustomerAccountController@patmentupdate')->name('admin.CustomerAccount.payment.update');
         Route::get('/CustomerAccount/list/{id?}', 'CustomerAccountController@list')->name('admin.CustomerAccount.list');
-
         Route::get('/CustomerAccount/update/{id?}', 'CustomerAccountController@update')->name('admin.CustomerAccount.update');
-
+        Route::get('/CustomerAccount/check/payment/{id?}', 'CustomerAccountController@checkpayment')->name('admin.CustomerAccount.check.payment');
         Route::delete('/CustomerAccount/delete/{id?}', 'CustomerAccountController@delete')->name('admin.CustomerAccount.delete');
+        Route::get('/CustomerAccount/print', 'CustomerAccountController@print')->name('admin.customeraccount.print');
 
 
         //Customer
@@ -334,6 +333,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/Scheduling/ExitFac', 'SchedulingController@ExitFac')->name('admin.scheduling.store.exit.fac');
         Route::get('/Scheduling/detail/list', 'SchedulingController@detaillist')->name('admin.scheduling.detail.list');
         Route::post('/Scheduling/update/date', 'SchedulingController@updatedate')->name('admin.scheduling.update.date');
+        Route::post('/Scheduling/updatee/datee', 'SchedulingController@updatedatee')->name('admin.scheduling.update.datee');
         Route::post('/Scheduling/cancel/detail', 'SchedulingController@canceldetail')->name('admin.scheduling.cancel.detail');
         Route::get('/Scheduling/print/{id?}', 'SchedulingController@print')->name('admin.Scheduling.print');
         Route::post('/Scheduling/update/bargiri', 'SchedulingController@bargiri')->name('admin.scheduling.update.bargiri');

@@ -83,7 +83,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
+        $string = preg_split("/,/", "$request->price");
+        $count = count($string);
+        $number = null;
+        for ($i = 0; $i < $count; $i++) {
+            $number .= $string[$i];
+        }
         if (!empty($request->product_id)) {
             $products = Product::find($request->product_id);
             if ($products->code != $request->code) {
@@ -127,7 +132,7 @@ class ProductController extends Controller
                     'commodity_id' => $request->commodity_id,
                     'characteristics_id' => $request->characteristic,
                     'manufacturing' => $request->manufacturing,
-                    'price' => $request->price,
+                    'price' => $number,
                     'minimum' => $request->minimum,
                     'maximum' => $request->maximum,
                     'label' => $commodity->name . ' ' . $name . ' ' . $request->name,

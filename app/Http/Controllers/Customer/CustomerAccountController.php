@@ -7,6 +7,7 @@ use App\CustomerAccount;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Faker\Provider\Payment;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 use Morilog\Jalali\Jalalian;
@@ -38,6 +39,7 @@ class CustomerAccountController extends Controller
 
     public function store(Request $request)
     {
+
         $packs = array();
         $details = \DB::table('clearing_factor')
             ->where('clearing_id', $request->customer_ider)
@@ -140,6 +142,80 @@ class CustomerAccountController extends Controller
 
     }
 
+    public function storee(Request $request)
+    {
+
+        $created = Carbon::now()->timezone('Asia/Tehran');
+        $price = null;
+
+
+        $CustomerAccount = CustomerAccount::where('customer_id', $request->customer_id)
+            ->first();
+        if (!empty($request->price)) {
+            $count = count($request->price);
+            for ($i = 0; $i < $count; $i++) {
+                try {
+                    $price = $price + $request->price[$i];
+                    \DB::table('detail_customer_payment')
+                        ->insert([
+                            'customer_id' => $request->customer_id,
+                            'type' => $request->type[$i],
+                            'shenase' => $request->shenase[$i],
+                            'price' => $request->price[$i],
+                            'date' => $request->date[$i],
+                            'datee' => Jalalian::forge($created)->format('Y/m/d'),
+                            'name' => $request->name[$i],
+                            'name_user' => $request->user_name[$i],
+                            'descriptionn' => $request->descriptionnn[$i],
+                            'created_at' => $created,
+                            'status' => 1,
+                        ]);
+                } catch (Exception $exception) {
+                }
+            }
+
+        }
+        $sum = $price + $request->cpriicee;
+        if ($sum < $request->pricesuumm) {
+            if (empty($CustomerAccount)) {
+                CustomerAccount::create([
+                    'customer_id' => $request->customer_id,
+                    'creditor' => $sum,
+                ]);
+            } else {
+                CustomerAccount::where('customer_id', $request->customer_id)
+                    ->update([
+                        'creditor' => $sum,
+                    ]);
+            }
+
+        } else {
+            if (empty($CustomerAccount)) {
+                CustomerAccount::create([
+                    'customer_id' => $request->customer_id,
+                    'creditor' => $sum - $request->pricesuumm,
+                ]);
+            } else {
+                CustomerAccount::where('customer_id', $request->customer_id)
+                    ->update([
+                        'creditor' => $sum - $request->pricesuumm,
+                    ]);
+
+            }
+        }
+        return response()->json(['success' => 'success']);
+
+
+    }
+
+    public function print()
+    {
+        $customer_accounts = \DB::table('customer_accounts')->get();
+        $customers = Customer::orderBy('id', 'desc')->get();
+        return view('customeraccount.print', compact('customers', 'customer_accounts'));
+
+    }
+
     public function detail(Request $request)
     {
 
@@ -213,6 +289,30 @@ class CustomerAccountController extends Controller
 
     }
 
+    public function checkpayment($id)
+    {
+        $price = CustomerAccount::where('customer_id', $id)
+            ->first();
+        return response()->json($price);
+
+    }
+
+    public function patmentupdate(Request $request)
+    {
+        $string = preg_split("/,/", "$request->priced");
+        $count = count($string);
+        $number = null;
+        for ($i = 0; $i < $count; $i++) {
+            $number .= $string[$i];
+        }
+        CustomerAccount::where('customer_id', $request->cusomer_id_payment)
+            ->update([
+                'creditor' => $number,
+            ]);
+        return \response()->json(['success' => 'success']);
+
+    }
+
     public function edit(Request $request)
     {
         $CustomerAccount = CustomerAccount::where('customer_id', $request->id_customer)->first();
@@ -269,8 +369,19 @@ class CustomerAccountController extends Controller
 
         $btn = '<a href="' . route('admin.CustomerAccount.list', $row->id) . '">
                      <i class="fa fa-eye fa-lg" title="ریز پرداختی مشتری"></i>
-                      </a>';
-
+                      </a>&nbsp;&nbsp;';
+        if (\Gate::check('ویرایش موجودی مشتری')) {
+            $btn = $btn . '<a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                       class="editpaymentcustomer">
+                       <i class="fa fa-edit fa-lg" title="ویرایش"></i>
+                       </a>&nbsp;&nbsp;';
+        }
+        $btn = $btn . '<a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="شارژ حساب"
+                       class="sharj">
+                       <i class="fa fa-plus fa-lg" title="شارژ حساب"></i>
+                       </a>&nbsp;&nbsp;';
 
         return $btn;
 

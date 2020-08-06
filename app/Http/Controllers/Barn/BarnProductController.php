@@ -102,7 +102,6 @@ class BarnProductController extends Controller
         $products = Product::all();
         if ($request->ajax()) {
             $data = \DB::table('receiptproduct')
-                ->whereNull('status')
                 ->get();
             return Datatables::of($data)
                 ->addIndexColumn()

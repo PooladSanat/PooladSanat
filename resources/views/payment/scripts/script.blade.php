@@ -26,16 +26,17 @@
                 $('.data-table').DataTable({
                     processing: true,
                     serverSide: true,
-                    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                        $('td:eq(0)', nRow).css('background-color', '#e8ecff');
-                    },
                     "bInfo": false,
                     "paging": false,
                     "bPaginate": false,
                     "columnDefs": [
                         {"orderable": false, "targets": 0},
                     ],
-                    "order": [[ 8, "desc" ]],
+                    "order": [[ 1, "ASC" ]],
+                    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                        $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+                    },
+                    "ordering": false,
                     "language": {
                         "search": "جستجو:",
                         "lengthMenu": "نمایش _MENU_",
@@ -58,7 +59,7 @@
                     },
                     columns: [
                         {data: 'checkbox', orderable: false, searchable: false},
-                        {data: 'customer', name: 'customer'},
+                        {data: 'customer_name', name: 'customer_name'},
                         {data: 'user', name: 'user'},
                         {data: 'pack_id', name: 'pack_id'},
                         {data: 'havale', name: 'havale'},

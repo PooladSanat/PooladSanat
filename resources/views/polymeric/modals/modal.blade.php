@@ -80,7 +80,7 @@
                                                 style="color: red"
                                                 class="required-mark">*</span>
                                         </label>
-                                        <input type="text" id="price" name="price" class="form-control"
+                                        <input type="text" id="price" name="price" class="form-control price"
                                                placeholder="لطفا قیمت را وارد کنید"
                                                required>
                                     </div>

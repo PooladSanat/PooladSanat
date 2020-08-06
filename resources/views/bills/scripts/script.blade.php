@@ -30,6 +30,7 @@
                         {"orderable": false, "targets": 0},
                     ],
                     "order": [[ 6, "desc" ]],
+                    "ordering": false,
                     "language": {
                         "search": "جستجو:",
                         "lengthMenu": "نمایش _MENU_",
@@ -107,6 +108,7 @@
                         "order": [[ 6, "desc" ]],
                         "scrollY": "150px",
                         "scrollCollapse": true,
+
                         "language": {
                             "search": "جستجو:",
                             "lengthMenu": "نمایش _MENU_",
@@ -540,6 +542,8 @@
             "\n</option>" +
             "<option value='بانک توسعه تعاون'>بانک توسعه تعاون\n" +
             "\n</option>" +
+            "<option value='موسسه اعتباری توسعه تعاون'>موسسه اعتباری توسعه تعاون\n" +
+            "\n</option>" +
             "<option value='پست بانک ایران'>پست بانک ایران\n" +
             "\n</option>" +
             "<option value='بانک اقتصاد نوین'>بانک اقتصاد نوین\n" +
@@ -561,6 +565,8 @@
             "<option value='بانک صادرات'>بانک صادرات\n" +
             "\n</option>" +
             "<option value='بانک ملت'>بانک ملت\n" +
+            "\n</option>" +
+            "<option value='بانک تات'>بانک تات\n" +
             "\n</option>" +
             "<option value='بانک تجارت'>بانک تجارت\n" +
             "\n</option>" +

@@ -52,6 +52,12 @@ class PolymericController extends Controller
      */
     public function store(Request $request)
     {
+        $string = preg_split("/,/", "$request->price");
+        $count = count($string);
+        $number = null;
+        for ($i = 0; $i < $count; $i++) {
+            $number .= $string[$i];
+        }
         if (!empty($request->product)) {
             $polymerics = Polymeric::find($request->product);
             if ($polymerics->code != $request->code) {
@@ -93,7 +99,7 @@ class PolymericController extends Controller
                     'type' => $request->type,
                     'grid' => $request->grid,
                     'description' => $request->description,
-                    'price' => $request->price,
+                    'price' => $number,
                     'minimum' => $request->minimum,
                     'maximum' => $request->maximum,
                 ]);

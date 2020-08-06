@@ -35,8 +35,8 @@ class SchedulingController extends Controller
             ->where('id', $role_id->role_id)
             ->first();
 
-        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی" or $role->name == "مسئول حمل و نقل" or $role->name == "مدیر انبار") {
-            $user_id = [12, 13, 14, 15, 16, 17, 18, 19, 22, 24, 25];
+        if ($role->name == "مدیریت" or $role->name == "Admin" or $role->name == "کارشناس فروش و مالی" or $role->name == "مسئول حمل و نقل" or $role->name == "مدیر انبار" or $role->name == "مدیر کارخانه") {
+            $user_id = [12, 13, 14, 15, 16, 17, 18, 19, 22, 24, 25, 26];
         }
 
         if ($role->name == "کارشناس فروش") {
@@ -56,10 +56,8 @@ class SchedulingController extends Controller
             $todate = "1450/04/01";
             $list = $request->from_check;
         } else {
-
             $list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         }
-
         if ($request->ajax()) {
             $data = DB::table('View_Scheduling')
                 ->whereIn('user_id', $user_id)
@@ -182,7 +180,6 @@ class SchedulingController extends Controller
         ], [
             'numberexit.*.required' => 'لطفا مقدار خارج شده از انبار را وارد کنید',
         ]);
-
         $id_invoi = count(collect($request)->get('id_invoi'));
         if (!empty($request->updatee)) {
             if ($validator->passes()) {
@@ -290,6 +287,7 @@ class SchedulingController extends Controller
                     }
 
                 }
+                $pack_total = Scheduling::where('pack', $request->pack[0])->sum('total');
                 $p = array();
                 $sum = null;
                 $customer = DB::table('schedulings')
@@ -324,10 +322,11 @@ class SchedulingController extends Controller
                         'pack_id' => $request->pack[0],
                         'customer_id' => $customer_id->customer_id,
                         'user_id' => $customer_id->user_id,
-                        'sum' => $s ,
+                        'sum' => $s,
                         'status' => 0,
                         'Month' => $verta->month,
                         'Year' => $verta->year,
+                        'total' => $pack_total,
                         'date' => Jalalian::forge($date)->format('Y/m/d'),
                         'type' => $customer_id->paymentMethod,
                         'created_at' => $date,
@@ -431,6 +430,7 @@ class SchedulingController extends Controller
                         \DB::rollBack();
                     }
                 }
+                $pack_total = Scheduling::where('pack', $request->pack[0])->sum('total');
                 $p = array();
                 $sum = null;
                 $customer = DB::table('schedulings')
@@ -458,26 +458,18 @@ class SchedulingController extends Controller
                 for ($w = 0; $w < $v; $w++) {
                     $sum += $p[$w];
                 }
-                if ($customer_id->paymentMethod == "نقدی") {
-                    $takhfif = 23;
-                } elseif ($customer_id->paymentMethod == "بصورت چک 1 ماهه") {
-                    $takhfif = 21;
-                } elseif ($customer_id->paymentMethod == "بصورت چک 2 ماهه") {
-                    $takhfif = 19;
-                } elseif ($customer_id->paymentMethod == "بصورت چک 3 ماهه") {
-                    $takhfif = 17;
-                }
-                $s = $total * $takhfif / 100;
-                $summ = $total - $s;
+
+                $s = $total - $customer_id->ta;
                 DB::table('factors')
                     ->insert([
                         'pack_id' => $request->pack[0],
                         'customer_id' => $customer_id->customer_id,
                         'user_id' => $customer_id->user_id,
-                        'sum' => $summ,
+                        'sum' => $s,
                         'status' => 0,
                         'Month' => $verta->month,
                         'Year' => $verta->year,
+                        'total' => $pack_total,
                         'date' => Jalalian::forge($date)->format('Y/m/d'),
                         'type' => $customer_id->paymentMethod,
                         'created_at' => $date,
@@ -709,6 +701,18 @@ class SchedulingController extends Controller
         return response()->json(['success' => 'success']);
     }
 
+    public function updatedatee(Request $request)
+    {
+
+        DB::table('schedulings')
+            ->where('pack', $request->id_de)
+            ->update([
+                'date' => $request->daatee,
+            ]);
+        return response()->json(['success' => 'success']);
+    }
+
+
     public function canceldetail(Request $request)
     {
         $id = Scheduling::where('id', $request->id_p)->first();
@@ -911,8 +915,16 @@ class SchedulingController extends Controller
                        </a>&nbsp;&nbsp;';
             }
 
+
         }
 
+        if (\Gate::check('تغییر تاریخ بارگیری')) {
+            $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->pack . '" data-original-title="تغییر تاریخ بارگیری"
+                       class="change-datee">
+                  <i class="fa fa-history fa-lg" title="تغییر تاریخ بارگیری"></i>
+                       </a>&nbsp;&nbsp;';
+        }
 
         return $btn;
 

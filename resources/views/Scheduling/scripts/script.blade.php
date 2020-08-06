@@ -138,6 +138,11 @@
             $('#changedateModel').modal('show');
             $('#id_d').val(id);
         });
+        $('body').on('click', '.change-datee', function () {
+            var id = $(this).data('id');
+            $('#changedateModele').modal('show');
+            $('#id_de').val(id);
+        });
 
         $('body').on('click', '.EditCar', function () {
             var id = $(this).data('id');
@@ -250,6 +255,47 @@
                 }
             });
         });
+
+        $('#saveBtndatee').click(function (e) {
+            e.preventDefault();
+            $('#saveBtndatee').text('در حال ثبت اطلاعات...');
+            $('#saveBtndatee').prop("disabled", true);
+            $.ajax({
+                data: $('#changedateFormesa').serialize(),
+                url: "{{ route('admin.scheduling.update.datee') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.errors) {
+                        $('#changedateModele').modal('hide');
+                        jQuery.each(data.errors, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#saveBtndatee').text('ثبت');
+                        $('#saveBtndatee').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#changedateFormesa').trigger("reset");
+                        $('#changedateModele').modal('hide');
+                        $('#data-table').DataTable().ajax.reload();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveBtndatee').text('ثبت');
+                        $('#saveBtndatee').prop("disabled", false);
+                    }
+                }
+            });
+        });
+
 
         $('body').on('click', '.plus-number', function () {
             var product_id = $(this).data('id');
@@ -704,6 +750,32 @@
 
 <script>
     kamaDatepicker('from_date',
+        {
+            buttonsColor: "red",
+            forceFarsiDigits: false,
+            sync: true,
+            gotoToday: true,
+            highlightSelectedDay: true,
+            markHolidays: true,
+            markToday: true,
+            previousButtonIcon: "fa fa-arrow-circle-left",
+            nextButtonIcon: "fa fa-arrow-circle-right",
+
+        });
+    kamaDatepicker('date',
+        {
+            buttonsColor: "red",
+            forceFarsiDigits: false,
+            sync: true,
+            gotoToday: true,
+            highlightSelectedDay: true,
+            markHolidays: true,
+            markToday: true,
+            previousButtonIcon: "fa fa-arrow-circle-left",
+            nextButtonIcon: "fa fa-arrow-circle-right",
+
+        });
+    kamaDatepicker('daatee',
         {
             buttonsColor: "red",
             forceFarsiDigits: false,

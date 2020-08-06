@@ -4,7 +4,7 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption" id="caption">
-                        مشخصات پرداخت مشتری
+                        شارژ حساب مشتری
                     </div>
                     <div class="caption pull-left">
                         <a data-dismiss="modal">
@@ -27,10 +27,13 @@
                                                 class="table table-responsive table-striped table-bordered">
                                                 <thead>
                                                 <tr>
-                                                    <td>نوع پرداخت</td>
-                                                    <td>شناسه پرداخت</td>
+                                                    <td>نوع سند</td>
+                                                    <td>شماره سند</td>
+                                                    <td>تاریخ سر رسید</td>
+                                                    <td>نام بانک</td>
+                                                    <td>نام صادر کننده</td>
                                                     <td>مبلغ(ریال)</td>
-                                                    <td>تاریخ</td>
+                                                    <td>شرح</td>
                                                     <td>عملیات</td>
                                                 </tr>
                                                 </thead>
@@ -40,8 +43,11 @@
                                                 <tr>
                                                     <td id="typee"></td>
                                                     <td id="shanasee"></td>
-                                                    <td id="pricee"></td>
                                                     <td id="datee"></td>
+                                                    <td id="namee"></td>
+                                                    <td id="user_namee"></td>
+                                                    <td id="pricee"></td>
+                                                    <td id="descriptionn"></td>
                                                     <td id="actiontt"></td>
                                                 </tr>
                                                 </tbody>
@@ -186,7 +192,7 @@
                                         </div>
                                         <div class="col-md-2">
                                             <label>مبلغ(ریال)</label>
-                                            <input type="number" class="form-control" id="price" name="price">
+                                            <input type="number" class="form-control price" id="price" name="price">
                                         </div>
 
                                         <div class="col-md-2">
@@ -203,6 +209,63 @@
                                     <div class="text-left">
                                         <button style="width: 130px" type="submit" class="btn btn-success"
                                                 id="saveeditpament"
+                                                value="ثبت">
+                                            ثبت
+                                        </button>
+
+                                        <button style="width: 130px" type="button" class="btn btn-danger"
+                                                data-dismiss="modal">
+                                            انصراف
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="editpaymentcustomer" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption" id="caption">
+                        موجودی مشتری
+                    </div>
+                    <div class="caption pull-left">
+                        <a data-dismiss="modal">
+                            <i style="color: white" class="pull-left fa fa-close"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                        <div class="form-group">
+
+                            <form autocomplete="off" id="editpaymentcustomerForm" name="editpaymentcustomerForm">
+                                <input type="hidden" name="cusomer_id_payment" id="cusomer_id_payment">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>موجودی مشتری:</label>
+                                        <input type="text" name="priced" id="priced" class="form-control priced">
+                                    </div>
+
+                                </div>
+                                <br/>
+                                <hr/>
+                                <div class="modal-footer">
+                                    <div class="text-left">
+                                        <button style="width: 130px" type="submit" class="btn btn-success"
+                                                id="saveBtnpayment"
                                                 value="ثبت">
                                             ثبت
                                         </button>

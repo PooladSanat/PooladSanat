@@ -54,8 +54,8 @@
             $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
+                "ordering": false,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                    $('td:eq(0)', nRow).css('background-color', '#e8ecff');
 
                     var api = this.api(), aData;
                     var intVal = function (i) {
@@ -95,6 +95,11 @@
                     $(api.column(2).footer()).html(thuTotal);
                     $(api.column(3).footer()).html(friTotal);
                     $(api.column(4).footer()).html(friTotaal);
+
+
+                    if (aData.total == 0 && aData.sum == 0 && aData.sa == 0 && aData.as == 0){
+                        $('td', nRow).css('background-color', 'rgba(146,153,156,0.36)');
+                    }
 
 
                 }

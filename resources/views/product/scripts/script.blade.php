@@ -1,5 +1,8 @@
 <script src="{{asset('/public/js/a1.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/js/a2.js')}}" type="text/javascript"></script>
+<script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
+<script src="{{asset('/public/js/12.js')}}" type="text/javascript"></script>
+
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
     @php
@@ -206,9 +209,10 @@
         });
 
     });
-
+    $('.price').mask("#,##0", {
+        reverse: true
+    });
 
     $('#foundation').addClass('active');
     $('#foundation_a').addClass('active');
 </script>
-

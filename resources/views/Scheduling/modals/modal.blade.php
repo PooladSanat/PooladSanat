@@ -259,7 +259,7 @@
                                                 style="color: red"
                                                 class="required-mark">*</span>
                                         </label>
-                                        <input type="text" id="date" name="date" class="form-control example1"
+                                        <input type="text" id="date" name="date" class="form-control"
                                                required>
 
                                     </div>
@@ -570,6 +570,72 @@
                                         <button style="width: 130px" type="button" class="btn btn-danger"
                                                 data-dismiss="modal">
                                             بستن
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="changedateModele" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption" id="caption">
+                        تغیر زمان بارگیری
+                    </div>
+                    <div class="caption pull-left">
+                        <a data-dismiss="modal">
+                            <i style="color: white" class="pull-left fa fa-close"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                        <div class="form-group">
+
+                            <form autocomplete="off" id="changedateFormesa" name="changedateFormesa" class="form-horizontal">
+                                <input type="hidden" name="id_de" id="id_de">
+                                @csrf
+                                <div class="row">
+
+                                    <div class="col-md-12">
+
+                                        <label>تاریخ
+                                            <span
+                                                style="color: red"
+                                                class="required-mark">*</span>
+                                        </label>
+                                        <input type="text" id="daatee" name="daatee" class="form-control"
+                                               required>
+
+                                    </div>
+
+                                </div>
+                                <br/>
+                                <hr/>
+                                <div class="modal-footer">
+                                    <div class="text-left">
+                                        <button style="width: 130px" type="submit" class="btn btn-success"
+                                                id="saveBtndatee"
+                                                value="ثبت">
+                                            ثبت
+                                        </button>
+
+                                        <button style="width: 130px" type="button" class="btn btn-danger"
+                                                data-dismiss="modal">
+                                            انصراف
                                         </button>
 
                                     </div>

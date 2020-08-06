@@ -30,6 +30,7 @@
                     {"orderable": false, "targets": 0},
                 ],
                 "order": [[ 5, "desc" ]],
+                "ordering": false,
                 "language": {
                     "search": "جستجو:",
                     "lengthMenu": "نمایش _MENU_",

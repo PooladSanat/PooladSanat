@@ -2,6 +2,9 @@
 <script src="{{asset('/public/js/a2.js')}}" type="text/javascript"></script>
 <link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
 <script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
+<script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
+<script src="{{asset('/public/js/12.js')}}" type="text/javascript"></script>
+
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
     $(function () {
@@ -20,7 +23,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 3, "desc" ]],
+            "order": [[3, "desc"]],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $('td:eq(0)', nRow).css('background-color', '#e8ecff');
                 if (parseInt(aData.creditor) < 0) {
@@ -54,6 +57,17 @@
             var id = $(this).data('id');
             $('#customer_id').val(id);
 
+
+        });
+
+
+        $('body').on('click', '.editpaymentcustomer', function () {
+            var id = $(this).data('id');
+            $.get("{{ route('admin.CustomerAccount.check.payment') }}" + '/' + id, function (data) {
+                $('#editpaymentcustomer').modal('show');
+                $('#priced').val(data.creditor);
+                $('#cusomer_id_payment').val(id);
+            })
 
         });
 
@@ -115,6 +129,50 @@
             });
         });
 
+        $('#saveBtnpayment').click(function (e) {
+            e.preventDefault();
+            $('#saveBtnpayment').text('در حال ثبت اطلاعات...');
+            $('#saveBtnpayment').prop("disabled", true);
+            $.ajax({
+                data: $('#editpaymentcustomerForm').serialize(),
+                url: "{{ route('admin.CustomerAccount.payment.update') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.errors) {
+                        $('#editpaymentcustomer').modal('hide');
+                        jQuery.each(data.errors, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#saveBtnpayment').text('ثبت');
+                        $('#saveBtnpayment').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#editpaymentcustomerForm').trigger("reset");
+                        $('#editpaymentcustomer').modal('hide');
+                        table1.draw();
+                        table.draw();
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'مشخصات با موفقیت در سیستم ثبت شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#saveBtnpayment').text('ثبت');
+                        $('#saveBtnpayment').prop("disabled", false);
+                    }
+                }
+            });
+        });
+
+
+
+
         $('body').on('click', '.deletepayment', function () {
             var id = $(this).data("id");
             Swal.fire({
@@ -149,6 +207,13 @@
             })
         });
 
+        $('body').on('click', '.sharj', function () {
+            var id = $(this).data('id');
+            $('#customer_id').val(id);
+            $('#ajaxModel').modal('show');
+
+        });
+
 
         var table1 = $('.ee').DataTable({
             processing: true,
@@ -162,7 +227,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 9, "desc" ]],
+            "order": [[9, "desc"]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -197,7 +262,7 @@
             $('#saveBtn').prop("disabled", true);
             $.ajax({
                 data: $('#productForm').serialize(),
-                url: "{{ route('admin.CustomerAccount.store') }}",
+                url: "{{ route('admin.CustomerAccount.storee') }}",
                 type: "POST",
                 dataType: 'json',
                 success: function (data) {
@@ -255,12 +320,11 @@
             "<select id=\'type" + a + "\'  name=\"type[]\"\n" +
             "class=\"form-control type\"/>" +
             "<option>انتخاب کنید</option>" +
-            "<option value='1'>نقدی</option>" +
             "<option value='2'>چک</option>" +
+            "<option value='1'>فیش حواله</option>" +
             "</select>" +
             "</div></div></div>";
         document.getElementById('typee').appendChild(myNode);
-
 
         var myNode = document.createElement('div');
         myNode.id = 'shanasee' + a;
@@ -269,6 +333,90 @@
             "class=\"form-control shenase\"/>" +
             "</div></div></div>";
         document.getElementById('shanasee').appendChild(myNode);
+
+
+        var myNode = document.createElement('div');
+        myNode.id = 'namee' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<select id=\'name" + a + "\'  name=\"name[]\"\n" +
+            "class=\"form-control name\"/>" +
+            "<option value=''>انتخاب کنید</option>" +
+            "<option value='بانک ملّی ایران'>بانک ملّی ایران\n" +
+            "\n</option>" +
+            "<option value='بانک سپه'>بانک سپه\n" +
+            "\n</option>" +
+            "<option value='بانک صنعت و معدن'>بانک صنعت و معدن\n" +
+            "\n</option>" +
+            "<option value='بانک کشاورزی'>بانک کشاورزی\n" +
+            "\n</option>" +
+            "<option value='بانک مسکن'>بانک مسکن\n" +
+            "\n</option>" +
+            "<option value='بانک توسعه صادرات ایران'>بانک توسعه صادرات ایران\n" +
+            "\n</option>" +
+            "<option value='بانک توسعه تعاون'>بانک توسعه تعاون\n" +
+            "\n</option>" +
+            "<option value='موسسه اعتباری توسعه تعاون'>موسسه اعتباری توسعه تعاون\n" +
+            "\n</option>" +
+            "<option value='پست بانک ایران'>پست بانک ایران\n" +
+            "\n</option>" +
+            "<option value='بانک اقتصاد نوین'>بانک اقتصاد نوین\n" +
+            "\n</option>" +
+            "<option value='بانک پارسیان'>بانک پارسیان\n" +
+            "\n</option>" +
+            "<option value='بانک کارآفرین'>بانک کارآفرین\n" +
+            "\n</option>" +
+            "<option value='بانک سامان'>بانک سامان\n" +
+            "\n</option>" +
+            "<option value='بانک سینا'>بانک سینا\n" +
+            "\n</option>" +
+            "<option value='بانک خاور میانه'>بانک خاور میانه\n" +
+            "\n</option>" +
+            "<option value='بانک شهر'>بانک شهر\n" +
+            "\n</option>" +
+            "<option value='بانک دی'>بانک دی\n" +
+            "\n</option>" +
+            "<option value='بانک صادرات'>بانک صادرات\n" +
+            "\n</option>" +
+            "<option value='بانک ملت'>بانک ملت\n" +
+            "\n</option>" +
+            "<option value='بانک تات'>بانک تات\n" +
+            "\n</option>" +
+            "<option value='بانک تجارت'>بانک تجارت\n" +
+            "\n</option>" +
+            "<option value='بانک رفاه'>بانک رفاه\n" +
+            "\n</option>" +
+            "<option value='بانک حکمت ایرانیان'>بانک حکمت ایرانیان\n" +
+            "\n</option>" +
+            "<option value='بانک گردشگری'>بانک گردشگری\n" +
+            "\n</option>" +
+            "<option value='بانک ایران زمین'>بانک ایران زمین\n" +
+            "\n</option>" +
+            "<option value='بانک قوامین'>بانک قوامین\n" +
+            "\n</option>" +
+            "<option value='بانک انصار'>بانک انصار\n" +
+            "\n</option>" +
+            "<option value='بانک سرمایه'>بانک سرمایه\n" +
+            "\n</option>" +
+            "<option value='بانک پاسارگاد'>بانک پاسارگاد\n" +
+            "\n</option>" +
+            "<option value='بانک مشترک ایران-ونزوئلا'>بانک مشترک ایران-ونزوئلا\n" +
+            "\n</option>" +
+            "<option value='بانک قرض‌الحسنه مهر ایران'>بانک قرض‌الحسنه مهر ایران\n" +
+            "\n</option>" +
+            "<option value='بانک قرض‌الحسنه رسالت'>بانک قرض‌الحسنه رسالت\n" +
+            "\n</option>" +
+            "</select>" +
+            "</div></div></div>";
+        document.getElementById('namee').appendChild(myNode);
+
+        var myNode = document.createElement('div');
+        myNode.id = 'user_namee' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'user_name" + a + "\'  name=\"user_name[]\"\n" +
+            "class=\"form-control user_name\"/>" +
+            "</div></div></div>";
+        document.getElementById('user_namee').appendChild(myNode);
+
 
         var myNode = document.createElement('div');
         myNode.id = 'pricee' + a;
@@ -289,19 +437,32 @@
 
 
         var myNode = document.createElement('div');
+        myNode.id = 'descriptionn' + a;
+        myNode.innerHTML += "<div class='form-group'>" +
+            "<input type=\"text\" id=\'descriptionnn" + a + "\'  name=\"descriptionnn[]\"\n" +
+            "class=\"form-control date\"/>" +
+            "</div></div></div>";
+        document.getElementById('descriptionn').appendChild(myNode);
+
+
+        var myNode = document.createElement('div');
         myNode.id = 'actiontt' + a;
         myNode.innerHTML += "<div class='form-group'>" +
             "<button onclick='deleteService2(" + a + ", event)' class=\"form-control btn btn-danger actiont\"><i class=\"fa fa-remove\"></button></div>";
         document.getElementById('actiontt').appendChild(myNode);
+
 
     }
 
     function deleteService2(id, event) {
         event.preventDefault();
         $('#typee' + id).remove();
+        $('#namee' + id).remove();
+        $('#user_namee' + id).remove();
         $('#shanasee' + id).remove();
         $('#pricee' + id).remove();
         $('#datee' + id).remove();
+        $('#descriptionn' + id).remove();
         $('#actiontt' + id).remove();
 
     }
@@ -319,6 +480,12 @@
         added_inputs_array_table2(data, added_inputs2_array.length - 1);
     }
 
+    $('.price').mask("#,##0", {
+        reverse: true
+    });
+    $('.priced').mask("#,##0", {
+        reverse: true
+    });
 
 </script>
 <script>

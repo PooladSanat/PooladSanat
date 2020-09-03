@@ -129,7 +129,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/ProductCharacteristic/delete/{id?}', 'ProductCharacteristicController@delete')->name('admin.ProductCharacteristic.delete');
 
         //ProductController
-        Route::get('/Product/list', 'ProductController@list')->name('admin.product.list');
+        Route::get('/Produoct/list', 'ProductController@list')->name('admin.product.lisret');
         Route::get('/Product/update/{id?}', 'ProductController@update')->name('admin.product.update');
         Route::get('/Product/list/select', 'ProductController@getcharacteristic')->name('admin.list.product');
         Route::get('/Product/list/selectu', 'ProductController@getcharacteristicu')->name('admin.list.productu');
@@ -153,7 +153,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::delete('/device/delete/{id?}', 'DeviceController@delete')->name('admin.device.delete');
 
         //ColorController
-        Route::get('/color/list', 'ColorController@list')->name('admin.color.list');
+        Route::get('/colorrrrr/listttt', 'ColorController@listttt')->name('admin.color.listt');
         Route::post('/color/store', 'ColorController@store')->name('admin.color.store');
         Route::post('/color/edit', 'ColorController@edit')->name('admin.color.edit');
         Route::delete('/color/delete/{id?}', 'ColorController@delete')->name('admin.color.delete');
@@ -256,6 +256,14 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/customers/list/checkcity', 'CustomerController@checkcity')->name('admin.list.check.city');
         Route::get('/customers/list/checkstate', 'CustomerController@checkstate')->name('admin.list.check.state');
 
+        //Home
+        Route::get('/customers/detail/information', 'CustomerController@information')->name('admin.customer.detail.information');
+        Route::get('/customers/detail/information/list', 'CustomerController@informationList')->name('admin.customer.detail.information.list');
+        Route::get('/customers/detail/traconesh', 'CustomerController@traconesh')->name('admin.customer.detail.traconesh.list');
+        Route::get('/customers/detail/kharid', 'CustomerController@kharid')->name('admin.customer.detail.kharid.list');
+        Route::get('/customers/detail/asnad', 'CustomerController@asnad')->name('admin.customer.detail.asnad.list');
+
+
 
     });
 
@@ -285,6 +293,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/invoice/update/{id?}', 'InvoiceController@update')->name('admin.invoice.update');
         Route::get('/invoice/update/product/{id?}', 'InvoiceController@updateproduct')->name('admin.invoice.product.update');
         Route::get('/invoice/PrintDetail/{id?}', 'InvoiceController@PrintDetail')->name('admin.print.detail');
+        Route::get('/invoice/PrintDetailll/{id?}', 'InvoiceController@PrintDetailll')->name('admin.print.detailllll');
         Route::get('/invoice/PrintDetaill/{id?}', 'InvoiceController@PrintDetaill')->name('admin.print.detaill');
         Route::post('/invoice/product/edit', 'InvoiceController@editproduct')->name('admin.invoice.product.edit');
         Route::post('/invoice/edit', 'InvoiceController@edit')->name('admin.invoice.edit');
@@ -373,6 +382,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/Complaints/check', 'ComplaintsController@check')->name('admin.Complaints.check');
         Route::get('/Complaints/file', 'ComplaintsController@file')->name('admin.Complaints.file.check');
 
+        Route::get('/Complaints/filedes', 'ComplaintsController@filedes')->name('admin.Complaints.file.check.des');
+
 
     });
 
@@ -431,6 +442,20 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/barnproduct/restore', 'BarnProductController@restore')->name('admin.barnproduct.restore');
 
 
+        Route::get('/barnproduct/receiptreturn', 'BarnProductController@receiptreturn')->name('admin.receiptreturn.list');
+        Route::post('/receiptreturn/restore', 'BarnProductController@restorereturn')->name('admin.receiptreturn.restore');
+        Route::get('/receiptreturn/receiptreturns/{id?}', 'BarnProductController@receiptwizardreturn')->name('admin.receiptreturn.wizard');
+
+
+        Route::get('/barnproduct/receiptamster', 'BarnProductController@receiptcarncolor')->name('admin.receiptamster.list');
+        Route::get('/receiptcroncolor/receiptreturns/{id?}', 'BarnProductController@receiptwizardcroncolor')->name('admin.receiptcroncolor.wizard');
+        Route::post('/receiptcroncolor/restore', 'BarnProductController@restorecarncolor')->name('admin.restorecarncolor.restore');
+
+        Route::get('/receiptpolim/receiptamster', 'BarnProductController@receiptpolim')->name('admin.receiptpolim.list');
+        Route::get('/receiptpolim/receiptreturns/{id?}', 'BarnProductController@receiptwizardpolim')->name('admin.receiptpolim.wizard');
+        Route::post('/receiptpolim/restore', 'BarnProductController@restorepolim')->name('admin.receiptpolim.restore');
+
+
         //BarnTemporaryController
         Route::get('/barntemporary/list', 'BarnTemporaryController@list')->name('admin.barntemporary.list');
 
@@ -448,6 +473,17 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
         //ReportMonthly
         Route::get('/ReportMonthly/list', 'ReportMonthlyController@list')->name('admin.ReportMonthly.list');
+        Route::get('/CustomerTransactions/list', 'ReportMonthlyController@CustomerTransactions')->name('admin.CustomerTransactions.list');
+        Route::get('CustomerTransactions/print', 'CustomerStatusReportController@CustomerTransactionsPrint')->name('admin.CustomerTransactions.print');
+        Route::get('/ReportMonthly/list/exit', 'ReportMonthlyController@ExitList')->name('admin.ReportMonthly.exit.list');
+        Route::get('ReportMonthly/print/exit', 'ReportMonthlyController@ExitPrint')->name('admin.CustomerStatusReport.exit.print');
+
+
+        Route::get('/ReportMonthly/list/tolid', 'ReportMonthlyController@Tolid')->name('admin.ReportMonthly.list.tolid');
+        Route::get('/ReportMonthly/list/frosh', 'ReportMonthlyController@Frosh')->name('admin.ReportMonthly.list.frosh');
+        Route::get('/ReportMonthly/list/mar', 'ReportMonthlyController@Mar')->name('admin.ReportMonthly.list.mar');
+
+
 
     });
 
@@ -464,28 +500,26 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('payment/factor', 'PaymentsController@factor')->name('admin.payment.delete.factor');
         Route::get('/payment/update/{id?}', 'PaymentsController@update')->name('admin.payment.update');
         Route::get('/paymentt/updatee/{id?}', 'PaymentsController@updatee')->name('admin.payment.updatee');
-
-
         Route::get('/payment/admin/trash/{id?}', 'PaymentsController@trash')->name('admin.payment.trash');
         Route::get('/payment/admin/edit/{id?}', 'PaymentsController@edit')->name('admin.payment.edit');
-
         Route::post('/payment/admin/update', 'PaymentsController@EditUpdate')->name('admin.payment.edit.update');
-
         Route::get('/payment/list/detail/factor', 'PaymentsController@ListList')->name('admin.payment.list.detail.factor');
-
+        Route::get('/payment/list/detail/factor/payment', 'PaymentsController@ListListPayment')->name('admin.payment.list.detail.factor.payment');
         Route::get('/payment/check/list/{id?}', 'PaymentsController@CheckList')->name('admin.payment.check.list');
+        Route::get('/payment/list/detail/factor/pack', 'PaymentsController@ListListpack')->name('admin.payment.list.detail.factor.pack');
+
+
 
         //BillsController
         Route::get('/bills/list', 'BillsController@list')->name('admin.bills.list');
         Route::get('/bills/detaillist', 'BillsController@detaillist')->name('admin.bills.detaillist');
         Route::get('/bills/success/admin/{id?}', 'BillsController@SuccessAdmin')->name('admin.payment.success.admin');
-
-
         Route::get('/bills/print/payment/{id?}', 'BillsController@PrintPayment')->name('admin.bills.print.detail');
 
 
         //PaymentDocumentController
         Route::get('/PaymentDocument/list', 'PaymentDocumentController@list')->name('admin.PaymentDocument.list');
+        Route::get('/PaymentDocument/paymentlist/{id?}', 'PaymentDocumentController@paymentlist')->name('admin.CustomerAccount.check.payment.list');
         Route::post('/PaymentDocument/store/payment', 'PaymentDocumentController@store')->name('admin.CustomerAccount.store.payment');
 
     });
@@ -581,6 +615,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
 
     Route::get('/testttt', 'TestController@testttt');
+    Route::get('/estttt', 'TestController@estttt');
     Route::get('/g', 'TestController@g');
     Route::get('/table', 'TestController@table');
     Route::get('/showDatatable', 'TestController@showDatatable')->name('showDatatable');

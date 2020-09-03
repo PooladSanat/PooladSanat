@@ -26,7 +26,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 2, "desc" ]],
+            "order": [[ 2, "Acs" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -60,7 +60,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 3, "desc" ]],
+            "order": [[ 3, "Acs" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",

@@ -112,14 +112,15 @@
             <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
-            <a href="{{route('admin.invoice.wizard')}}" class="btn btn-link">
+            @can('پیش فاکتور های تایید نشده')
+                <a href="{{route('admin.invoice.wizard')}}" class="btn btn-link">
 
-                <img src="{{asset('public/icon/icons8-profit-growth-64.png')}}"
-                     width="30" title="صدور پیش فاکتور">
+                    <img src="{{asset('public/icon/icons8-profit-growth-64.png')}}"
+                         width="30" title="صدور پیش فاکتور">
 
 
-            </a>
-
+                </a>
+            @endcan
 
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
@@ -187,22 +188,32 @@
                             @if(!empty(auth()->user()->avatar))
                                 <img src="{{url(auth()->user()->avatar)}}" class="user-image" alt="User Image">
                             @else
-                                <img src="{{url('/public/icon/male-user.png')}}" class="user-image"
+                                <img src="{{url('/public/icon/Blank-Avatar-Man-in-Suit.jpg')}}" class="user-image"
                                      alt="User Image">
                             @endif
                             <span class="hidden-xs">{{auth()->user()->name}}</span>
+
                         </a>
                         <ul class="dropdown-menu">
                             <li class="user-header">
                                 @if(!empty(auth()->user()->avatar))
                                     <img src="{{url(auth()->user()->avatar)}}" class="img-circle" alt="User Image">
                                 @else
-                                    <img src="{{url('/public/icon/male-user.png')}}" class="img-circle"
+                                    <img src="{{url('/public/icon/Blank-Avatar-Man-in-Suit.jpg')}}" class="img-circle"
                                          alt="User Image">
                                 @endif
                                 <p>
                                     {{auth()->user()->name}}
                                 </p>
+                                    <?php
+                                    $id = DB::table('role_user')
+                                        ->where('user_id', auth()->user()->id)
+                                        ->first();
+                                    $name = DB::table('roles')
+                                        ->where('id', $id->role_id)
+                                        ->first();
+                                    ?>
+                                <h2 style="font-size: 13px;color: white">{{$name->name}}</h2>
                             </li>
                             <li class="user-footer">
                                 <div class="pull-right">
@@ -235,10 +246,11 @@
                     @if(!empty(auth()->user()->avatar))
                         <img src="{{url(auth()->user()->avatar)}}" class="img-circle" alt="User Image">
                     @else
-                        <img src="{{url('/public/icon/male-user.png')}}" class="img-circle" alt="User Image">
+                        <img src="{{url('/public/icon/Blank-Avatar-Man-in-Suit.jpg')}}" class="img-circle" alt="User Image">
                     @endif
                 </div>
                 <div class="pull-right info">
+                    <br/>
                     <p>{{auth()->user()->name}}</p>
                 </div>
             </div>
@@ -288,6 +300,7 @@
                     </li>
                 @endif
 
+
                 @if(Gate::check('تعریف رنگ') || Gate::check('تعریف مستربچ')
                  || Gate::check('مواد پلیمیری') || Gate::check('تامین کنندگان')
                  || Gate::check('تعریف دستگاه') || Gate::check('تعریف دستگاه')
@@ -327,7 +340,7 @@
                                         @endcan
                                         @can('تعریف محصول')
 
-                                            <li><a href="{{route('admin.product.list')}}"><i
+                                            <li><a href="{{route('admin.product.lisret')}}"><i
                                                         class="fa fa-circle-o"></i>تعریف محصول</a>
                                             </li>
                                         @endcan
@@ -394,7 +407,7 @@
                                             </li>
                                         @endcan
                                         @can('تعریف مستربچ')
-                                            <li><a href="{{route('admin.color.list')}}"><i
+                                            <li><a href="{{route('admin.color.listt')}}"><i
                                                         class="fa fa-circle-o"></i>تعریف مستربچ</a>
                                             </li>
                                         @endcan
@@ -438,8 +451,9 @@
                     </li>
                 @endif
 
+
                 @if(Gate::check('مشتریان') || Gate::check('انواع مشتریان')
-                    || Gate::check('حساب مشتریان'))
+                 || Gate::check('حساب مشتریان'))
                     <li class="treeview" id="customer">
                         <a href="#">
                             <i class="fa fa-user"></i> <span>مشتریان</span>
@@ -460,15 +474,11 @@
                                 </li>
                             @endcan
 
-                            @can('حساب مشتریان')
-                                <li><a href="{{route('admin.CustomerAccount.index')}}"><i
-                                            class="fa fa-circle-o"></i>حساب مشتریان</a>
-                                </li>
-                            @endcan
 
                         </ul>
                     </li>
                 @endif
+
 
                 @if(Gate::check('آرشیو فروش') || Gate::check('پیش فاکتور های تایید نشده')
                 || Gate::check('پیش فاکتور های تایید شده') || Gate::check('پیش فاکتور های لغو شده')
@@ -510,7 +520,7 @@
                             @endcan
                             @can('زمان بندی بارگیری')
                                 <li><a href="{{route('admin.scheduling.list')}}"><i
-                                            class="fa fa-circle-o"></i>زمان بندی بارگیری</a>
+                                            class="fa fa-circle-o"></i>حواله های خروج کالا</a>
                                 </li>
                             @endcan
                             @can('مرجوعی')
@@ -532,10 +542,11 @@
                         </ul>
                     </li>
                 @endif
+
                 @if(Gate::check('فاکتور های تسویه نشده') || Gate::check('صورت حساب های تسویه نشده')
-                               || Gate::check('فاکتور های تسویه شده') || Gate::check('صورت حساب های تسویه شده')
-                               || Gate::check('اسناد پرداختی')
-                                || Gate::check('صورت وضعیت مشتریان'))
+                 || Gate::check('فاکتور های تسویه شده') || Gate::check('صورت حساب های تسویه شده')
+                 || Gate::check('اسناد پرداختی')
+                 || Gate::check('صورت وضعیت مشتریان')|| Gate::check('حساب مشتریان'))
                     <li class="treeview" id="payment">
                         <a href="#">
                             <i class="fa fa-credit-card"></i> <span>مالی</span>
@@ -575,6 +586,14 @@
                                             class="fa fa-circle-o"></i>صورت وضعیت مشتریان</a>
                                 </li>
                             @endcan
+                            @can('حساب مشتریان')
+                                <li><a href="{{route('admin.CustomerAccount.index')}}"><i
+                                            class="fa fa-circle-o"></i>حساب مشتریان</a>
+                                </li>
+                            @endcan
+                            <li><a href="{{route('admin.CustomerTransactions.list')}}"><i
+                                        class="fa fa-circle-o"></i>لیست تراکنش های مشتری</a>
+                            </li>
 
 
                         </ul>
@@ -607,6 +626,14 @@
                 {{--                        </ul>--}}
                 {{--                    </li>--}}
                 {{--                @endif--}}
+
+
+
+
+
+
+
+
 
                 @if(Gate::check('تولید') || Gate::check('صف تولید')
                 || Gate::check('پلن خطوط تولید') || Gate::check('سفارش تولید')
@@ -690,55 +717,111 @@
                 @endif
 
 
+
+
+
                 @if(Gate::check('انبار مستربچ') || Gate::check('انبار مواد پلیمیری')
-                || Gate::check('انبار کالاهای ساخته شده') || Gate::check('رسید کالای ساخته شده')
-                || Gate::check('انبار موقت') || Gate::check('انبار ضایعات')
-                                             )
+                    || Gate::check('انبار کالاهای ساخته شده') || Gate::check('انبار کالاهای ساخته شده')
+                    || Gate::check('انبار موقت') || Gate::check('انبار ضایعات')
+                    || Gate::check('رسید انبار ضایعات')
+                    || Gate::check('رسید انبار مستربچ') ||
+                     Gate::check('رسید انبار مواد پلیمیری'))
                     <li class="treeview" id="barn">
                         <a href="#">
                             <i class="fa fa-archive"></i> <span>انبار</span>
                             <span class="pull-left-container">
-<i class="fa fa-angle-right pull-left"></i>
-</span>
+              <i class="fa fa-angle-right pull-left"></i>
+            </span>
                         </a>
                         <ul class="treeview-menu">
-                            @can('انبار مستربچ')
-                                <li><a href="{{route('admin.barncolor.list')}}"><i
-                                            class="fa fa-circle-o"></i>انبار مستربچ</a>
+
+                            @if(Gate::check('انبار مستربچ') || Gate::check('انبار مواد پلیمیری')
+                                || Gate::check('انبار کالاهای ساخته شده')
+                                || Gate::check('انبار موقت') || Gate::check('انبار ضایعات'))
+                                <li class="treeview" id="bbarn">
+                                    <a href="#">
+                                        <i class="fa fa-area-chart"></i> <span>موجودی انبارها</span>
+                                        <span class="pull-left-container">
+<i class="fa fa-angle-right pull-left"></i>
+</span>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        @can('انبار مستربچ')
+                                            <li><a href="{{route('admin.barncolor.list')}}"><i
+                                                        class="fa fa-circle-o"></i>انبار مستربچ</a>
+                                            </li>
+                                        @endcan
+                                        @can('انبار مواد پلیمیری')
+                                            <li><a href="{{route('admin.barnmaterial.list')}}"><i
+                                                        class="fa fa-circle-o"></i>انبار مواد پلیمری</a>
+                                            </li>
+                                        @endcan
+                                        @can('انبار کالاهای ساخته شده')
+                                            <li><a href="{{route('admin.barnproduct.list')}}"><i
+                                                        class="fa fa-circle-o"></i>انبار کالاهای ساخته شده</a>
+                                            </li>
+                                        @endcan
+                                        @can('انبار موقت')
+                                            <li><a href="{{route('admin.barntemporary.list')}}"><i
+                                                        class="fa fa-circle-o"></i>انبار موقت</a>
+                                            </li>
+                                        @endcan
+                                        @can('انبار ضایعات')
+                                            <li><a href="{{route('admin.barnreturn.list')}}"><i
+                                                        class="fa fa-circle-o"></i>انبار ضایعات</a>
+                                            </li>
+                                        @endcan
+
+                                    </ul>
                                 </li>
-                            @endcan
-                            @can('انبار مواد پلیمیری')
-                                <li><a href="{{route('admin.barnmaterial.list')}}"><i
-                                            class="fa fa-circle-o"></i>انبار مواد پلیمری</a>
+                            @endif
+
+                            @if(Gate::check('رسید کالای ساخته شده') || Gate::check('رسید انبار ضایعات')
+                                || Gate::check('رسید انبار مستربچ') || Gate::check('رسید انبار مواد پلیمیری'))
+                                <li class="treeview" id="rbarn">
+                                    <a href="#">
+                                        <i class="fa fa-file-archive-o"></i> <span>رسید انبارها</span>
+                                        <span class="pull-left-container">
+                                        <i class="fa fa-angle-right pull-left"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        @can('رسید کالای ساخته شده')
+                                            <li><a href="{{route('admin.receiptproduct.list')}}"><i
+                                                        class="fa fa-circle-o"></i>رسید انبار ساخته شده</a>
+                                            </li>
+                                        @endcan
+                                        @can('رسید انبار ضایعات')
+                                            <li><a href="{{route('admin.receiptreturn.list')}}"><i
+                                                        class="fa fa-circle-o"></i>رسید انبار ضایعات</a>
+                                            </li>
+                                        @endcan
+                                        @can('رسید انبار مستربچ')
+                                            <li><a href="{{route('admin.receiptamster.list')}}"><i
+                                                        class="fa fa-circle-o"></i>رسید انبار مستربچ</a>
+                                            </li>
+                                        @endcan
+                                        @can('رسید انبار مواد پلیمیری')
+                                            <li><a href="{{route('admin.receiptpolim.list')}}"><i
+                                                        class="fa fa-circle-o"></i>رسید انبار مواد پلیمیری</a>
+                                            </li>
+                                        @endcan
+
+
+                                    </ul>
                                 </li>
-                            @endcan
-                            @can('انبار کالاهای ساخته شده')
-                                <li><a href="{{route('admin.barnproduct.list')}}"><i
-                                            class="fa fa-circle-o"></i>انبار کالاهای ساخته شده</a>
-                                </li>
-                            @endcan
-                            @can('رسید کالای ساخته شده')
-                                <li><a href="{{route('admin.receiptproduct.list')}}"><i
-                                            class="fa fa-circle-o"></i>رسید کالای ساخته شده</a>
-                                </li>
-                            @endcan
-                            @can('انبار موقت')
-                                <li><a href="{{route('admin.barntemporary.list')}}"><i
-                                            class="fa fa-circle-o"></i>انبار موقت</a>
-                                </li>
-                            @endcan
-                            @can('انبار ضایعات')
-                                <li><a href="{{route('admin.barnreturn.list')}}"><i
-                                            class="fa fa-circle-o"></i>انبار ضایعات</a>
-                                </li>
-                            @endcan
+                            @endif
+
 
                         </ul>
                     </li>
+
                 @endif
 
 
-                @if(Gate::check('گزارش عملکرد ماهانه'))
+
+
+                @if(Gate::check('گزارش عملکرد ماهانه')||Gate::check('گزارش خروج کالا'))
 
                     <li class="treeview" id="report">
                         <a href="#">
@@ -751,6 +834,11 @@
                             @can('گزارش عملکرد ماهانه')
                                 <li><a href="{{route('admin.ReportMonthly.list')}}"><i
                                             class="fa fa-circle-o"></i>گزارش عملکرد ماهانه</a>
+                                </li>
+                            @endcan
+                            @can('گزارش خروج کالا')
+                                <li><a href="{{route('admin.ReportMonthly.exit.list')}}"><i
+                                            class="fa fa-circle-o"></i>گزارش خروج کالا</a>
                                 </li>
                             @endcan
                         </ul>

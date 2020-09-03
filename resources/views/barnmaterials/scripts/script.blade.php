@@ -21,7 +21,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 5, "desc" ]],
+            "order": [[ 6, "deesc" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -37,6 +37,7 @@
                 {data: 'type', name: 'type'},
                 {data: 'grid', name: 'grid'},
                 {data: 'name', name: 'name'},
+                {data: 'description', name: 'description'},
                 {data: 'PhysicalInventory', name: 'PhysicalInventory'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
 
@@ -139,4 +140,6 @@
         })
     });
     $('#barn').addClass('active');
+    $('#bbarn').addClass('active');
+
 </script>

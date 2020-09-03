@@ -41,7 +41,9 @@ class BillsController extends Controller
                 ->whereIn('status', $status)
                 ->whereIn('customer_id', $customer)
                 ->whereBetween('date', array($indate, $todate))
+                ->orderBy('date', 'desc')
                 ->get();
+
 
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -121,11 +123,20 @@ class BillsController extends Controller
                 ->whereIn('status', $status)
                 ->whereIn('customer_id', $customer)
                 ->whereBetween('date', array($indate, $todate))
+                ->orderBy('date', 'desc')
                 ->get();
 
 
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('id', function ($row) {
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                       class="detail-factor">
+                      ' . $row->id . '
+                       </a>';
+                    return $btn;
+                })
                 ->addColumn('price', function ($row) {
                     $price = number_format($row->price);
                     return $price;
@@ -155,7 +166,7 @@ class BillsController extends Controller
                 ->addColumn('actioonn', function ($row) {
                     return $this->actioonn($row);
                 })
-                ->rawColumns(['actioonn'])
+                ->rawColumns(['actioonn','id'])
                 ->make(true);
         }
         return view('bills.detaillist', compact('users', 'customers'));

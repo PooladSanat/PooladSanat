@@ -36,45 +36,101 @@ class CustomerStatusReportController extends Controller
 //            $data = DB::select("CALL get_invoices()");
 
             $data = \DB::table('clearing')
-                ->whereIn('status', $status)
                 ->whereIn('customer_id', $customer)
                 ->whereBetween('date', array($indate, $todate))
+                ->orderBy('date', 'desc')
                 ->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('id', function ($row) {
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                       class="detail-factor">
+                      ' . $row->id . '
+                       </a>';
+                    return $btn;
+                })
                 ->addColumn('price', function ($row) {
                     $price = number_format($row->price);
                     return $price;
                 })
-                ->addColumn('reciveprice', function ($row) {
+                ->addColumn('prrice', function ($row) use ($indate, $todate) {
+                    $data = \DB::table('clearing')
+                        ->where('customer_id', $row->customer_id)
+                        ->whereBetween('date', array($indate, $todate))
+                        ->sum('price');
+                    return number_format($data);
+                })
+                ->addColumn('reciveprice', function ($row) use ($indate, $todate) {
+
                     $detail = \DB::table('detail_customer_payment')
+                        ->whereBetween('datee', array($indate, $todate))
                         ->where('payment_id', $row->id)
+                        ->sum('price');
+
+                    return number_format($detail);
+                })
+                ->addColumn('rreciveprice', function ($row) use ($indate, $todate) {
+                    $detail = \DB::table('detail_customer_payment')
+                        ->whereBetween('datee', array($indate, $todate))
+                        ->where('customer_id', $row->customer_id)
                         ->sum('price');
                     return number_format($detail);
                 })
-                ->addColumn('total', function ($row) {
+                ->addColumn('rrecivepriceee', function ($row) use ($indate, $todate) {
+                    $data = \DB::table('clearing')
+                        ->where('customer_id', $row->customer_id)
+                        ->whereBetween('date', array($indate, $todate))
+                        ->sum('price');
+
                     $detail = \DB::table('detail_customer_payment')
+                        ->whereBetween('datee', array($indate, $todate))
+                        ->where('customer_id', $row->customer_id)
+                        ->sum('price');
+                    $r = abs($detail - $data);
+                    return number_format($r);
+                })
+                ->addColumn('rrecivepricee', function ($row) use ($indate, $todate) {
+
+                    $data = \DB::table('clearing')
+                        ->where('customer_id', $row->customer_id)
+                        ->whereBetween('date', array($indate, $todate))
+                        ->sum('price');
+
+                    $detail = \DB::table('detail_customer_payment')
+                        ->whereBetween('datee', array($indate, $todate))
+                        ->where('customer_id', $row->customer_id)
+                        ->sum('price');
+                    return $detail - $data;
+                })
+                ->addColumn('total', function ($row) use ($indate, $todate) {
+                    $detail = \DB::table('detail_customer_payment')
+                        ->whereBetween('datee', array($indate, $todate))
                         ->where('payment_id', $row->id)
                         ->sum('price');
-                    return number_format($detail - $row->price);
+                    $sum = abs($detail - $row->price);
+                    return number_format($sum);
                 })
-                ->addColumn('t', function ($row) {
+                ->addColumn('t', function ($row) use ($indate, $todate) {
                     $detail = \DB::table('detail_customer_payment')
+                        ->whereBetween('datee', array($indate, $todate))
                         ->where('payment_id', $row->id)
                         ->sum('price');
                     return $detail - $row->price;
                 })
-                ->addColumn('customer', function ($row) {
+                ->addColumn('customer', function ($row) use ($indate, $todate) {
                     $sum = \DB::table('factors')
                         ->where('status', 0)
                         ->where('customer_id', $row->customer_id)
                         ->sum('sum');
                     return $sum;
                 })
-                ->addColumn('customerr', function ($row) {
+                ->addColumn('customerr', function ($row) use ($indate, $todate) {
                     $sum = \DB::table('factors')
+                        ->whereBetween('date', array($indate, $todate))
                         ->where('status', 0)
+                        ->whereNull('sort')
                         ->where('customer_id', $row->customer_id)
                         ->sum('sum');
                     return number_format($sum);
@@ -91,7 +147,44 @@ class CustomerStatusReportController extends Controller
                         ->first();
                     return number_format($sum->creditor);
                 })
-                ->rawColumns([])
+                ->addColumn('account', function ($row) use ($indate, $todate) {
+
+                    $sum = \DB::table('factors')
+                        ->where('customer_id', $row->customer_id)
+                        ->whereNotBetween('date', array($indate, $todate))
+                        ->sum('sum');
+
+                    $detail = \DB::table('detail_customer_payment')
+                        ->where('customer_id', $row->customer_id)
+                        ->whereNotBetween('datee', array($indate, $todate))
+                        ->sum('price');
+
+                    return number_format($detail - $sum);
+                })
+                ->addColumn('accountt', function ($row) use ($indate, $todate) {
+
+                    $sum = \DB::table('factors')
+                        ->where('customer_id', $row->customer_id)
+                        ->whereNotBetween('date', array($indate, $todate))
+                        ->sum('sum');
+
+                    $detail = \DB::table('detail_customer_payment')
+                        ->where('customer_id', $row->customer_id)
+                        ->whereNotBetween('datee', array($indate, $todate))
+                        ->sum('price');
+                    $total_sum = abs($detail - $sum);
+                    return number_format($total_sum);
+                })
+                ->addColumn('q', function ($row) use ($indate, $todate) {
+                    $detail = \DB::table('detail_customer_payment')
+                        ->whereNotNull('payment_id')
+                        ->whereBetween('date', array($indate, $todate))
+                        ->where('customer_id', $row->customer_id)
+                        ->whereNull('payment_id')
+                        ->sum('price');
+                    return $detail;
+                })
+                ->rawColumns(['id'])
                 ->make(true);
 
         }
@@ -121,8 +214,10 @@ class CustomerStatusReportController extends Controller
 
 
             $data = \DB::table('detail_customer_payment')
+                ->where('date', '!=', '1399')
                 ->whereIn('customer_id', $customer)
                 ->whereBetween('datee', array($indate, $todate))
+                ->orderBy('date', 'desc')
                 ->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -131,6 +226,13 @@ class CustomerStatusReportController extends Controller
                         return "نقدی";
                     } else {
                         return "چکی";
+                    }
+                })
+                ->addColumn('payment', function ($row) {
+                    if (!empty($row->payment_id)) {
+                        return 'بابت صورتحساب' . ' ' . $row->payment_id;
+                    } else {
+                        return 'بابت شارژ حساب';
                     }
                 })
                 ->addColumn('price', function ($row) {
@@ -193,6 +295,7 @@ class CustomerStatusReportController extends Controller
             ->first();
 
         $detail_customer_payments = \DB::table('detail_customer_payment')
+            ->where('date', '!=', '1399')
             ->whereIn('customer_id', $customer)
             ->whereBetween('datee', array($indate, $todate))
             ->get();
@@ -302,6 +405,37 @@ class CustomerStatusReportController extends Controller
 //            DB::rollBack();
 //        }
 //        return response()->json(['success' => 'success']);
+
+    }
+
+
+    public function CustomerTransactionsPrint(Request $request)
+    {
+
+        $customer = [$request->id_customer];
+        if (!empty($request->intime)) {
+            $indate = $request->intime;
+        } else {
+            $indate = "1370/04/10";
+        }
+        if (!empty($request->totime)) {
+            $todate = $request->totime;
+        } else {
+            $todate = "1470/04/10";
+        }
+
+        $in = $request->intime;
+        $to = $request->totime;
+        $name = Customer::where('id', $request->id_customer)->first();
+
+        $clearings = \DB::table('View_Transaction')
+            ->where('date', '!=', "1399")
+            ->whereIn('customer_id', $customer)
+            ->whereBetween('date', array($indate, $todate))
+            ->get();
+        $view = \View::make('CustomerTransactions.print',
+            compact('clearings', 'in', 'to', 'name'));
+        return $view->render();
 
     }
 

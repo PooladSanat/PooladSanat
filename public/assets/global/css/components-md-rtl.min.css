@@ -1,5 +1,5 @@
 body, h1, h2, h3, h4, h5, h6 {
-    font-family: "Open Sans", sans-serif
+    font-family: "Open Sans", Shahab
 }
 
 .bold.btn, .sbold.btn {
@@ -997,6 +997,7 @@ a {
     text-shadow: none;
     color: #0b93d5;
 }
+
 a:active, a:focus, a:hover {
     outline: 0
 }
@@ -5554,7 +5555,6 @@ li [class*=" fa-"].icon-large, li [class*=" glyphicon-"].icon-large, li [class*=
     text-shadow: none;
     padding: 0;
     background-color: #fff;
-    font-family: "B Yekan", Helvetica, Arial, sans-serif;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     -ms-border-radius: 2px;

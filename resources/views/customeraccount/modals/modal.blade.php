@@ -22,6 +22,17 @@
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>نام مشتری</label>
+                                                <input type="text" class="form-control" name="name_userrr" id="name_userrr" disabled>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>مانده حساب</label>
+                                                <input type="text" class="form-control" id="userrr_payment" name="userrr_payment" disabled>
+                                            </div>
+                                        </div>
+                                        <br/>
                                         <div class="table table-responsive">
                                             <table
                                                 class="table table-responsive table-striped table-bordered">
@@ -192,7 +203,7 @@
                                         </div>
                                         <div class="col-md-2">
                                             <label>مبلغ(ریال)</label>
-                                            <input type="number" class="form-control price" id="price" name="price">
+                                            <input type="number" class="form-control" id="price" name="price">
                                         </div>
 
                                         <div class="col-md-2">
@@ -256,7 +267,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>موجودی مشتری:</label>
-                                        <input type="text" name="priced" id="priced" class="form-control priced">
+                                        <input type="text" name="priced" id="priced" class="form-control">
                                     </div>
 
                                 </div>

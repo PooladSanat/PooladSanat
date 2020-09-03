@@ -125,6 +125,7 @@
                     <br/>
                     <table>
                         <thead>
+
                         <tr>
                             <th>ردیف</th>
                             <th>کد صورت حساب</th>
@@ -184,6 +185,10 @@
                             <th id="sum_j">{{number_format($total)}}</th>
                         </tr>
                         <tr>
+                            <th colspan="5">مانده حساب مشتری</th>
+                            <th id="sum_m">{{number_format($sumcustomer->creditor)}}</th>
+                        </tr>
+                        <tr>
                             <th colspan="5">جمع مبالغ فاکتورهای در جریان</th>
                             <th id="sum_j">{{number_format($sumtotal)}}</th>
                         </tr>
@@ -228,11 +233,12 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <?php
-                            $number = 1;
-                            ?>
-                            @foreach($detail_customer_payments as $detail_customer_payment)
+                        <?php
+                        $number = 1;
+                        ?>
+                        @foreach($detail_customer_payments as $detail_customer_payment)
+                            <tr>
+
                                 <th>{{$number ++}}</th>
                                 <th>
                                     @if($detail_customer_payment->type == 1)
@@ -247,17 +253,22 @@
                                 <th>{{$detail_customer_payment->name_user}}</th>
                                 <th>{{number_format($detail_customer_payment->price)}}</th>
                                 <th>
-                                    @if($detail_customer_payment->status == 1)
-                                        بدون وضعیت
-                                    @elseif($detail_customer_payment->status == 2)
+                                    @if($detail_customer_payment->type == 1)
                                         پرداخت شده
                                     @else
-                                        برگشت خورده
+                                        @if($detail_customer_payment->status == 1)
+                                            بدون وضعیت
+                                        @elseif($detail_customer_payment->status == 2)
+                                            پرداخت شده
+                                        @else
+                                            برگشت خورده
+                                        @endif
                                     @endif
                                 </th>
 
-                            @endforeach
-                        </tr>
+
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
 

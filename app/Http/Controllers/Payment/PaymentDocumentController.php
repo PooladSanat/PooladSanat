@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Customer;
+use App\CustomerAccount;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
@@ -42,13 +43,14 @@ class PaymentDocumentController extends Controller
                     , 'بانک مسکن', 'بانک توسعه صادرات ایران', 'بانک توسعه تعاون', 'پست بانک ایران', 'بانک اقتصاد نوین', 'بانک پارسیان', 'بانک کارآفرین'
                     , 'بانک سامان', 'بانک سینا', 'بانک خاور میانه', 'بانک شهر', 'بانک دی', 'بانک صادرات', 'بانک ملت', 'بانک تجارت', 'بانک رفاه'
                     , 'بانک حکمت ایرانیان', 'بانک گردشگری', 'بانک ایران زمین', 'بانک قوامین', 'بانک انصار', 'بانک سرمایه', 'بانک پاسارگاد', 'بانک مشترک ایران-ونزوئلا', 'بانک قرض‌الحسنه مهر ایران'
-                    , 'بانک قرض‌الحسنه رسالت', 'بانک آینده','بانک تات','موسسه اعتباری توسعه تعاون'];
+                    , 'بانک قرض‌الحسنه رسالت', 'بانک آینده', 'بانک تات', 'موسسه اعتباری توسعه تعاون'];
             }
 //            $data = DB::select("CALL get_invoices()");
             $data = \DB::table('detail_customer_payment')
                 ->whereIn('customer_id', $customer)
                 ->whereIn('name', $name)
                 ->whereBetween('date', array($indate, $todate))
+                ->orderBy('date', 'desc')
                 ->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -57,10 +59,10 @@ class PaymentDocumentController extends Controller
                     return $name->name;
                 })
                 ->addColumn('payment_id', function ($row) {
-                    if ($row->payment_id == null) {
-                        return 'شارژ حساب';
-                    } else {
+                    if (!empty($row->payment_id)) {
                         return $row->payment_id;
+                    } else {
+                        return 'شارژ حساب';
                     }
                 })
                 ->addColumn('type', function ($row) {
@@ -104,6 +106,15 @@ class PaymentDocumentController extends Controller
                 'description' => $request->description,
             ]);
         return response()->json(['success' => 'success']);
+
+    }
+
+    public function paymentlist($id)
+    {
+        $data = CustomerAccount::where('customer_id', $id)->first();
+        $dataa = Customer::where('id', $id)->first();
+
+        return response()->json(['data' => $data, 'dataa' => $dataa]);
 
     }
 

@@ -33,6 +33,7 @@
             .control-group {
                 display: none;
             }
+
             #printer {
                 display: none;
             }
@@ -113,7 +114,7 @@
                     <table>
                         <thead>
                         <tr>
-                            <th>
+                            <th style="background-color: rgba(135,142,145,0.5)">
                                     <span
                                         style="text-align: center;font-size: 15px">جزییات درخواست مرجوع کالای کد {{$id}}</span>
                                 <br/>
@@ -133,7 +134,7 @@
                     <table>
                         <thead>
                         <tr>
-                            <th>
+                            <th style="background-color: rgba(23,0,255,0.14)">
                                 <span style="text-align: center;font-size: 15px">مشخصات کالای مرجوعی</span>
                                 <br/>
                                 <div class="row">
@@ -225,11 +226,12 @@
                         </tbody>
                     </table>
                     <br/>
+                    <br/>
                     @if(!empty($manager))
                         <table>
                             <thead>
                             <tr>
-                                <th>
+                                <th style="background-color: rgba(23,0,255,0.14)">
                                                             <span
                                                                 style="text-align: center;font-size: 15px">اعلام نظر مدیر فروش</span>
                                     <br/>
@@ -252,7 +254,7 @@
                         <table>
                             <thead>
                             <tr>
-                                <th width="250">توضیحات مدیر فروش در خصوص مرجوع بار</th>
+                                <th width="250">توضیحات مدیر فروش</th>
                                 <th>{{$manager->description}}</th>
                             </tr>
                             </thead>
@@ -260,33 +262,41 @@
                         <table>
                             <thead>
                             <tr>
-                                <th height="100" width="250">مرجوع نمودن مورد موافقت</th>
-                                <th>
-                                    @if($manager->status == 1)
+                                <th height="50" width="250">وضعیت</th>
+                                @if($manager->status == 1)
+                                    <th style="background-color: rgba(0,162,60,0.31)">
                                         تایید
-                                    @else
-                                        عدم تایید
-                                    @endif
-                                </th>
-                                <th>امضاء مدیر فروش</th>
-                                <th>
-                                    @foreach($users as $user)
-                                        @if($user->id == $manager->user_id)
-                                            <img src="{{url($user->sign)}}" width="100" class="user-image" alt="User Image">
+                                    </th>
 
-                                        @endif
-                                    @endforeach
-                                </th>
+                                @else
+                                    <th style="background-color: rgba(255,0,0,0.32)">
+                                        عدم تایید
+                                    </th>
+
+                                @endif
+                                    <th>امضاء مدیر فروش</th>
+                                    <th>
+                                        @foreach($users as $user)
+                                            @if($user->id == $manager->user_id)
+                                                @if(!empty($user->sign))
+                                                    <img src="{{url($user->sign)}}" width="100" class="user-image"
+                                                         alt="User Image">
+
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                    </th>
                             </tr>
                             </thead>
                         </table>
                     @endif
                     <br/>
+                    <br/>
                     @if(!empty($qc))
                         <table>
                             <thead>
                             <tr>
-                                <th>
+                                <th style="background-color: rgba(23,0,255,0.14)">
                                                             <span
                                                                 style="text-align: center;font-size: 15px">اعلام نظر واحد کنترل کیفی</span>
                                     <br/>
@@ -309,7 +319,7 @@
                         <table>
                             <thead>
                             <tr>
-                                <th height="100" width="250">تعداد محصول سالم</th>
+                                <th height="50" width="250">تعداد محصول سالم</th>
                                 <th>
                                     {{$Healthy}}
                                 </th>
@@ -323,23 +333,30 @@
                         <table>
                             <thead>
                             <tr>
-                                <th height="100" width="250">وضعیت</th>
-                                <th>
-                                    @if($qc->status == 1)
+                                <th height="50" width="250">وضعیت</th>
+                                @if($qc->status == 1)
+                                    <th style="background-color: rgba(0,162,60,0.31)">
                                         تایید
-                                    @else
+                                    </th>
+
+                                @else
+                                    <th style="background-color: rgba(255,0,0,0.32)">
                                         عدم تایید
-                                    @endif
-                                </th>
-                                <th height="100" width="250">توضیحات تکمیلی</th>
+                                    </th>
+
+                                @endif
+                                <th height="50" width="250">توضیحات تکمیلی</th>
                                 <th>
                                     {{$qc->description}}
                                 </th>
-                                <th height="100" width="250">امضاء مدیر کنترل کیفیت</th>
+                                <th height="50" width="250">امضاء مدیر کنترل کیفیت</th>
                                 <th>
                                     @foreach($users as $user)
                                         @if($user->id == $qc->user_id)
-                                            <img src="{{url($user->sign)}}" width="100" class="user-image" alt="User Image">
+                                            @if(!empty($user->sign))
+                                                <img src="{{url($user->sign)}}" width="100" class="user-image"
+                                                     alt="User Image">
+                                            @endif
                                         @endif
                                     @endforeach
                                 </th>
@@ -348,11 +365,12 @@
                         </table>
                     @endif
                     <br/>
+                    <br/>
                     @if(!empty($barn))
                         <table>
                             <thead>
                             <tr>
-                                <th>
+                                <th style="background-color: rgba(23,0,255,0.14)">
                                                             <span
                                                                 style="text-align: center;font-size: 15px">اعلام نظر مسئول انبار</span>
                                     <br/>
@@ -383,21 +401,27 @@
                         <table>
                             <thead>
                             <tr>
-                                <th height="100" width="250">مرجوع نمودن مورد موافقت</th>
-                                <th>
-
-                                    @if($barn->status == 1)
+                                <th height="50" width="250">وضعیت</th>
+                                @if($barn->status == 1)
+                                    <th style="background-color: rgba(0,162,60,0.31)">
                                         تایید
-                                    @else
+                                    </th>
+
+                                @else
+                                    <th style="background-color: rgba(255,0,0,0.32)">
                                         عدم تایید
-                                    @endif
-                                </th>
+                                    </th>
+
+                                @endif
                                 <th>امضاء مسئول انبار</th>
                                 <th>
                                     @foreach($users as $user)
                                         @if($user->id == $barn->user_id)
-                                            <img src="{{url($user->sign)}}" width="100" class="user-image" alt="User Image">
+                                            @if(!empty($user->sign))
+                                                <img src="{{url($user->sign)}}" width="100" class="user-image"
+                                                     alt="User Image">
 
+                                            @endif
                                         @endif
                                     @endforeach
                                 </th>
@@ -405,6 +429,7 @@
                             </thead>
                         </table>
                     @endif
+                    <br/>
                     <br/>
                     <a class="btn btn-primary" href="javascript:void(0)" id="printer">تهیه نسخه چاپی</a>
                     <br/>

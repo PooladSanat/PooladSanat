@@ -36,59 +36,70 @@
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     $('td:eq(0)', nRow).css('background-color', '#e8ecff');
                     if (parseInt(aData.t) > parseInt("0")) {
-                        $('td:eq(5)', nRow).css('background-color', 'rgba(204,255,141,0.65)');
+                        $('td:eq(5)', nRow).css('background-color', 'rgba(204,255,141,0.58)');
                     } else if (parseInt(aData.t) < parseInt("0")) {
-                        $('td:eq(5)', nRow).css('background-color', 'rgba(255,106,107,0.64)');
+                        $('td:eq(5)', nRow).css('background-color', 'rgba(255,106,107,0.4)');
                     } else if (parseInt(aData.t) == parseInt("0")) {
-                        $('td:eq(5)', nRow).css('background-color', 'rgba(0,183,255,0.64)');
+                        $('td:eq(5)', nRow).css('background-color', 'rgb(248,244,255)');
+                    }
+                    $('#sum_gg').text(aData.prrice).css('background-color', 'rgba(255,106,107,0.4)');
+
+                    if (parseInt(aData.rreciveprice) > 0) {
+                        $('#sum_hh').text(aData.rreciveprice).css('background-color', 'rgba(0,183,255,0.42)');
+                    } else {
+                        $('#sum_hh').text(aData.rreciveprice).css('background-color', 'rgb(255,249,255)');
                     }
 
+                    if (parseInt(aData.rrecivepricee) < 0) {
+                        $('#sum_jj').text(aData.rrecivepriceee).css('background-color', 'rgba(255,106,107,0.4)');
+                    } else if (parseInt(aData.rrecivepricee) > 0) {
+                        $('#sum_jj').text(aData.rrecivepriceee).css('background-color', 'rgba(0,183,255,0.42)');
+                    } else {
+                        $('#sum_jj').text(aData.rrecivepriceee).css('background-color', 'rgb(255,249,255)');
+                    }
 
-                    var api = this.api(), aData;
-                    var intVal = function (i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                                i : 0;
-                    };
-                    var wedTotal = api
-                        .column(3)
-                        .data()
-                        .reduce(function (a, b) {
-                            return formatNumber(intVal(a) + intVal(b));
-                        }, 0);
-                    var thuTotal = api
-                        .column(4)
-                        .data()
-                        .reduce(function (a, b) {
-                            return formatNumber(intVal(a) + intVal(b));
-                        }, 0);
-
-                    var friTotal = api
-                        .column(5)
-                        .data()
-                        .reduce(function (a, b) {
-                            return formatNumber(intVal(a) + intVal(b));
-                        }, 0);
-
-                    $(api.column(0).footer()).html('جمع کل');
-                    $(api.column(3).footer()).html(wedTotal);
-                    $(api.column(4).footer()).html(thuTotal);
-                    $(api.column(5).footer()).html(friTotal);
-
-
-                    $('#sum_j').text(aData.customerr);
+                    if (parseInt(aData.customerr) > 0) {
+                        $('#sum_j').text(aData.customerr).css('background-color', 'rgba(255,106,107,0.4)');
+                    } else {
+                        $('#sum_j').text(aData.customerr).css('background-color', 'rgb(255,249,255)');
+                    }
                     $('#sum_customer').text(aData.sum_customerr);
-
-                    if (aData.sum_customer - aData.customer < 0) {
-                        $('#summ').text(formatNumber(aData.sum_customer - aData.customer)).css('background-color', 'rgba(255,106,107,0.64)');
-
-                    } else if (aData.sum_customer - aData.customer > 0) {
-                        $('#summ').text(formatNumber(aData.sum_customer - aData.customer)).css('background-color', 'rgba(204,255,141,0.65)');
-
-                    } else if (aData.sum_customer - aData.customer == 0) {
-                        $('#summ').text(formatNumber(aData.sum_customer - aData.customer)).css('background-color', 'rgba(0,183,255,0.66)');
+                    if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) < 0) {
+                        $('#summ').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(255,106,107,0.4)');
+                    } else if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) > 0) {
+                        $('#summ').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(0,183,255,0.42)');
+                    } else if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) == 0) {
+                        $('#summ').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(255,249,255)');
                     }
+
+
+                    if (parseInt(aData.account) < 0) {
+                        $('#a').text(aData.accountt).css('background-color', 'rgba(255,106,107,0.4)');
+                    } else if (parseInt(aData.account) > 0) {
+                        $('#a').text(aData.accountt).css('background-color', 'rgba(0,183,255,0.42)');
+                    } else if (parseInt(aData.account) == 0) {
+                        $('#a').text(aData.accountt).css('background-color', 'rgba(255,249,255)');
+                    }
+
+
+                    if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) < 0) {
+                        $('#b').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(255,106,107,0.4)');
+                    } else if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) > 0) {
+                        $('#b').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(0,183,255,0.42)');
+                    } else if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) == 0) {
+                        $('#b').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(255,249,255)');
+                    }
+                    var dd = aData.rrecivepricee - aData.customer;
+
+                    if (aData.account - dd < 0) {
+                        $('#c').text(formatNumber(Math.abs(dd - aData.account))).css('background-color', 'rgba(255,106,107,0.4)');
+                    } else if (aData.account - dd > 0) {
+                        $('#c').text(formatNumber(Math.abs(dd - aData.account))).css('background-color', 'rgba(0,183,255,0.42)');
+                    } else if (aData.account - dd == 0) {
+                        $('#c').text(formatNumber(Math.abs(dd - aData.account))).css('background-color', 'rgba(255,249,255)');
+                    }
+
+
                 }
                 ,
                 "language": {
@@ -100,7 +111,6 @@
                     "infoFiltered": "(جستجو از _MAX_ مورد)",
                     "processing": "در حال پردازش اطلاعات"
                 },
-
                 ajax: {
                     ajax: "{{ route('admin.CustomerStatusReport.list') }}",
                     data:
@@ -120,7 +130,6 @@
                 ]
             });
         }
-
 
         $('#filter').click(function () {
             var customer_id = $('#customer_id').val();
@@ -147,6 +156,13 @@
                 ],
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+                    if (aData.status == "پرداخت شده") {
+                        $('td:eq(8)', nRow).css('background-color', 'rgba(0,183,255,0.42)');
+
+                    } else {
+                        $('td:eq(8)', nRow).css('background-color', 'rgba(255,106,107,0.4)');
+
+                    }
                 },
                 "language": {
                     "search": "جستجو:",
@@ -164,18 +180,16 @@
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'type', name: 'type'},
+                    {data: 'payment', name: 'payment'},
                     {data: 'shenase', name: 'shenase'},
-                    {data: 'date', name: 'date'},
+                    {data: 'datee', name: 'datee'},
                     {data: 'name', name: 'name'},
                     {data: 'name_user', name: 'name_user'},
                     {data: 'price', name: 'price'},
                     {data: 'status', name: 'status'},
-
                 ]
             });
-
         });
-
 
         $('#bulk_delete').click(function (e) {
             e.preventDefault();
@@ -198,11 +212,53 @@
                 }
             });
         });
+    });
+    $('body').on('click', '.detail-factor', function () {
+
+        var detail_factor = $(this).data('id');
+        $('#ajaxModellistre').modal('show');
+        $('#factooooor').DataTable().destroy();
+        $('.factooooor').DataTable({
+            processing: true,
+            serverSide: true,
+            "ordering": false,
+            "paging": false,
+            "info": false,
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                url: "{{ route('admin.payment.list.detail.factor') }}",
+                data: {
+                    detail_factor: detail_factor,
+                },
+            },
+            columns: [
+                {data: 'pack', name: 'pack'},
+                {data: 'customer', name: 'customer'},
+                {data: 'user', name: 'user'},
+                {data: 'product', name: 'product'},
+                {data: 'color', name: 'color'},
+                {data: 'total', name: 'total'},
+                {data: 'created_at', name: 'created_at'},
+            ],
+            rowsGroup:
+                [
+                    0, 1, 2
+                ],
+
+        });
+
 
     });
 
     $('#payment').addClass('active');
-
 </script>
 <script>
     kamaDatepicker('indate',
@@ -216,7 +272,6 @@
             markToday: true,
             previousButtonIcon: "fa fa-arrow-circle-left",
             nextButtonIcon: "fa fa-arrow-circle-right",
-
         });
     kamaDatepicker('todate',
         {
@@ -229,7 +284,6 @@
             markToday: true,
             previousButtonIcon: "fa fa-arrow-circle-left",
             nextButtonIcon: "fa fa-arrow-circle-right",
-
         });
     $(document).ready(function () {
         $('#customer_id').select2({

@@ -326,6 +326,51 @@
 
 
     });
+    $('body').on('click', '.detail-factor', function () {
+
+        var detail_factor = $(this).data('id');
+        $('#ajaxModellistr').modal('show');
+        $('#factor').DataTable().destroy();
+        $('.factor').DataTable({
+            processing: true,
+            serverSide: true,
+            "ordering": false,
+            "paging": false,
+            "info": false,
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                url: "{{ route('admin.payment.list.detail.factor') }}",
+                data: {
+                    detail_factor: detail_factor,
+                },
+            },
+            columns: [
+                {data: 'pack', name: 'pack'},
+                {data: 'customer', name: 'customer'},
+                {data: 'user', name: 'user'},
+                {data: 'product', name: 'product'},
+                {data: 'color', name: 'color'},
+                {data: 'total', name: 'total'},
+                {data: 'created_at', name: 'created_at'},
+            ],
+            rowsGroup:
+                [
+                    0, 1, 2
+                ],
+
+        });
+
+
+    });
+
     $('body').on('click', '.deleteProduct', function () {
         var id = $(this).data("id");
         Swal.fire({

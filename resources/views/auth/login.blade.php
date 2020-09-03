@@ -1,8 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="en">
 <head>
-    <meta charset="utf-8"/>
     <title>ورود به پنل مدیریت پولاد صنعت</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="shortcut icon" type="image/x-icon" href="{{url('/public/icon/logo.png')}}"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{asset('/public/login/vendor/bootstrap/css/bootstrap.min.css')}}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css"
+          href="{{asset('/public/login/fonts/font-awesome-4.7.0/css/font-awesome.min.css')}}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{asset('/public/login/vendor/animate/animate.css')}}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{asset('/public/login/vendor/css-hamburgers/hamburgers.min.css')}}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{asset('/public/login/vendor/select2/select2.min.css')}}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{asset('/public/login/css/util.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('/public/login/css/main.css')}}">
+
     <link rel="shortcut icon" type="image/x-icon" href="{{url('/public/icon/logo.png')}}"/>
 
     <link href="{{asset('/public/assets/global/plugins/bootstrap/css/bootstrap-rtl.min.css')}}" rel="stylesheet"
@@ -10,6 +28,7 @@
     <link href="{{asset('/public/assets/global/css/components-md-rtl.min.css')}}" rel="stylesheet" id="style_components"
           type="text/css"/>
     <link href="{{asset('/public/assets/pages/css/login-5-rtl.min.css')}}" rel="stylesheet" type="text/css"/>
+    <script src="{{asset('/public/assets/sweetalert.js')}}"></script>
     <style>
         @font-face {
             font-family: 'Shahab';
@@ -21,11 +40,11 @@
             font-style: normal;
         }
     </style>
-    <script src="{{asset('/public/assets/sweetalert.js')}}"></script>
-
+    <!--===============================================================================================-->
 </head>
-<body class=" login" style="font-family: Shahab">
-<div class="user-login-5">
+<body style="font-family: Shahab">
+
+<div class="limiter">
     @if(session()->has('pass-success'))
         <script>
             Swal.fire({
@@ -46,95 +65,99 @@
             })
         </script>
     @endif
-
-    <div class="row bs-reset">
-        <div class="col-md-6 bs-reset mt-login-5-bsfix">
-            <div class="login-bg">
-                <img src="{{url('/public/assets/pages/img/login/bg1.jpg')}}" width="104.3%">
-                <img class="login-logo" src="{{url('/public/icon/logo.png')}}" width="150"/></div>
+    @if(session()->has('checkUser'))
+        <div id="alert" class="alert alert-danger alert-dismissible">
+            <button type="button" class="close pull-left" data-dismiss="alert" aria-hidden="true">
+                &times;
+            </button>
+            <h4><i class="icon fa fa-trash"></i>خطا!</h4>
+            کاربر عزیز دسترسی های شما غیر فعال شده است.
         </div>
-        <div class="col-md-6 login-container bs-reset mt-login-5-bsfix">
-            <div class="login-content">
-                <h1>سیستم مدیریت پولاد صنعت</h1>
-                <p>سیستم جامع مدیریت پولاد صنعت</p>
-                <form method="POST" action="{{ route('login') }}" class="login-form">
-                    @csrf
-                    @if(session()->has('checkUser'))
-                        <div id="alert" class="alert alert-danger alert-dismissible">
-                            <button type="button" class="close pull-left" data-dismiss="alert" aria-hidden="true">
-                                &times;
-                            </button>
-                            <h4><i class="icon fa fa-trash"></i>خطا!</h4>
-                            کاربر عزیز دسترسی های شما غیر فعال شده است.
-                        </div>
 
-                    @endif
+    @endif
+    @if(session()->has('exit'))
+        <div id="alert" class="alert alert-info alert-dismissible">
+            <button type="button" class="close pull-left" data-dismiss="alert" aria-hidden="true">
+                &times;
+            </button>
+            <h4><i class="icon fa fa-trash"></i>به روز رسانی!</h4>
+            پرسنل عزیز نرم افزار در حال به روزرسانی میباشد لطفا صبر کنید
+        </div>
 
-                    @if(session()->has('exit'))
-                        <div id="alert" class="alert alert-info alert-dismissible">
-                            <button type="button" class="close pull-left" data-dismiss="alert" aria-hidden="true">
-                                &times;
-                            </button>
-                            <h4><i class="icon fa fa-trash"></i>به روز رسانی!</h4>
-                            پرسنل عزیز نرم افزار در حال به روزرسانی میباشد لطفا صبر کنید
-                        </div>
+    @endif
+    <div class="container-login100">
 
-                    @endif
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <input class="form-control form-control-solid placeholder-no-fix form-group" type="text"
-                                   autocomplete="off" placeholder="نام کاربری" name="email" required/>
-                            @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                        <strong style="color: red">{{ $message }}</strong>
-                                    </span>
-                            @enderror
-                        </div>
-                        <div class="col-xs-6">
-                            <input class="form-control form-control-solid placeholder-no-fix form-group" type="password"
-                                   autocomplete="off" placeholder="کلمه عبور" name="password" required/></div>
-                        @error('password')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong style="color: red">{{ $message }}</strong>
-                                    </span>
-                        @enderror
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="rem-password">
-                                <label class="rememberme mt-checkbox mt-checkbox-outline">
-                                    <input type="checkbox" name="remember" value="1"/> من را بخاطر بسپار
-                                    <span></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-sm-8 text-right">
-                            <div class="forgot-password">
-                                <a href="javascript:;" id="forget-password" class="forget-password"><span
-                                        style="color: blue">کلمه عبور را فراموش کرده ام؟</span></a>
-                            </div>
-                            <button class="btn green" type="submit">ورود به سیستم</button>
-                        </div>
-                    </div>
-                </form>
-                <form class="forget-form" action="{{route('admin.user.RestPassword')}}" method="post">
-                    @csrf
-                    <h3 class="font-green">کلمه عبور خود را فراموش کرده ام؟</h3>
-                    <p> لطفا شماره همراهی که در سیستم ثبت شده است را وارد کنید. </p>
-                    <div class="form-group">
-                        <input class="form-control form-control-solid placeholder-no-fix form-group" type="text"
-                               autocomplete="off"
-                               placeholder="شماره همراه" name="phone" required/>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" id="back-btn" class="btn green btn-outline">بازگشت</button>
-                        <input type="submit" class="btn btn-success uppercase pull-right" value="ارسال">
-                    </div>
-                </form>
+        <div class="wrap-login100">
+            <div class="login100-pic js-tilt" data-tilt>
+                <img src="{{asset('/public/login/images/img-01.png')}}" alt="IMG">
             </div>
+
+            <form autocomplete="off" class="login100-form" method="POST" action="{{ route('login') }}">
+
+                @csrf
+					<span class="login100-form-title">
+						<strong style="font-family: Shahab">سیستم مدیریت پولاد صنعت</strong>
+					</span>
+
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="text" name="email" placeholder="نام کاربری" autocomplete="off">
+                    <span class="symbol-input100">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</span>
+                    @error('email')
+                    <span role="alert">
+                                        <strong style="color: red">{{ $message }}</strong>
+                                    </span>
+                    @enderror
+                </div>
+
+                <div class="wrap-input100 validate-input">
+                    <input class="input100" type="password" name="password" placeholder="کلمه عبور" autocomplete="off">
+                    <span class="symbol-input100">
+							<i class="fa fa-lock" aria-hidden="true"></i>
+						</span>
+                    @error('password')
+                    <span role="alert">
+                                        <strong style="color: red">{{ $message }}</strong>
+                                    </span>
+                    @enderror
+                </div>
+
+                <div class="container-login100-form-btn">
+                    <button style="font-family: Shahab;font-size: 18px" class="login100-form-btn">
+                        ورود به سیستم
+                    </button>
+                </div>
+
+
+
+
+                <div class="text-center p-t-136">
+                    <a class="txt2" href="#">
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+
+<!--===============================================================================================-->
+<script src="{{asset('/public/login/vendor/jquery/jquery-3.2.1.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{asset('/public/login/vendor/bootstrap/js/popper.js')}}"></script>
+<script src="{{asset('/public/login/vendor/bootstrap/js/bootstrap.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{asset('/public/login/vendor/select2/select2.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{asset('/public/login/vendor/tilt/tilt.jquery.min.js')}}"></script>
+<script>
+    $('.js-tilt').tilt({
+        scale: 1.1
+    })
+</script>
+<!--===============================================================================================-->
+<script src="{{asset('/public/login/js/main.js')}}"></script>
 <script src="{{asset('/public/assets/global/plugins/jquery.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/assets/global/plugins/jquery-validation/js/jquery.validate.min.js')}}"
         type="text/javascript"></script>
@@ -143,6 +166,6 @@
 <script src="{{asset('/public/assets/global/plugins/backstretch/jquery.backstretch.min.js')}}"
         type="text/javascript"></script>
 <script src="{{asset('/public//assets/pages/scripts/login-5.min.js')}}" type="text/javascript"></script>
-</body>
 
+</body>
 </html>

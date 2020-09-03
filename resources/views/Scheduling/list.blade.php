@@ -6,7 +6,7 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption">
-                        زمان بندی بارگیری
+                        حواله های خروج کالا
                     </div>
                     <div class="tools"></div>
                 </div>

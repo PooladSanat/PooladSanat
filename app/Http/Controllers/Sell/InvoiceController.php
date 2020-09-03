@@ -69,7 +69,7 @@ class InvoiceController extends Controller
                     })
                     ->addColumn('status', function ($row) {
                         if ($row->state == 0) {
-                            return 'در انتظار بررسی سوابق مالی';
+                            return 'در انتظار تایید فروشنده';
                         } elseif ($row->state == 1) {
                             return 'در انتظار تایید مدیریت';
                         } elseif ($row->state == 2) {
@@ -924,9 +924,10 @@ class InvoiceController extends Controller
 
     public function CustomerValidate($id)
     {
-        $customer_id = Invoice::where('id', $id)->first();
-        $product = \DB::table('customer_validation_payment')->where('customer_id', $customer_id->customer_id)->first();
-        return response()->json($product);
+        Invoice::where('id', $id)->update([
+            'state' => 1,
+        ]);
+        return response()->json(['success' => 'success']);
 
     }
 
@@ -1027,6 +1028,8 @@ class InvoiceController extends Controller
 
     public function ValidateStore(Request $request)
     {
+
+
         $id = Invoice::where('id', $request->customer_id)->first();
 
         DB::beginTransaction();
@@ -1096,6 +1099,7 @@ class InvoiceController extends Controller
 
     public function delete(Request $request)
     {
+
         DB::beginTransaction();
         try {
             if ($request->step == 1) {
@@ -1154,6 +1158,28 @@ class InvoiceController extends Controller
 
     public function PrintDetail(Invoice $id)
     {
+        $payments = DB::table('payments')
+            ->whereNotNull('invoice_id')
+            ->get();
+        $user_ids = User::where('id', $id->user_id)->first();
+        $invoices_backs = DB::table('factors')
+            ->where('customer_id', $id->customer_id)
+            ->orderBy('date', 'desc')
+            ->get();
+
+        $factors = DB::table('factors')
+            ->where('status', 0)
+            ->where('end', null)
+            ->where('customer_id', $id->customer_id)
+            ->orderBy('date', 'desc')
+            ->get();
+
+        $dataa = \DB::table('clearing')
+            ->where('customer_id', $id->customer_id)
+            ->orderBy('date', 'desc')
+            ->get();
+
+
         $customer_validation_payment = \DB::table('customer_validation_payment')
             ->where('customer_id', $id->customer_id)
             ->first();
@@ -1161,8 +1187,6 @@ class InvoiceController extends Controller
             $user_id = $customer_validation_payment->user_id;
         } else
             $user_id = null;
-
-
         $admin_invoice = \DB::table('admin_invoice')
             ->where('invoice_id', $id->id)
             ->first();
@@ -1189,9 +1213,75 @@ class InvoiceController extends Controller
         return view('sell.detail.list',
             compact('id', 'customer', 'user', 'invoice_products'
                 , 'products', 'colors', 'customer_validation_payment'
-                , 'admin_invoice', 'select_stores', 'users', 'users_s'));
+                , 'admin_invoice', 'select_stores', 'users', 'users_s'
+                , 'invoices_backs', 'user_ids', 'payments', 'factors', 'dataa'
+            ));
 
     }
+
+    public function PrintDetailll(Invoice $id)
+    {
+        $payments = DB::table('payments')
+            ->whereNotNull('invoice_id')
+            ->get();
+        $user_ids = User::where('id', $id->user_id)->first();
+        $invoices_backs = DB::table('factors')
+            ->where('customer_id', $id->customer_id)
+            ->orderBy('date', 'desc')
+            ->get();
+
+        $factors = DB::table('factors')
+            ->where('status', 0)
+            ->where('end', null)
+            ->where('customer_id', $id->customer_id)
+            ->orderBy('date', 'desc')
+            ->get();
+
+        $dataa = \DB::table('clearing')
+            ->where('customer_id', $id->customer_id)
+            ->orderBy('date', 'desc')
+            ->get();
+
+
+        $customer_validation_payment = \DB::table('customer_validation_payment')
+            ->where('customer_id', $id->customer_id)
+            ->first();
+        if (!empty($customer_validation_payment->user_id)) {
+            $user_id = $customer_validation_payment->user_id;
+        } else
+            $user_id = null;
+        $admin_invoice = \DB::table('admin_invoice')
+            ->where('invoice_id', $id->id)
+            ->first();
+        if (!empty($admin_invoice->user_id)) {
+            $user_id_c = $admin_invoice->user_id;
+        } else
+            $user_id_c = null;
+
+//        $customer_history_payment = \DB::table('customer_history_payment')
+//            ->where('customer_id', $id->customer_id)
+//            ->first();
+        $select_stores = SelectStore::all();
+        $products = Product::all();
+        $colors = Color::all();
+        $customer = Customer::where('id', $id->customer_id)->first();
+        $user = User::where('id', $id->user_id)->first();
+
+
+        $users = User::where('id', $user_id)->first();
+        $users_s = User::where('id', $user_id_c)->first();
+        $invoice_products = \DB::table('invoice_product')
+            ->where('invoice_id', $id->id)
+            ->get();
+        return view('sell.detail.listt',
+            compact('id', 'customer', 'user', 'invoice_products'
+                , 'products', 'colors', 'customer_validation_payment'
+                , 'admin_invoice', 'select_stores', 'users', 'users_s'
+                , 'invoices_backs', 'user_ids', 'payments', 'factors', 'dataa'
+            ));
+
+    }
+
 
     public function PrintDetaill(Invoice $id)
     {
@@ -1490,7 +1580,7 @@ class InvoiceController extends Controller
                     ->addColumn('action_success', function ($row) {
                         return $this->action_success($row);
                     })
-                    ->rawColumns(['action_success', 'checkbox','invoice'])
+                    ->rawColumns(['action_success', 'checkbox', 'invoice'])
                     ->make(true);
             }
             return view('sell.success',
@@ -1699,7 +1789,6 @@ class InvoiceController extends Controller
 
     }
 
-
     public function massremove(Request $request)
     {
 
@@ -1725,22 +1814,26 @@ class InvoiceController extends Controller
 
         $btn = null;
 
-
-
-
-
-
-        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+        if ($row->state == 0) {
+            $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->id . '" data-original-title="سوابق مالی"
                        class="validate">
-
-                       <i class="fa fa-credit-card fa-lg" title="سوابق مالی"></i>
-
+                       <i class="fa fa-check fa-lg" title="تایید و ارسال به مدیریت"></i>
                        </a>&nbsp;&nbsp;';
-        if (Gate::check('تایید مدیریت')) {
-            $btn = $btn . '<a href="' . route('admin.print.detail', $row->id) . '">
+        }
+        if ($row->state != 0) {
+            if (Gate::check('تایید مدیریت')) {
+                $btn = $btn . '<a href="' . route('admin.print.detail', $row->id) . '">
 
                        <i class="fa fa-user fa-lg" title="تایید مدیریت"></i>
+                       </a>&nbsp;&nbsp;';
+            }
+
+        }
+
+        if (Gate::check('جزییات سوابق مشتری')) {
+            $btn = $btn . '<a href="' . route('admin.print.detailllll', $row->id) . '">
+                       <i class="fa fa-eye fa-lg" title="جزییات سوابق مشتری"></i>
                        </a>&nbsp;&nbsp;';
         }
 

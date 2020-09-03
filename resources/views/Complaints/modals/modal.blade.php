@@ -244,7 +244,7 @@
 
                                                 <div class="col-md-4">
                                                     <label>مشتری:</label>
-                                                    <select name="customer_id" id="customer_id"
+                                                    <select name="customer_id" id="customer_idese"
                                                             class="form-control">
                                                         <option>انتخاب کنید...</option>
                                                         @foreach($customers as $customer)

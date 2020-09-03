@@ -63,26 +63,43 @@ class PaymentsController extends Controller
             }
 
             $data = DB::table('View_Factors')
-                ->where('Month', $v->month)
                 ->where('status', 0)
                 ->where('end', null)
                 ->whereIn('customer_id', $customer)
                 ->whereIn('user_id', $user)
                 ->whereBetween('date', array($indate, $todate))
-                ->orderBy('customer_id', 'asc')->get();
+                ->orderBy('customer_id', 'desc')
+                ->orderBy('date', 'desc')
+                ->get();
 
 
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('checkbox', function ($row) {
-                    $btn = ' <input type="checkbox" id="checkbox"
+                    $btn = null;
+                    if ($row->sort == null) {
+                        $btn = ' <input type="checkbox" id="checkbox"
                         name="student_checkbox[]"
                         value=' . $row->pack_id . '
                        class="student_checkbox">';
+                    } else {
+                        $btn = null;
+                    }
                     return $btn;
+
                 })
                 ->addColumn('total', function ($row) {
                     return number_format($row->sum);
+                })
+                ->addColumn('pack_id', function ($row) {
+
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->pack_id . '" data-original-title="ویرایش"
+                       class="detail-factor">
+                      ' . $row->pack_id . '
+                       </a>';
+                    return $btn;
+
                 })
                 ->addColumn('havale', function ($row) {
                     if (!empty($row->havale)) {
@@ -104,7 +121,7 @@ class PaymentsController extends Controller
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
                 })
-                ->rawColumns(['action', 'checkbox'])
+                ->rawColumns(['action', 'checkbox', 'pack_id'])
                 ->make(true);
         }
         return view('payment.list', compact('customers', 'users'));
@@ -177,6 +194,91 @@ class PaymentsController extends Controller
 
     }
 
+    public function ListListpack(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $data = DB::table('View_Scheduling')
+                ->where('pack', $request->detail_factor)
+                ->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+//                ->addColumn('product', function ($row) {
+//                    $detail = DB::table('invoice_product')
+//                        ->where('id', $row->detail_id)
+//                        ->first();
+//                    $product = Product::where('id', $detail->product_id)
+//                        ->first();
+//                    return $product->label;
+//                })
+                ->rawColumns([])
+                ->make(true);
+        }
+
+        return view('bills.list');
+
+    }
+
+    public function ListListPayment(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = DB::table('schedulings')
+                ->where('pack', $request->detail_factor)
+                ->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('product', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $product = Product::where('id', $detail->product_id)
+                        ->first();
+                    return $product->label;
+                })
+                ->addColumn('color', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $color = Color::where('id', $detail->color_id)
+                        ->first();
+                    return $color->name;
+                })
+                ->addColumn('customer', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $customer = Invoice::where('id', $detail->invoice_id)
+                        ->first();
+                    $name = User::where('id', $customer->user_id)->first();
+                    return $name->name;
+                })
+                ->addColumn('user', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $customer = Invoice::where('id', $detail->invoice_id)
+                        ->first();
+                    $name = Customer::where('id', $customer->customer_id)->first();
+                    return $name->name;
+
+                })
+                ->addColumn('total', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    return $detail->salesNumber;
+                })
+                ->addColumn('created_at', function ($row) {
+                    return Jalalian::forge($row->created_at)->format('Y/m/d');
+                })
+                ->rawColumns([])
+                ->make(true);
+        }
+
+        return view('ExitReport.list');
+
+    }
+
     public function detaillist(Request $request)
     {
         $array_customer = array();
@@ -214,12 +316,13 @@ class PaymentsController extends Controller
 
 
             $data = DB::table('View_Factors')
-                ->where('Month', $v->month)
-                ->where('status', 3)
+                ->where('status', 1)
                 ->whereIn('customer_id', $customer)
                 ->whereIn('user_id', $user)
                 ->whereBetween('date', array($indate, $todate))
-                ->orderBy('customer_id', 'asc')->get();
+                ->orderBy('customer_id', 'desc')
+                ->orderBy('date', 'desc')
+                ->get();
 
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -237,6 +340,16 @@ class PaymentsController extends Controller
                     $number = Factors::where('customer_id', $row->customer_id)
                         ->sum('sum');
                     return number_format($number);
+                })
+                ->addColumn('pack_id', function ($row) {
+
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->pack_id . '" data-original-title="ویرایش"
+                       class="detail-factor">
+                      ' . $row->pack_id . '
+                       </a>';
+                    return $btn;
+
                 })
                 ->addColumn('havale', function ($row) {
                     if (!empty($row->havale)) {
@@ -256,7 +369,7 @@ class PaymentsController extends Controller
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
                 })
-                ->rawColumns(['action', 'checkbox'])
+                ->rawColumns(['action', 'checkbox', 'pack_id'])
                 ->make(true);
         }
         return view('payment.detaillist', compact('customers', 'users'));
@@ -433,7 +546,7 @@ class PaymentsController extends Controller
                     DB::table('factors')
                         ->where('pack_id', $string[$i])
                         ->update([
-                            'status' => 3,
+                            'sort' => 1,
                         ]);
                 } catch (Exception $exception) {
                 }
@@ -640,6 +753,7 @@ class PaymentsController extends Controller
                 ->whereIn('pack_id', $packs)
                 ->update([
                     'status' => 1,
+                    'payment' => 1,
                     'end' => 1,
                 ]);
             return \response()->json(['success' => 'success']);

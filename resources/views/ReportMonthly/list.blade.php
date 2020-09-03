@@ -38,10 +38,11 @@
                         <thead style="background-color: #e8ecff">
                         <tr>
                             <th style="width: 1px">تاریخ</th>
+                            <th>تعداد تولید(عدد)</th>
                             <th>تعداد فروش(عدد)</th>
                             <th>مبلغ فروش(ریال)</th>
                             <th>تعداد مرجوعی(عدد)</th>
-                            <th>تعداد تولید(عدد)</th>
+
                         </tr>
                         </thead>
                         <tbody>

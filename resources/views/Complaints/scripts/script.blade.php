@@ -41,7 +41,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 8, "desc" ]],
+            "order": [[ 8, "Acs" ]],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $('td:eq(0)', nRow).css('background-color', '#e8ecff');
                 if (aData.status == 'اتمام یافته') {
@@ -160,7 +160,7 @@
                 },
                 success: function (data) {
                     $('#qcmodel').modal('show');
-                    $('#customer_id').val(data.data.customer_id);
+                    $('#customer_idese').val(data.data.customer_id);
                     var test;
                     added_inputs3_array = [];
 
@@ -249,7 +249,7 @@
                         document.getElementById('actiontt').appendChild(myNode);
 
 
-                        $('#customer_id').change(function () {
+                        $('#customer_idese').change(function () {
                             var invoices = [];
                             var commodityID = null;
                             commodityID = $(this).val();
@@ -480,9 +480,6 @@
         })
     });
 
-    $('#new').click(function () {
-        console.log('fdsfds');
-    });
 
 
     $('#sell').addClass('active');

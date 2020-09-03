@@ -16,12 +16,13 @@
         href="{{asset('/public/css/2.css')}}">
     <style>
         table {
-            font-family: 'Far.YagutBold', Tahoma, Sans-Serif;
+            font-family: 'Far.YagutBold', Tahoma;
             border-collapse: collapse;
             width: 100%;
         }
 
         td, th {
+            font-family: 'Far.YagutBold', Tahoma, Sans-Serif;
             border: 1px solid #dddddd;
             text-align: right;
             padding: 8px;
@@ -75,9 +76,12 @@
 <div class="container-fluid">
     <div class="container-fluid">
         <!-- Control the column width, and how they should appear on different devices -->
-        <h4>اطلاعات پایه</h4>
-        <table style="font-family: 'B Yekan'">
+
+        <table>
             <thead>
+            <tr>
+                <th style="background-color: rgba(8,71,255,0.23)" colspan="9">اطلاعات پایه</th>
+            </tr>
             <tr>
                 <th>کد راهکاران</th>
                 <th>نام</th>
@@ -114,9 +118,12 @@
     @if($type->type == 2)
         <div class="container-fluid">
             <!-- Control the column width, and how they should appear on different devices -->
-            <h4>اطلاعات تکمیلی</h4>
-            <table style="font-family: 'B Yekan'">
+            <table>
                 <thead>
+
+                <tr>
+                    <th style="background-color: rgba(8,71,255,0.23)" colspan="7">اطلاعات تکمیلی</th>
+                </tr>
                 <tr>
                     <th>جنسیت</th>
                     <th>تلفن همراه</th>
@@ -159,9 +166,12 @@
     @if($type->type == 1)
         <div class="container-fluid">
             <!-- Control the column width, and how they should appear on different devices -->
-            <h4>اطلاعات فردی</h4>
-            <table style="font-family: 'B Yekan'">
+            <table>
+
                 <thead>
+                <tr>
+                    <th style="background-color: rgba(8,71,255,0.23)" colspan="8">اطلاعات فردی</th>
+                </tr>
                 <tr>
                     <th>تلفن دفتر</th>
                     <th>کد پستی</th>
@@ -198,9 +208,11 @@
         <br/>
         <div class="container-fluid">
             <!-- Control the column width, and how they should appear on different devices -->
-            <h4>اطلاعات محل کار</h4>
-            <table style="font-family: 'B Yekan'">
+            <table>
                 <thead>
+                <tr>
+                    <th style="background-color: rgba(8,71,255,0.23)" colspan="8">اطلاعات محل کار</th>
+                </tr>
                 <tr>
                     <th>نام فروشگاه</th>
                     <th>سال تاسیس</th>
@@ -231,9 +243,11 @@
         <br/>
         <div class="container-fluid">
             <!-- Control the column width, and how they should appear on different devices -->
-            <h4>وضعیت بانکی و اعتباری</h4>
-            <table style="font-family: 'B Yekan'">
+            <table>
                 <thead>
+                <tr>
+                    <th style="background-color: rgba(8,71,255,0.23)" colspan="8">وضعیت بانکی و اعتباری</th>
+                </tr>
                 <tr>
                     <th>نام بانک</th>
                     <th>شعبه</th>
@@ -256,9 +270,11 @@
         <br/>
         <div class="container-fluid">
             <!-- Control the column width, and how they should appear on different devices -->
-            <h4>اسامی تامیین کنندگان</h4>
-            <table style="font-family: 'B Yekan'">
+            <table>
                 <thead>
+                <tr>
+                    <th style="background-color: rgba(8,71,255,0.23)" colspan="8">اسامی تامیین کنندگان</th>
+                </tr>
                 <tr>
                     <th>نام شرکت/شخص</th>
                     <th>تاریخ شروع همکاری</th>
@@ -277,9 +293,11 @@
         <br/>
         <div class="container-fluid">
             <!-- Control the column width, and how they should appear on different devices -->
-            <h4>مشخصات پرسنل های شرکت</h4>
-            <table style="font-family: 'B Yekan'">
+            <table>
                 <thead>
+                <tr>
+                    <th style="background-color: rgba(8,71,255,0.23)" colspan="8">مشخصات پرسنل های شرکت</th>
+                </tr>
                 <tr>
 
                     <th>سمت</th>

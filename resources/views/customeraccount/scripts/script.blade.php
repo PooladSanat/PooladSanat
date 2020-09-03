@@ -23,7 +23,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[3, "desc"]],
+            "order": [[3, "deesc"]],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $('td:eq(0)', nRow).css('background-color', '#e8ecff');
                 if (parseInt(aData.creditor) < 0) {
@@ -209,9 +209,22 @@
 
         $('body').on('click', '.sharj', function () {
             var id = $(this).data('id');
-            $('#customer_id').val(id);
-            $('#ajaxModel').modal('show');
 
+            $.get("{{ route('admin.CustomerAccount.check.payment.list') }}" + '/' + id, function (data) {
+
+                $('#customer_id').val(id);
+                $('.type').remove();
+                $('.shenase').remove();
+                $('.name').remove();
+                $('.user_name').remove();
+                $('.price').remove();
+                $('.date').remove();
+                $('.descriptionnn').remove();
+                $('.actiont').remove();
+                $('#ajaxModel').modal('show');
+                $('#name_userrr').val(data.dataa.name);
+                $('#userrr_payment').val(data.data.creditor);
+            })
         });
 
 
@@ -301,7 +314,7 @@
 
     });
 
-    $('#customer').addClass('active');</script>
+    $('#payment').addClass('active');</script>
 
 <script language="javascript">
 

@@ -330,6 +330,7 @@ class SchedulingController extends Controller
                         'date' => Jalalian::forge($date)->format('Y/m/d'),
                         'type' => $customer_id->paymentMethod,
                         'created_at' => $date,
+                        'payment' => 0,
                     ]);
                 return response()->json(['success' => 'success']);
             }
@@ -473,6 +474,7 @@ class SchedulingController extends Controller
                         'date' => Jalalian::forge($date)->format('Y/m/d'),
                         'type' => $customer_id->paymentMethod,
                         'created_at' => $date,
+                        'payment' => 0,
                     ]);
                 return response()->json(['success' => 'success']);
             }
@@ -513,6 +515,9 @@ class SchedulingController extends Controller
                 Scheduling::where('pack', $request->produc)->update([
                     'status' => 6,
                     'end' => 1,
+                ]);
+                Factors::where('pack_id', $request->produc)->update([
+                    'rahkaran' => $request->number,
                 ]);
                 \DB::table('invoice_product')
                     ->where('id', $id->detail_id)
@@ -711,7 +716,6 @@ class SchedulingController extends Controller
             ]);
         return response()->json(['success' => 'success']);
     }
-
 
     public function canceldetail(Request $request)
     {
@@ -914,8 +918,6 @@ class SchedulingController extends Controller
 
                        </a>&nbsp;&nbsp;';
             }
-
-
         }
 
         if (\Gate::check('تغییر تاریخ بارگیری')) {
@@ -959,4 +961,8 @@ class SchedulingController extends Controller
         $string = str_replace($arabic, $newNumbers, $string);
         return str_replace($persian, $newNumbers, $string);
     }
+
+
+
+
 }

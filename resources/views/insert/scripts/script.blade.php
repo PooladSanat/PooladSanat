@@ -20,7 +20,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 5, "desc" ]],
+            "order": [[ 5, "Acs" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",

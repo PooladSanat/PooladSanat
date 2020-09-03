@@ -9,6 +9,7 @@ use App\User;
 use File;
 use Illuminate\Http\Request;
 use Mockery\Exception;
+use Morilog\Jalali\Jalalian;
 use Response;
 use Validator;
 use Yajra\DataTables\DataTables;
@@ -131,6 +132,221 @@ class CustomerController extends Controller
         return view('Customer.wizard', compact('typeCustomers', 'recents', 'users', 'methods', 'states', 'country'));
 
     }
+
+
+    public function information(Request $request)
+    {
+        return response()->json($request->id);
+
+    }
+
+
+    public function informationList(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $data = \DB::table('customers')
+                ->where('id', $request->detail_factor)
+                ->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('expert', function ($row) {
+                    $detail = User::
+                    where('id', $row->expert)
+                        ->first();
+                    return $detail->name;
+                })
+                ->addColumn('type', function ($row) {
+                    $detail = \DB::table('type_customers')
+                        ->where('id', $row->type)
+                        ->first();
+                    return $detail->name;
+                })
+                ->addColumn('phone', function ($row) {
+                    $type = \DB::table('type_customers')
+                        ->where('id', $row->type)
+                        ->first();
+                    if ($type->type == 2) {
+                        $detail = \DB::table('customer_personal')
+                            ->where('customer_id', $row->id)
+                            ->first();
+                        return $detail->phone_personel;
+                    } else {
+                        $detail = \DB::table('customer_company')
+                            ->where('customer_id', $row->id)
+                            ->first();
+                        return $detail->phone_company;
+                    }
+
+                })
+                ->addColumn('tel', function ($row) {
+                    $type = \DB::table('type_customers')
+                        ->where('id', $row->type)
+                        ->first();
+                    if ($type->type == 2) {
+                        $detail = \DB::table('customer_personal')
+                            ->where('customer_id', $row->id)
+                            ->first();
+                        return $detail->tel_personel;
+                    } else {
+                        $detail = \DB::table('customer_company')
+                            ->where('customer_id', $row->id)
+                            ->first();
+                        return $detail->tel_company;
+                    }
+
+                })
+                ->addColumn('adders', function ($row) {
+                    $type = \DB::table('type_customers')
+                        ->where('id', $row->type)
+                        ->first();
+                    if ($type->type == 2) {
+                        $detail = \DB::table('customer_personal')
+                            ->where('customer_id', $row->id)
+                            ->first();
+                        return $detail->adders_personel;
+                    } else {
+                        $detail = \DB::table('customer_company')
+                            ->where('customer_id', $row->id)
+                            ->first();
+                        return $detail->adders_company;
+                    }
+
+                })
+                ->addColumn('price', function ($row) {
+                    $detail = \DB::table('customer_accounts')
+                        ->where('customer_id', $row->id)
+                        ->first();
+                    if (!empty($detail)) {
+                        return number_format($detail->creditor);
+                    } else {
+                        return 0;
+                    }
+
+                })
+                ->rawColumns([])
+                ->make(true);
+        }
+
+        return view('ReportMonthly.list');
+
+    }
+
+    public function traconesh(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $data = \DB::table('View_Transaction')
+                ->where('date', '!=', "1399")
+                ->where('customer_id', $request->customer_id)
+                ->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('price', function ($row) {
+                    return number_format($row->price);
+                })
+                ->addColumn('sum', function ($row) {
+                    return number_format($row->sum);
+                })
+                ->addColumn('description', function ($row) {
+                    if (!empty($row->price)) {
+                        return $row->descriptionn;
+                    } else {
+                        return 'بدهی بابت فاکتور' . ' ' . $row->rahkaran;
+                    }
+                })
+                ->rawColumns([])
+                ->make(true);
+
+        }
+        return view('home');
+    }
+
+    public function kharid(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $data = \DB::table('invoices')
+                ->whereNull('dele')
+                ->where('customer_id', $request->customer_id)
+                ->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('totalfinal', function ($row) {
+                    return number_format($row->totalfinal);
+                })
+                ->addColumn('payment', function ($row) {
+                    if ($row->payment == 1) {
+                        return 'پرداخت شده';
+                    } else {
+                        return 'پرداخت نشده';
+                    }
+                })
+                ->rawColumns([])
+                ->make(true);
+
+        }
+        return view('home');
+    }
+
+
+    public function asnad(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $data = \DB::table('detail_customer_payment')
+                ->where('date', '!=', '1399')
+                ->where('customer_id', $request->customer_id)
+                ->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('customer', function ($row) {
+                    $name = Customer::where('id', $row->customer_id)->first();
+                    return $name->name;
+                })
+                ->addColumn('payment_id', function ($row) {
+                    if (!empty($row->payment_id)) {
+                        return 'بابت فاکتور' . $row->payment_id;
+                    } else {
+                        return 'شارژ حساب';
+                    }
+                })
+                ->addColumn('type', function ($row) {
+                    if ($row->type == 2) {
+                        return 'چک';
+                    } else {
+                        return 'نقد';
+                    }
+                })
+                ->addColumn('price', function ($row) {
+                    return number_format($row->price);
+                })
+                ->addColumn('create', function ($row) {
+                    return Jalalian::forge($row->created_at)->format('Y/m/d');
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->type != 2){
+                        return 'وصول شده';
+                    }else{
+                        if ($row->status == 1) {
+                            return 'وصول نشده';
+                        } elseif ($row->status == 2) {
+                            return 'وصول شده';
+                        } else {
+                            return 'برگشت خورده';
+                        }
+                    }
+
+                })
+                ->rawColumns([])
+                ->make(true);
+
+        }
+        return view('home');
+    }
+
 
     /**
      * نمایش صفحه ثبت ویرایش مشخصات مشتریان

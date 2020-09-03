@@ -17,8 +17,11 @@ class ColorController extends Controller
     /**
      * نمایش لیست رنگها *
      */
-    public function list(Request $request)
+    public function listttt(Request $request)
     {
+
+
+
         $colors = StoreColor::all();
         $masters = Masterbatch::all();
         if ($request->ajax()) {

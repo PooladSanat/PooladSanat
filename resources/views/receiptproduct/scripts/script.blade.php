@@ -21,7 +21,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 5, "desc" ]],
+            "order": [[ 6, "Accs" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -38,6 +38,7 @@
                 {data: 'color_id', name: 'color_id'},
                 {data: 'number', name: 'number'},
                 {data: 'created', name: 'created'},
+                {data: 'time', name: 'time'},
                 {data: 'action', name: 'action'},
             ]
         });
@@ -125,4 +126,6 @@
 
     });
     $('#barn').addClass('active');
+    $('#rbarn').addClass('active');
+
 </script>

@@ -214,7 +214,13 @@
 
                                     <td>{{$complaint_action->operation}}</td>
                                     <td>{{$complaint_action->uruency}}</td>
-                                    <td>{{$complaint_action->description}}</td>
+                                    <td>
+
+                                        <a href="#" data-toggle="modal" data-target="#youModal"
+                                           data-id="{{$complaint_action->id}}" class="modalLinkk">
+                                            {{str_limit($complaint_action->description,30)}}
+                                        </a>
+                                    </td>
                                     <td>
                                         <a href="#" data-toggle="modal" data-target="#yourModal"
                                            data-id="{{$complaint_action->id}}" class="modalLink">
@@ -233,11 +239,11 @@
                             <a class="btn btn-primary" href="javascript:void(0)" id="new">ثبت اقدام جدید</a>
                         @endif
 
-                    @if(auth()->user()->id == $id->user_id)
-                        <diV style="float: left">
-                            <a class="btn btn-danger" href="javascript:void(0)" id="end">خاتمه شکایت</a>
-                        </diV>
-                    @endif
+                        @if(auth()->user()->id == $id->user_id)
+                            <diV style="float: left">
+                                <a class="btn btn-danger" href="javascript:void(0)" id="end">خاتمه شکایت</a>
+                            </diV>
+                        @endif
                     @endif
                 </div>
             </div>

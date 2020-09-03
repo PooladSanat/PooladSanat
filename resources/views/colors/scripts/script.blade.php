@@ -23,7 +23,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 8, "desc" ]],
+            "order": [[ 8, "dessc" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -33,7 +33,7 @@
                 "infoFiltered": "(جستجو از _MAX_ مورد)",
                 "processing": "در حال پردازش اطلاعات"
             },
-            ajax: "{{ route('admin.color.list') }}",
+            ajax: "{{ route('admin.color.listt') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'masterbatch', name: 'masterbatch'},

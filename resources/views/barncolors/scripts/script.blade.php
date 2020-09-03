@@ -18,7 +18,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 6, "desc" ]],
+            "order": [[ 6, "deesc" ]],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $('td:eq(0)', nRow).css('background-color', '#e8ecff');
                 if (parseInt(aData.PhysicalInventory) <= parseInt(aData.minimum)) {
@@ -148,5 +148,7 @@
         })
     });
     $('#barn').addClass('active');
+    $('#bbarn').addClass('active');
+
 
 </script>

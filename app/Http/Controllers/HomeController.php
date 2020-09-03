@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Color;
+use App\Customer;
 use App\Invoice;
+use App\Product;
 use App\Target;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Morilog\Jalali\Jalalian;
 
 class HomeController extends Controller
 {
@@ -28,8 +32,24 @@ class HomeController extends Controller
     public function index()
     {
 
+        $v = verta();
+
+        $invoices = \DB::table('View_ReportTopCustomer')->limit(5)
+            ->where('year', $v->year)
+            ->orderBy('number', 'DESC')
+            ->get();
+
+        $products = \DB::table('View_ReportTopProduct')->limit(5)
+            ->where('year', $v->year)
+            ->orderBy('number', 'DESC')
+            ->get();
+        $product = Product::all();
+        $colors = Color::all();
+        $customers = Customer::all();
+
         $users = User::all();
-        return view('home', compact('users'));
+        return view('home', compact('users', 'invoices', 'customers'
+            , 'products', 'product', 'colors','v'));
     }
 
     public function Chart(Request $request)
@@ -38,7 +58,6 @@ class HomeController extends Controller
         $target = Target::where('user_id', $request->id)
             ->where('year', $request->year)
             ->first();
-
         if ($target != null) {
             $fa = $target->farvardin;
             $ma = $target->may;
@@ -66,8 +85,6 @@ class HomeController extends Controller
             $Av = 0;
             $Ma = 0;
         }
-
-
         $invoices = Invoice::where('user_id', $request->id)
             ->where('Year', $request->year)
             ->first();

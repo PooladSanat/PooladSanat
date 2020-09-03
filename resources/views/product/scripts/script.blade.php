@@ -28,7 +28,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 10, "desc" ]],
+            "order": [[ 10, "Acs" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -38,7 +38,7 @@
                 "infoFiltered": "(جستجو از _MAX_ مورد)",
                 "processing": "در حال پردازش اطلاعات"
             },
-            ajax: "{{ route('admin.product.list') }}",
+            ajax: "{{ route('admin.product.lisret') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'code', name: 'code'},

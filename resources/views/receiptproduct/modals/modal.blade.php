@@ -63,12 +63,14 @@
 
     </div>
 </div>
+
 <div class="modal fade" id="ajaxModel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-body">
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption" id="caption">
+                        رسید انبار کالای ساخته شده
                     </div>
                     <div class="caption pull-left">
                         <a data-dismiss="modal">

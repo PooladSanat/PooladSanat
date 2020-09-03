@@ -5,7 +5,7 @@
 <script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
-
+    var detail_factor = null;
     <?php
     $v = verta();
     $months = $v->month;
@@ -38,17 +38,12 @@
     '/' + '31';
 
     $(function () {
-
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-
         load_data();
-
 
         function load_data(indate = ind, todate = tod) {
             $('.data-table').DataTable({
@@ -68,8 +63,9 @@
                         .column(1)
                         .data()
                         .reduce(function (a, b) {
-                            return intVal(a) + intVal(b);
+                            return formatNumber(intVal(a) + intVal(b));
                         }, 0);
+
                     var thuTotal = api
                         .column(2)
                         .data()
@@ -81,13 +77,14 @@
                         .column(3)
                         .data()
                         .reduce(function (a, b) {
-                            return intVal(a) + intVal(b);
+                            return formatNumber(intVal(a) + intVal(b));
                         }, 0);
+
                     var friTotaal = api
                         .column(4)
                         .data()
                         .reduce(function (a, b) {
-                            return intVal(a) + intVal(b);
+                            return formatNumber(intVal(a) + intVal(b));
                         }, 0);
 
                     $(api.column(0).footer()).html('جمع کل');
@@ -96,12 +93,9 @@
                     $(api.column(3).footer()).html(friTotal);
                     $(api.column(4).footer()).html(friTotaal);
 
-
-                    if (aData.total == 0 && aData.sum == 0 && aData.sa == 0 && aData.as == 0){
-                        $('td', nRow).css('background-color', 'rgba(146,153,156,0.36)');
+                    if (aData.total == 0 && aData.sum == 0 && aData.sa == 0 && aData.as == 0) {
+                        $('td', nRow).css('background-color', 'rgba(76,82,85,0.36)');
                     }
-
-
                 }
                 ,
                 "bInfo": false,
@@ -110,7 +104,7 @@
                 "columnDefs": [
                     {"orderable": false, "targets": 0},
                 ],
-                "order": [[1, "ACS"]],
+                "order": [[1, "ACcS"]],
                 "language": {
                     "search": "جستجو:",
                     "lengthMenu": "نمایش _MENU_",
@@ -131,10 +125,11 @@
                 },
                 columns: [
                     {data: 'date', name: 'date'},
+                    {data: 'as', name: 'as'},
                     {data: 'total', name: 'total'},
                     {data: 'sum', name: 'sum'},
                     {data: 'sa', name: 'sa'},
-                    {data: 'as', name: 'as'},
+
 
                 ],
                 "order": [[0, "desc"]]
@@ -150,6 +145,122 @@
         });
 
     });
+
+
+
+
+
+    $('body').on('click', '.detail-tolid', function () {
+
+        detail_factor = $(this).data('id');
+        $('#ajaxModellistr').modal('show');
+        $("#factttor").DataTable().destroy();
+        $('.factttor').DataTable({
+            processing: true,
+            serverSide: true,
+            "searching": false,
+            "lengthChange": false,
+            "info": false,
+            "bPaginate": false,
+            "bSort": false,
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                url: "{{ route('admin.ReportMonthly.list.tolid') }}",
+                data: {
+                    detail_factor: detail_factor,
+                },
+            },
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'product', name: 'product'},
+                {data: 'color', name: 'color'},
+                {data: 'number', name: 'number'},
+                {data: 'date', name: 'date'},
+                {data: 'time', name: 'time'},
+            ]
+
+        });
+        $("#fro").DataTable().destroy();
+        $('.fro').DataTable({
+            processing: true,
+            serverSide: true,
+            "ordering": false,
+            "searching": false,
+            "orderable": false,
+            "bSort": false,
+            "paging": false,
+            "info": false,
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                url: "{{ route('admin.ReportMonthly.list.frosh') }}",
+                data: {
+                    detail_factor: detail_factor,
+                },
+            },
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'pack_id', name: 'pack_id'},
+                {data: 'user_id', name: 'user_id'},
+                {data: 'customer_id', name: 'customer_id'},
+                {data: 'number', name: 'number'},
+                {data: 'price', name: 'price'},
+            ]
+
+        });
+        $("#mar").DataTable().destroy();
+        $('.mar').DataTable({
+            processing: true,
+            serverSide: true,
+            "ordering": false,
+            "searching": false,
+            "orderable": false,
+            "bSort": false,
+            "paging": false,
+            "info": false,
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                url: "{{ route('admin.ReportMonthly.list.mar') }}",
+                data: {
+                    detail_factor: detail_factor,
+                },
+            },
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'user', name: 'user'},
+                {data: 'customer', name: 'customer'},
+                {data: 'factor', name: 'factor'},
+                {data: 'number', name: 'number'},
+                {data: 'description', name: 'description'},
+            ]
+
+        });
+
+    });
+
 
     $('#report').addClass('active');
 

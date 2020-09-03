@@ -130,87 +130,48 @@
 
         $('body').on('click', '.validate', function () {
             var id = $(this).data("id");
-            $.get("{{ route('admin.invoice.customers.validate') }}" + '/' + id, function (data) {
-                $('#ajaxModelCustomer').modal('show');
-                if (data.Creditceiling == null) {
-                    $('#Creditceiling').val(0);
-                } else {
-                    $('#Creditceiling').val(data.Creditceiling);
-                }
-                if (data.Openceiling == null) {
-                    $('#Openceiling').val(0);
-                } else {
-                    $('#Openceiling').val(data.Openceiling);
-                }
-                if (data.Yearcount == null) {
-                    $('#Yearcount').val(0);
-                } else {
-                    $('#Yearcount').val(data.Yearcount);
-                }
-                if (data.yearAgoCount == null) {
-                    $('#yearAgoCount').val(0);
-                } else {
-                    $('#yearAgoCount').val(data.yearAgoCount);
-                }
-                if (data.Yearturnover == null) {
-                    $('#Yearturnover').val(0);
-                } else {
-                    $('#Yearturnover').val(data.Yearturnover);
-                }
-                if (data.lastYearturnover == null) {
-                    $('#lastYearturnover').val(0);
-                } else {
-                    $('#lastYearturnover').val(data.lastYearturnover);
-                }
-                if (data.Checkback == null) {
-                    $('#Checkback').val(0);
-                } else {
-                    $('#Checkback').val(data.Checkback);
-                }
 
-                if (data.Checkbackintheflow == null) {
-                    $('#Checkbackintheflow').val(0);
-                } else {
-                    $('#Checkbackintheflow').val(data.Checkbackintheflow);
+            Swal.fire({
+                title: 'تایید پیش فاکتور؟',
+                text: "ارسال پیش فاکتور برای مدیریت!",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'تایید',
+                cancelButtonText: 'انصراف',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{route('admin.invoice.customers.validate')}}" + '/' + id,
+                        data: {
+                            '_token': $('input[name=_token]').val(),
+                        },
+                        success: function (data) {
+                            $('#data-table').DataTable().ajax.reload();
+                            Swal.fire({
+                                title: 'موفق',
+                                text: 'پیش فاکتور برای تایید به مدیریت ارسال شد',
+                                icon: 'success',
+                                confirmButtonText: 'تایید'
+                            })
+                        }
+                    });
                 }
-
-                if (data.accountbalance == null) {
-                    $('#accountbalance').val(0);
-                } else {
-                    $('#accountbalance').val(data.accountbalance);
-                }
-                if (data.Averagetimedelay == null) {
-                    $('#Averagetimedelay').val(0);
-                } else {
-                    $('#Averagetimedelay').val(data.Averagetimedelay);
-                }
-                if (data.Futurefactors == null) {
-                    $('#Futurefactors').val(0);
-                } else {
-                    $('#Futurefactors').val(data.Futurefactors);
-                }
-                if (data.Receiveddocuments == null) {
-                    $('#Receiveddocuments').val(0);
-                } else {
-                    $('#Receiveddocuments').val(data.Receiveddocuments);
-                }
-                if (data.Openaccountbalance == null) {
-                    $('#Openaccountbalance').val(0);
-                } else {
-                    $('#Openaccountbalance').val(data.Openaccountbalance);
-                }
-                if (data.paymentmethod == null) {
-                    $('#paymentmethod').val(0);
-                } else {
-                    $('#paymentmethod').val(data.paymentmethod);
-                }
-                $('#description_m').val(data.description);
-                $('#customer_id').val(id);
-
-
             })
 
+
+
+
+
         });
+
+
+
+
+
+
 
         $('body').on('click', '.many', function () {
             var id = $(this).data("id");
@@ -421,8 +382,8 @@
                         $('#ajaxModelCustomer').modal('hide');
                         table.draw();
                         Swal.fire({
-                            title: 'موفق',
-                            text: 'اعتبار سنجی مشتری با موفقیت در سیستم ثبت شد',
+                            title: 'موفق!',
+                            text: 'سوابق مالی مشتری بررسی و تایید شد',
                             icon: 'success',
                             confirmButtonText: 'تایید',
                         });

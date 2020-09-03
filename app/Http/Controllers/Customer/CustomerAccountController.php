@@ -40,14 +40,13 @@ class CustomerAccountController extends Controller
     public function store(Request $request)
     {
 
+
         $packs = array();
         $details = \DB::table('clearing_factor')
             ->where('clearing_id', $request->customer_ider)
             ->get();
         foreach ($details as $detail)
             $packs[] = $detail->pack_id;
-
-
         $created = Carbon::now()->timezone('Asia/Tehran');
         $price = null;
         $clearing_factor = \DB::table('clearing_factor')
@@ -56,12 +55,21 @@ class CustomerAccountController extends Controller
         $pack = \DB::table('factors')
             ->where('pack_id', $clearing_factor->pack_id)
             ->first();
+
+        $pack_id = \DB::table('schedulings')
+            ->where('pack', $clearing_factor->pack_id)
+            ->first();
+
+        $invoice_product = \DB::table('invoice_product')
+            ->where('id', $pack_id->detail_id)
+            ->first();
         $CustomerAccount = CustomerAccount::where('customer_id', $pack->customer_id)
             ->first();
         \DB::table('payments')
             ->insert([
                 'clearing_id' => $request->customer_ider,
                 'customer_id' => $pack->customer_id,
+                'invoice_id' => $invoice_product->invoice_id,
             ]);
         $payment_id = \DB::table('payments')
             ->latest('id')->first();
@@ -125,6 +133,7 @@ class CustomerAccountController extends Controller
                     ->whereIn('pack_id', $packs)
                     ->update([
                         'status' => 1,
+                        'payment' => 1,
                         'end' => 1,
                     ]);
 
@@ -145,7 +154,7 @@ class CustomerAccountController extends Controller
     public function storee(Request $request)
     {
 
-        $created = Carbon::now()->timezone('Asia/Tehran');
+        $created = Carbon::now();
         $price = null;
 
 
@@ -180,12 +189,12 @@ class CustomerAccountController extends Controller
             if (empty($CustomerAccount)) {
                 CustomerAccount::create([
                     'customer_id' => $request->customer_id,
-                    'creditor' => $sum,
+                    'creditor' => $CustomerAccount->creditor + $sum,
                 ]);
             } else {
                 CustomerAccount::where('customer_id', $request->customer_id)
                     ->update([
-                        'creditor' => $sum,
+                        'creditor' => $CustomerAccount->creditor + $sum,
                     ]);
             }
 
@@ -193,12 +202,12 @@ class CustomerAccountController extends Controller
             if (empty($CustomerAccount)) {
                 CustomerAccount::create([
                     'customer_id' => $request->customer_id,
-                    'creditor' => $sum - $request->pricesuumm,
+                    'creditor' => $CustomerAccount->creditor + $sum - $request->pricesuumm,
                 ]);
             } else {
                 CustomerAccount::where('customer_id', $request->customer_id)
                     ->update([
-                        'creditor' => $sum - $request->pricesuumm,
+                        'creditor' => $CustomerAccount->creditor + $sum - $request->pricesuumm,
                     ]);
 
             }
@@ -222,6 +231,7 @@ class CustomerAccountController extends Controller
 
         if ($request->ajax()) {
             $data = \DB::table('detail_customer_payment')
+                ->where('date', '!=', '1399')
                 ->where('customer_id', $request->id_id)
                 ->get();
             return Datatables::of($data)
@@ -275,9 +285,7 @@ class CustomerAccountController extends Controller
 
     public function list($id)
     {
-
         return view('customeraccount.listdetail', compact('id'));
-
     }
 
     public function update($id)

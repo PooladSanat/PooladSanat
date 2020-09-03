@@ -56,12 +56,10 @@
 
                         <tfoot align="right">
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <th colspan="3">جمع کل</th>
+                            <th id="sum_gg">0</th>
+                            <th id="sum_hh">0</th>
+                            <th id="sum_jj">0</th>
                         </tr>
                         {{--                        <tr>--}}
                         {{--                            <th colspan="5">مانده حساب(مانده حساب مشتری از قبل در سیستم)</th>--}}
@@ -81,6 +79,29 @@
                     <hr/>
                     <br/>
 
+                    <table class="table table-striped table-bordered">
+                        <thead style="background-color: #e8ecff">
+                        <tr>
+                            <th>مانده حساب مشتری</th>
+                            <th>صورت وضعیت فعلی</th>
+                            <th>صورت وضعیت با احتساب مانده حساب مشتری</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td id="a">0</td>
+                            <td id="b">0</td>
+                            <td id="c">0</td>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+                    <br/>
+                    <hr/>
+                    <br/>
+
                     <table class="table table-striped table-bordered data" id="data">
                         <thead style="background-color: #e8ecff">
                         <tr>
@@ -91,8 +112,9 @@
                         <tr>
                             <th style="width: 1px">ردیف</th>
                             <th>نوع سند</th>
+                            <th width="15%">بابت</th>
                             <th>شماره سند</th>
-                            <th>تاریخ سر رسید</th>
+                            <th>تاریخ</th>
                             <th>بانک</th>
                             <th>نام صادر کننده</th>
                             <th>مبلغ</th>

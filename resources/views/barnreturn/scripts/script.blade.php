@@ -21,7 +21,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 3, "desc" ]],
+            "order": [[ 3, "dessc" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -139,4 +139,6 @@
         })
     });
     $('#barn').addClass('active');
+    $('#bbarn').addClass('active');
+
 </script>

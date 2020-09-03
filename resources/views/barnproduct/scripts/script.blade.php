@@ -22,7 +22,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 6, "desc" ]],
+            "order": [[ 6, "Accs" ]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -152,4 +152,6 @@
     });
 
     $('#barn').addClass('active');
+    $('#bbarn').addClass('active');
+
 </script>

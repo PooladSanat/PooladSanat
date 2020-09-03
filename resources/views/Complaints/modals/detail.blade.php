@@ -109,6 +109,8 @@
                                             </div>
 
                                         </div>
+                                        <br/>
+                                        <br/>
                                         <div class="table table-responsive">
                                             <table
                                                 class="table table-responsive table-striped table-bordered">
@@ -204,6 +206,39 @@
 
                                 </div>
 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="newmoddell" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption" id="caption">
+                        توضحیات
+                    </div>
+                    <div class="caption pull-left">
+                        <a data-dismiss="modal">
+                            <i style="color: white" class="pull-left fa fa-close"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <div class="row">
+                                 <textarea id="description"
+                                           disabled
+                                           name="description" class="form-control"
+                                           rows="12" cols="150">
+                                 </textarea>
                             </div>
                         </div>
                     </div>

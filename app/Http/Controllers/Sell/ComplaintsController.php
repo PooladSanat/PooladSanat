@@ -100,19 +100,23 @@ class ComplaintsController extends Controller
             'descriptionm' => $request->descriptionm,
             'status' => 1,
         ]);
-        $img = [];
-        foreach ($request->file('fille') as $image) {
-            $destinationPath = 'public/upload/fille/';
-            $name = time() . '.' . $image->getClientOriginalName();
-            $file_com = $image->move($destinationPath, $name);
-            $img[] = $file_com;
+        if (!empty($request->file('fille'))) {
+            $img = [];
+            foreach ($request->file('fille') as $image) {
+                $destinationPath = 'public/upload/fille/';
+                $name = time() . '.' . $image->getClientOriginalName();
+                $file_com = $image->move($destinationPath, $name);
+                $img[] = $file_com;
 
+            }
+        } else {
+            $img = ['null'];
         }
 
-        try {
-            $filee = count(collect($request)->get('reasons'));
-            for ($i = 0; $i <= $filee; $i++) {
 
+        try {
+            $filee = count(collect($request)->get('product'));
+            for ($i = 0; $i <= $filee; $i++) {
                 DB::table('detail_returns')->insert([
                     'complaints_id' => $Complaints->id,
                     'invoice_id' => $request->get('invoice')[$i],
@@ -281,6 +285,13 @@ class ComplaintsController extends Controller
         ]);
         return response()->json($Complaints);
 
+    }
+
+    public function filedes(Request $request)
+    {
+        $data = DB::table('complaint_action')->where('id', $request->id)
+            ->first();
+        return response()->json($data);
     }
 
     public function actions($row)

@@ -249,19 +249,6 @@
                                                         <td id="ss"></td>
                                                     </tr>
                                                     </tbody>
-                                                    <tfoot>
-                                                    <tr>
-                                                        <th colspan="1">
-                                                            <button id="btnAddbankk"
-                                                                    type="button"
-                                                                    onclick="addInput11()"
-                                                                    class="btn btn-primary"
-                                                                    data-toggle="tooltip">
-                                                                <i class="fa fa-plus"></i>
-                                                            </button>
-                                                        </th>
-                                                    </tr>
-                                                    </tfoot>
                                                 </table>
 
                                             </div>
@@ -297,72 +284,70 @@
 
 
 <div class="modal fade" id="user_" aria-hidden="true">
-    <div class="modal-dialog col-md-12">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body col-md-12">
-                <div class="portlet box blue">
-                    <div class="portlet-title">
-                        <div class="caption">
-                            نظر مدیر فروش
-                        </div>
-                        <div class="caption pull-left">
-                            <a data-dismiss="modal">
-                                <i style="color: white" class="pull-left fa fa-close"></i>
-                            </a>
-                        </div>
-
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption">
+                        نظر مدیر فروش
                     </div>
-                    <div class="portlet-body form">
-                        <div class="form-body">
-                            <div class="form-group">
+                    <div class="caption pull-left">
+                        <a data-dismiss="modal">
+                            <i style="color: white" class="pull-left fa fa-close"></i>
+                        </a>
+                    </div>
 
-                                <form autocomplete="off" id="userform" name="userform">
-                                    <input type="hidden" id="id_" name="id_">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="row">
-                                                <div class="col-md-2">
-                                                    <label>وضعیت:</label>
-                                                    <select name="statusu" id="statusu" class="form-control">
-                                                        <option value="1">تایید</option>
-                                                        <option value="2">عدم تایید</option>
-                                                    </select>
-                                                </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                        <div class="form-group">
 
-                                                <div class="col-md-10">
-                                                    <label>توضیحات:</label>
-                                                    <textarea name="descriptionu" id="descriptionu"
-                                                              placeholder="لطفا توضیحات خود را وارد کنید"
-                                                              class="form-control"
-                                                              rows="5" cols="20">
-                                                    </textarea>
-                                                </div>
-
-
+                            <form autocomplete="off" id="userform" name="userform">
+                                <input type="hidden" id="id_" name="id_">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>وضعیت:</label>
+                                                <select name="statusu" id="statusu" class="form-control">
+                                                    <option value="1">تایید</option>
+                                                    <option value="2">عدم تایید</option>
+                                                </select>
                                             </div>
 
-                                        </div>
-                                    </div>
-                                    <br/>
-                                    <hr/>
-                                    <div class="modal-footer">
-                                        <div class="text-left">
-                                            <button style="width: 130px" type="button" class="btn btn-success"
-                                                    id="saveu"
-                                                    data-dismiss="modal">
-                                                ثبت
-                                            </button>
-                                            <button style="width: 130px" type="button" class="btn btn-danger"
-                                                    data-dismiss="modal">
-                                                انصراف
-                                            </button>
+                                            <div class="col-md-12">
+                                                <label>توضیحات:</label>
+                                                <textarea name="descriptionu" id="descriptionu"
+                                                          placeholder="لطفا توضیحات خود را وارد کنید"
+                                                          class="form-control"
+                                                          rows="5" cols="20">
+                                                    </textarea>
+                                            </div>
 
 
                                         </div>
+
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                                <br/>
+                                <hr/>
+                                <div class="modal-footer">
+                                    <div class="text-left">
+                                        <button style="width: 130px" type="button" class="btn btn-success"
+                                                id="saveu"
+                                                data-dismiss="modal">
+                                            ثبت
+                                        </button>
+                                        <button style="width: 130px" type="button" class="btn btn-danger"
+                                                data-dismiss="modal">
+                                            انصراف
+                                        </button>
+
+
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -441,19 +426,6 @@
                                                         <td id="sss"></td>
                                                     </tr>
                                                     </tbody>
-                                                    <tfoot>
-                                                    <tr>
-                                                        <th colspan="1">
-                                                            <button id="btnAddbankk"
-                                                                    type="button"
-                                                                    onclick="addInput12()"
-                                                                    class="btn btn-primary"
-                                                                    data-toggle="tooltip">
-                                                                <i class="fa fa-plus"></i>
-                                                            </button>
-                                                        </th>
-                                                    </tr>
-                                                    </tfoot>
                                                 </table>
 
                                             </div>

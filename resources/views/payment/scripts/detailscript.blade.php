@@ -303,6 +303,53 @@
 
         }
     );
+
+    $('body').on('click', '.detail-factor', function () {
+
+        var detail_factor = $(this).data('id');
+        $('#ajaxModellistr').modal('show');
+        $('#factor').DataTable().destroy();
+        $('.factor').DataTable({
+            processing: true,
+            serverSide: true,
+            "ordering": false,
+            "paging": false,
+            "info": false,
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                url: "{{ route('admin.payment.list.detail.factor.pack') }}",
+                data: {
+                    detail_factor: detail_factor,
+                },
+            },
+            columns: [
+                {data: 'pack', name: 'pack'},
+                {data: 'user', name: 'user'},
+                {data: 'customer_name', name: 'customer_name'},
+                {data: 'product', name: 'product'},
+                {data: 'color', name: 'color'},
+                {data: 'total', name: 'total'},
+                {data: 'date', name: 'date'},
+            ],
+            rowsGroup:
+                [
+                    0, 1, 2,6
+                ],
+
+        });
+
+
+    });
+
+
     $('#payment').addClass('active');
 </script>
 

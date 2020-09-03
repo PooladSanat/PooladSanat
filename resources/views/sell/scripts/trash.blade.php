@@ -27,7 +27,7 @@
                 "columnDefs": [
                     {"orderable": false, "targets": 0},
                 ],
-                "order": [[ 11, "desc" ]],
+                "order": [[ 11, "deesc" ]],
                 "language": {
                     "search": "جستجو:",
                     "lengthMenu": "نمایش _MENU_",

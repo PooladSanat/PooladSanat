@@ -8,14 +8,42 @@ use Illuminate\Http\Request;
 class NotifController extends Controller
 {
 
-    public function tttt()
+    public function f()
     {
-        \DB::table('schedulings')
-            ->where('user_id', null)
+        \DB::table('factors')
             ->update([
-                'user_id' => 12,
+                'status' => 0,
+                'end' => null,
             ]);
 
+    }
+
+    public function tttt()
+    {
+        $result_array = array();
+        $invoice_product_array = array();
+        $scheduling_array = array();
+        $result = \DB::table('invoices')
+            ->where('date', '<', "1399/05/01")
+            ->get();
+        foreach ($result as $item) {
+            $result_array[] = $item->id;
+        }
+
+        $invoice_product = \DB::table('invoice_product')
+            ->whereIn('invoice_id', $result_array)
+            ->get();
+        foreach ($invoice_product as $invoice_item) {
+            $invoice_product_array[] = $invoice_item->id;
+        }
+        $schedulings = \DB::table('schedulings')
+            ->whereIn('detail_id', $invoice_product_array)
+            ->get();
+        foreach ($schedulings as $scheduling) {
+            $scheduling_array[] = $scheduling->pack;
+        }
+
+        dd($scheduling_array);
     }
 
     public function toChatAPI()

@@ -19,13 +19,14 @@
                             <th>رنگ</th>
                             <th>تعداد</th>
                             <th>تاریخ</th>
+                            <th>ساعت</th>
                             <th>عملیات</th>
                         </tr>
                         </thead>
                         <tbody>
                         </tbody>
                     </table>
-                    <a class="btn btn-primary" href="javascript:void(0)" id="createNewProduct">تعریف محصول جدید</a>
+                    <a class="btn btn-primary" href="javascript:void(0)" id="createNewProduct">رسید جدید</a>
                 </div>
             </div>
         </div>

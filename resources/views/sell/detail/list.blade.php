@@ -1,14 +1,25 @@
-<!DOCTYPE html>
+<?php
+$custmer = \App\Customer::where('id',$id->customer_id)->first();
+?>
+    <!DOCTYPE html>
 <html xml:lang="fa">
 <head>
 
     <title>سیستم مدیریت پولاد صنعت</title>
-    <link
-        rel="stylesheet"
-        href="{{asset('/public/css/2.css')}}">
+    <script src="{{asset('/public/js/a1.js')}}" type="text/javascript"></script>
+    <script src="{{asset('/public/js/a2.js')}}" type="text/javascript"></script>
+    <script src="{{asset('/public/js/jquery.maskedinput.js')}}" type="text/javascript"></script>
+    <script src="{{asset('/public/js/datatab.js')}}" type="text/javascript"></script>
+    <script src="{{asset('/public/js/row.js')}}" type="text/javascript"></script>
+    <link href="{{asset('/public/assets/global/css/plugins-md-rtl.min.css')}}" rel="stylesheet" type="text/css"/>
+
     <link rel="stylesheet" href="{{asset('/public/dist/css/bootstrap-theme.css')}}">
     <link rel="stylesheet" href="{{asset('/public/dist/css/rtl.css')}}">
     <link rel="stylesheet" href="{{asset('/public/dist/css/AdminLTE.css')}}">
+    <link href="{{asset('/public/assets/global/plugins/datatables/datatables.min.css')}}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{{asset('/public/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap-rtl.css')}}"
+          rel="stylesheet" type="text/css"/>
     <link href="{{asset('/public/assets/global/css/components-md-rtl.min.css')}}" rel="stylesheet" id="style_components"
           type="text/css"/>
 
@@ -73,19 +84,13 @@
     </style>
     <style>
         @font-face {
-            font-family: 'Far.YagutBold';
-            src: url('{{asset('/public/font/Weblogma_Yekan.eot')}}');
-            src: local('☺'),
-            url('{{asset('/public/font/Far_Yagut.woff')}}') format('woff'),
-            url('{{asset('/public/font/Far_Yagut.ttf')}}') format('truetype'),
-            url('{{asset('/public/font/Far_Yagut.svg')}}') format('svg');
+            font-family: 'Shahab';
+            src: url('{{asset('/public/f/Yekan.woff2')}}') format('woff2'),
+            url('{{asset('/public/f/Yekan.woff')}}') format('woff'),
+            url('{{asset('/public/f/Yekan.ttf')}}') format('truetype'),
+            url('{{asset('/public/f/Yekan.otf')}}') format('opentype');
             font-weight: normal;
             font-style: normal;
-        }
-
-        .myclass {
-            font-family: 'Far.YagutBold', Tahoma, Sans-Serif;
-            font-size: 17px;
         }
 
 
@@ -102,424 +107,634 @@
             margin-top: 0.4em;
         }
     </style>
+
+
 </head>
-<body dir="rtl" class="myclass" style="font-family: 'B Yekan'">
+<body dir="rtl" class="myclass" style="font-family: Shahab">
 <br/>
 <br/>
-<br/>
-<br/>
-<br/>
-<div class="col-md-12">
-    <h4>برگه درخواست کالا و ارزیابی وضعیت اعتباری مشتری</h4>
-    <br/>
-    <table style="font-family: 'B Yekan'">
-        <thead>
-        <tr>
-            <th>کد پیش فاکتور</th>
-            <th>خریدار</th>
-            <th>اقدام کننده</th>
-            <th>تاریخ اقدام</th>
-            <th>نحوه پرداخت</th>
-            <th>درصد سود فروش</th>
-            <th>محل تحویل</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{$id->invoiceNumber}}</td>
-            <td>{{$customer->name}}</td>
-            <td>{{$user->name}}</td>
-            <td>{{\Morilog\Jalali\Jalalian::forge($id->created_at)->format('Y/m/d')}}</td>
-            <td>
+<div class="container-fluid">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-2">
 
-                {{$id->paymentMethod}}
-            </td>
+                    </div>
+                    <div class="col-sm-6">
+                        <br/>
+                        <br/>
+                        <strong>   نام مشتری : {{$custmer->name}}</strong>
+                    </div>
+                    <div class="col-sm-4">
+                        <br/>
+                        <strong> شماره: {{$id->invoiceNumber}}</strong>
+                        <br/>
+                        <strong> تاریخ: {{\Morilog\Jalali\Jalalian::forge(date('Y/m/d'))->format('Y/m/d')}}</strong>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#activity" data-toggle="tab">خلاصه پیش فاکتور</a>
+                        </li>
+                        <li><a href="#a" data-toggle="tab">سوابق خرید قبلی مشتری</a></li>
+                        <li><a href="#b" data-toggle="tab">فاکتورهای در جریان</a></li>
+                        <li><a href="#c" data-toggle="tab">صورت وضعیت</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="active tab-pane" id="activity">
+                            <div class="container">
+                                <div>
+                                    <br/>
+                                    <div class="row">
 
-            <td>---</td>
-            <td>
-                @foreach($select_stores as $select_store)
-                    @if($select_store->id == $id->selectstores)
-                        {{$select_store->name}}
-                    @endif
-                @endforeach
-            </td>
-        </tr>
-        </tbody>
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>
+                                                    <br/>
+                                                    <table style="font-family: Shahab">
+                                                        <thead>
+                                                        <tr>
+                                                            <th colspan="6"
+                                                                style="background-color: rgba(255,135,73,0.44)">
+                                                                خلاصه پیش فاکتور
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>ردیف</th>
+                                                            <th>محصول</th>
+                                                            <th>رنگ</th>
+                                                            <th>تعداد</th>
+                                                            <th>قیمت واحد(ریال)</th>
+                                                            <th>قیمت کل(ریال)</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <?php
+                                                        $sum = 0;
+                                                        $tax = 0;
+                                                        $number = 1;
+                                                        ?>
+                                                        @foreach($invoice_products as $invoice_product)
+                                                            <?php
+                                                            $sum = $sum + $invoice_product->sumTotal;
+                                                            $tax = $tax + $invoice_product->taxAmount;
+                                                            ?>
+                                                            <tr>
+                                                                <td>{{$number++}}</td>
+                                                                <td>
+                                                                    @foreach($products as $product)
+                                                                        @if($product->id == $invoice_product->product_id)
+                                                                            {{$product->label}}
+                                                                        @endif
+                                                                    @endforeach
 
-    </table>
-    <br/>
-    <br/>
-    <br/>
-    <label>خلاصه پیش فاکتور:</label>
-    <table style="font-family: 'B Yekan'">
-        <thead>
-        <tr>
-            <th>محصول</th>
-            <th>رنگ</th>
-            <th>تعداد</th>
-            <th>قیمت واحد(ریال)</th>
-            <th>قیمت کل(ریال)</th>
-            <th>نحوه پرداخت</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
-        $sum = 0;
-        $tax = 0;
-        ?>
-        @foreach($invoice_products as $invoice_product)
-            <?php
-            $sum = $sum + $invoice_product->sumTotal;
-            $tax = $tax + $invoice_product->taxAmount;
-            ?>
-            <tr>
-                <td>
-                    @foreach($products as $product)
-                        @if($product->id == $invoice_product->product_id)
-                            {{$product->label}}
-                        @endif
-                    @endforeach
+                                                                </td>
+                                                                <td>
 
-                </td>
-                <td>
+                                                                    @foreach($colors as $color)
+                                                                        @if($color->id == $invoice_product->color_id)
+                                                                            {{$color->name}}
+                                                                        @endif
+                                                                    @endforeach
+                                                                </td>
+                                                                <td>{{$invoice_product->salesNumber}}</td>
+                                                                <td>{{number_format($invoice_product->salesPrice)}}</td>
+                                                                <td>{{number_format($invoice_product->sumTotal)}}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                        <tfoot>
+                                                        <tr>
+                                                            @if($id->price_sell > 0)
+                                                                <th colspan="5">
+                                                                    جمع کل
+                                                                </th>
 
-                    @foreach($colors as $color)
-                        @if($color->id == $invoice_product->color_id)
-                            {{$color->name}}
-                        @endif
-                    @endforeach
-                </td>
-                <td>{{$invoice_product->salesNumber}}</td>
-                <td>{{number_format($invoice_product->salesPrice)}}</td>
-                <td>{{number_format($invoice_product->sumTotal)}}</td>
-                <td>
-                    {{$id->paymentMethod}}
-                </td>
+                                                                <th>
+                                                                    {{number_format($id->price_sell)}}
+                                                                </th>
+                                                            @endif
+                                                        </tr>
+                                                        <tr>
+                                                            <th colspan="5">
+                                                                @if(!empty($id->takhfif))
+                                                                    <strong>تخفیف نماینده&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;({{$id->takhfif}}
+                                                                        %)</strong>
+                                                                    <hr/>
 
-            </tr>
-        @endforeach
-        </tbody>
-        <tfoot>
-        <tr>
-            @if($id->price_sell > 0)
-                <th colspan="4">
-                    مبلغ کل
-                </th>
+                                                                @endif
+                                                                @if(!empty($id->expenses))
+                                                                    <strong>سایر هزینه ها</strong>
+                                                                    <hr/>
+                                                                @endif
+                                                                @if(!empty($id->Carry))
+                                                                    <strong>هزینه ارسال</strong>
+                                                                    <hr/>
+                                                                @endif
+                                                                @if(!empty($id->ma))
+                                                                    <strong>مالیات</strong>
+                                                                    <hr/>
+                                                                @endif
+                                                            </th>
+                                                            <th>
+                                                                @if(!empty($id->takhfif))
+                                                                    <strong>{{number_format($id->ta)}}</strong>
+                                                                    <hr/>
+                                                                @endif
+                                                                @if(!empty($id->expenses))
+                                                                    <strong>{{number_format($id->expenses)}}</strong>
+                                                                    <hr/>
+                                                                @endif
+                                                                @if(!empty($id->Carry))
+                                                                    <strong>{{number_format($id->Carry)}}</strong>
+                                                                    <hr/>
+                                                                @endif
+                                                                @if($id->ma != 0)
+                                                                    <strong>{{number_format($id->ma)}}</strong>
+                                                                    <hr/>
+                                                                @endif
 
-                <th>
-                    {{number_format($id->price_sell)}}
-                </th>
-            @endif
-        </tr>
-        <tr>
-            <th colspan="4">
-                @if(!empty($id->takhfif))
-                    <strong>تخفیف</strong>
-                    <hr/>
-                @endif
-                @if(!empty($id->expenses))
-                    <strong>سایر هزینه ها</strong>
-                    <hr/>
-                @endif
-                @if(!empty($id->Carry))
-                    <strong>هزینه ارسال</strong>
-                    <hr/>
-                @endif
-                @if(!empty($id->ma))
-                    <strong>مالیات</strong>
-                    <hr/>
-                @endif
-                <strong>جمع کل</strong>
-            </th>
-            <th>
-                @if(!empty($id->takhfif))
-                    <strong>{{number_format($id->ta)}}</strong>
-                    <hr/>
-                @endif
-                @if(!empty($id->expenses))
-                    <strong>{{number_format($id->expenses)}}</strong>
-                    <hr/>
-                @endif
-                @if(!empty($id->Carry))
-                    <strong>{{number_format($id->Carry)}}</strong>
-                    <hr/>
-                @endif
-                @if($id->ma != 0)
-                    <strong>{{number_format($id->ma)}}</strong>
-                    <hr/>
-                @endif
-                <strong> {{number_format($id->totalfinal)}}</strong>
-            </th>
-        </tr>
-        </tfoot>
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: rgba(23,0,255,0.31)"
+                                                                colspan="5">
+                                                                مبلغ قابل پرداخت
+                                                            </th>
 
-    </table>
-    {{--    <br/>--}}
-    {{--    <br/>--}}
-    {{--    <label>نحوه محاسبه قیمت فروش:</label>--}}
-    {{--    <table style="font-family: 'B Yekan'">--}}
-    {{--        <thead>--}}
-    {{--        <tr>--}}
-    {{--            <th>گرید مواد</th>--}}
-    {{--            <th>بهای پایه مواد</th>--}}
-    {{--            <th>هزینه تامین مواد</th>--}}
-    {{--            <th>نرخ کارمزد مصوب</th>--}}
-    {{--            <th>کارمزد تولید</th>--}}
-    {{--            <th>نسبت کارمزد</th>--}}
-    {{--            <th>هزینه رنگ</th>--}}
-    {{--            <th>کارمزد رنگی کردن</th>--}}
-    {{--            <th>هزینه ضایعات رنگ</th>--}}
-    {{--            <th>سایر هزینه ها</th>--}}
-    {{--            <th>هزینه حمل</th>--}}
-    {{--        </tr>--}}
-    {{--        </thead>--}}
-    {{--        <tbody>--}}
-    {{--        <tr>--}}
-    {{--            <td></td>--}}
-    {{--            <td></td>--}}
-    {{--            <td></td>--}}
-    {{--            <td></td>--}}
-    {{--            <td></td>--}}
-    {{--            <td></td>--}}
-    {{--            <td></td>--}}
-    {{--            <td></td>--}}
-    {{--            <td></td>--}}
-    {{--            <td></td>--}}
-    {{--            <td></td>--}}
+                                                            <th style="background-color: rgba(23,0,255,0.31)">
+                                                                {{number_format($id->totalfinal)}}
+                                                            </th>
+                                                        </tr>
+                                                        </tfoot>
 
-    {{--        </tr>--}}
-    {{--        </tbody>--}}
+                                                    </table>
+                                                    <br/>
+                                                    <div class="row">
+                                                        <ul>
+                                                            <li style="font-size: 120%;text-align: right">نحوه پرداخت:
+                                                                <strong
+                                                                    style="color: rgba(255,0,0,0.79)">{{$id->paymentMethod}}</strong>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="container-fluid">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                            </div>
+                                                            <div class="col-md-2"></div>
+                                                            <div class="col-md-4">
+                                                                امضاء فروشنده
+                                                                <br/>
+                                                                @if(!empty($user_ids->sign))
 
+                                                                    <img src="{{url($user_ids->sign)}}" width="140">
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                        </table>
 
-    {{--    </table>--}}
-    <br/>
-    <br/>
-    <br/>
-    <label>میزان اعتبار سنجی:</label>
-    <table style="font-family: 'B Yekan'">
-        <thead>
-        <tr>
-            <th>سقف اعتباری</th>
-            <th>سقف حساب باز</th>
-            <th>تعداد خرید سال جاری</th>
-            <th>تعداد خرید سال قبل</th>
-            <th>گردش حساب سال جاری</th>
-            <th>گردش حساب سال قبل</th>
+                                    </div>
 
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                @if($customer_validation_payment->Creditceiling == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->Creditceiling)}}
-                @endif
-            </td>
-            <td>
-                @if($customer_validation_payment->Openceiling == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->Openceiling)}}
-                @endif
+                                </div>
+                            </div>
 
-            </td>
-            <td>
-                @if($customer_validation_payment->Yearcount == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->Yearcount)}}
-                @endif
-            </td>
-            <td>
+                        </div>
+                        <div class="tab-pane" id="a">
+                            <div class="container">
+                                <div>
+                                    <br/>
+                                    <div class="row">
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>
+                                                    <table style="font-family: Shahab">
+                                                        <thead>
+                                                        <tr>
+                                                            <th colspan="6"
+                                                                style="background-color: rgba(255,135,73,0.44)">
+                                                                سوابق خرید های قبلی مشتری
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>ردیف</th>
+                                                            <th>تاریخ</th>
+                                                            <th>فاکتور</th>
+                                                            <th>مبلغ فاکتور</th>
+                                                            <th>نحوه پرداخت</th>
+                                                            <th>وضعیت پرداخت</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <?php
+                                                        $number = 1;
+                                                        ?>
+                                                        @foreach($invoices_backs as $invoices_back)
+                                                            <tr>
+                                                                <td>{{$number++}}</td>
+                                                                <td>{{$invoices_back->date}}</td>
+                                                                <td>
 
-                @if($customer_validation_payment->yearAgoCount == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->yearAgoCount)}}
-                @endif
-            </td>
-            <td>
-                @if($customer_validation_payment->Yearturnover == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->Yearturnover)}}
-                @endif
+                                                                    <a href="#" data-toggle="modal"
+                                                                       data-target="#youModal"
+                                                                       data-id="{{$invoices_back->pack_id}}"
+                                                                       class="modalLinkk">
+                                                                        {{$invoices_back->pack_id}}
+                                                                    </a>
 
-            </td>
-            <td>
-                @if($customer_validation_payment->lastYearturnover == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->lastYearturnover)}}
-                @endif
-            </td>
+                                                                </td>
+                                                                <td>{{number_format($invoices_back->sum)}}</td>
+                                                                <td>{{$invoices_back->type}}</td>
+                                                                <?php
+                                                                $clearing_factor = DB::table('clearing_factor')
+                                                                    ->where('pack_id', $invoices_back->pack_id)->first();
+                                                                if (!empty($clearing_factor)) {
+                                                                    $has_payment = \App\Payments::where('clearing_id', $clearing_factor->clearing_id)
+                                                                        ->first();
+                                                                }
 
-        </tr>
-        </tbody>
-    </table>
-    <br/>
-    <br/>
-    <br/>
-    <label>سابقه پرداخت مشتری:</label>
-    <table style="font-family: 'B Yekan'">
-        <thead>
-        <tr>
-            <th>سابقه چک برگشتی</th>
-            <th>چکهای برگشتی در جریان</th>
-            <th>مانده حساب معوق</th>
-            <th>میانگین زمان معوق</th>
-            <th>فاکتورهای سررسید آتی</th>
-            <th>اسناد دریافتنی</th>
-            <th>مانده حساب باز</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                @if($customer_validation_payment->Checkback == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->Checkback)}}
-                @endif
+                                                                ?>
+                                                                @if(!empty($has_payment))
+                                                                    <td style="background-color: rgba(0,162,60,0.44)">
+                                                                        پرداخت شده
+                                                                    </td>
+                                                                @else
+                                                                    <td style="background-color: rgba(255,0,0,0.44)">
+                                                                        پرداخت نشده
+                                                                    </td>
+                                                                @endif
 
 
-            </td>
-            <td>
-                @if($customer_validation_payment->Checkbackintheflow == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->Checkbackintheflow)}}
-                @endif
-            </td>
-            <td>
-                @if($customer_validation_payment->accountbalance == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->accountbalance)}}
-                @endif
-            </td>
-            <td>
-                @if($customer_validation_payment->Averagetimedelay == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->Averagetimedelay)}}
-                @endif
-            </td>
-            <td>
-                @if($customer_validation_payment->Futurefactors == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->Futurefactors)}}
-                @endif
-            </td>
-            <td>
-                @if($customer_validation_payment->Receiveddocuments == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->Receiveddocuments)}}
-                @endif
-            </td>
-            <td>
-                @if($customer_validation_payment->Openaccountbalance == null)
-                    0
-                @else
-                    {{number_format($customer_validation_payment->Openaccountbalance)}}
-                @endif
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <table height="100" style="font-family: 'B Yekan'">
-        <thead>
-        </thead>
-        <tbody>
-        <tr>
-            <td width="142">
-                نحوه پرداختهای قبلی
-                <hr/>
-                توضیحات واحد مالی
-            </td>
-            <td>
-                {{$customer_validation_payment->paymentmethod}}
-                <hr/>
-                {{$customer_validation_payment->description}}
-            </td>
-            <td width="121">
-                @if(!empty($users->sign))
-                    <img src="{{url($users->sign)}}" width="100" style="background: white">
-                @endif
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
 
-    <br/>
-    <br/>
-    <br/>
-    <label>نظر و امضا مدیر فروش:</label>
-    <table height="130" style="font-family: 'B Yekan'">
-        <thead>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                @if(!empty($admin_invoice->description))
-                    {{$admin_invoice->description}}
-                @endif
-            </td>
-            <td width="250">
-                @if(!empty($id->state == 4))
-                    @if(!empty($users_s->sign))
-                        <img src="{{url($users_s->sign)}}" width="100" class="user-image" alt="User Image">
-                    @endif
-                @endif
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <br/>
-    <br/>
-    <br/>
-    <div class="row">
-        <div class="col-sm-9">
-            <input id="printbtn" class="btn btn-primary" type="button" value="تهیه نسخه چاپی" onclick="window.print();">
+                        </div>
+
+                        <div class="tab-pane" id="b">
+                            <div class="container">
+                                <div>
+                                    <br/>
+                                    <div class="row">
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>
+                                                    <table style="font-family: Shahab">
+                                                        <thead>
+                                                        <tr>
+                                                            <th colspan="6"
+                                                                style="background-color: rgba(255,135,73,0.44)">
+                                                                فاکتور های در جریان مشتری
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>ردیف</th>
+                                                            <th>تاریخ</th>
+                                                            <th>فاکتور</th>
+                                                            <th>مبلغ فاکتور</th>
+                                                            <th>نحوه پرداخت</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <?php
+                                                        $number = 1;
+                                                        ?>
+                                                        @foreach($factors as $factor)
+                                                            <tr>
+                                                                <td>{{$number++}}</td>
+                                                                <td>{{$factor->date}}</td>
+                                                                <td>
+                                                                    <a href="#" data-toggle="modal"
+                                                                       data-target="#youModal"
+                                                                       data-id="{{$factor->pack_id}}"
+                                                                       class="modalLinkk">
+                                                                        {{$factor->pack_id}}
+                                                                    </a>
+                                                                </td>
+                                                                <td>{{number_format($factor->sum)}}</td>
+                                                                <td>{{$factor->type}}</td>
+
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="tab-pane" id="c">
+                            <div class="container">
+                                <div>
+                                    <br/>
+                                    <div class="row">
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>
+                                                    <table style="font-family: Shahab">
+                                                        <thead>
+                                                        <tr>
+                                                            <th colspan="6"
+                                                                style="background-color: rgba(255,135,73,0.44)">
+                                                                صورت وضعیت مشتری
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>ردیف</th>
+                                                            <th>کد صورتحساب</th>
+                                                            <th>تاریخ صدور</th>
+                                                            <th>مبلغ صورتحساب</th>
+                                                            <th>جمع اسناد دریافتی</th>
+                                                            <th>مانده حساب</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        <?php
+                                                        $number = 1;
+                                                        $sum_s = null;
+                                                        $sum_p = null;
+                                                        $sum_c = null;
+                                                        $facto = null;
+                                                        ?>
+                                                        @foreach($dataa as $data)
+                                                            <tr>
+                                                                <td>{{$number++}}</td>
+                                                                <td>
+
+                                                                    <a href="#" data-toggle="modal"
+                                                                       data-target="#youModal"
+                                                                       data-id="{{$data->id}}"
+                                                                       class="modalLinkkk">
+                                                                        {{$data->id}}
+                                                                    </a>
+
+                                                                </td>
+                                                                <td>{{$data->date}}</td>
+                                                                <td>{{number_format($data->price)}}</td>
+                                                                <?php
+                                                                $detail_customer_payment = DB::table('detail_customer_payment')
+                                                                    ->where('payment_id', $data->id)->sum('price');
+                                                                $sum = $detail_customer_payment - $data->price;
+                                                                ?>
+                                                                <td>{{number_format($detail_customer_payment)}}</td>
+
+                                                                @if($sum < 0)
+                                                                    <td style="background-color: rgba(255,106,107,0.33)">{{number_format(abs($sum))}}</td>
+                                                                @elseif($sum >0)
+                                                                    <td style="background-color: rgba(0,183,255,0.33)">{{number_format(abs($sum))}}</td>
+
+                                                                @else
+                                                                    <td style="background-color: rgb(255,249,255)">{{number_format(abs($sum))}}</td>
+
+                                                                @endif
+
+
+                                                                <?php
+
+                                                                $sum_s += $data->price;
+                                                                $sum_p += $detail_customer_payment;
+                                                                $sum_c = $sum_p - $sum_s;
+
+                                                                ?>
+                                                                <?php
+                                                                $facto = DB::table('factors')
+                                                                    ->where('status', 0)
+                                                                    ->whereNull('sort')
+                                                                    ->where('customer_id', $data->customer_id)
+                                                                    ->sum('sum');
+                                                                ?>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+
+                                                        <tfoot>
+
+                                                        <tr>
+                                                            <th colspan="3" style="text-align: right">جمع کل</th>
+                                                            <th style="background-color: rgba(255,0,0,0.29)">{{number_format(abs($sum_s))}}</th>
+                                                            @if($sum_p > 0)
+                                                                <th style="background-color: rgba(13,143,255,0.33)">{{number_format(abs($sum_p))}}</th>
+                                                            @else
+                                                                <th>{{number_format(abs($sum_p))}}</th>
+                                                            @endif
+
+                                                            @if($sum_c > 0)
+                                                                <th style="background-color: rgba(13,143,255,0.33)">{{number_format(abs($sum_c))}}</th>
+                                                            @elseif($sum_c < 0)
+                                                                <th style="background-color: rgba(255,0,0,0.29)">{{number_format(abs($sum_c))}}</th>
+                                                            @else
+                                                                <th>{{number_format(abs($sum_c))}}</th>
+                                                            @endif
+                                                        </tr>
+
+                                                        <tr>
+                                                            <th colspan="5" style="text-align: right">جمع فاکتور های در
+                                                                جریان
+                                                            </th>
+                                                            @if($facto != 0)
+                                                                <th style="background-color: rgba(255,0,0,0.29)">{{number_format($facto)}}</th>
+
+                                                            @else
+                                                                <th>{{$facto}}</th>
+                                                            @endif
+
+                                                        </tr>
+
+                                                        <?php
+                                                        $sort = $sum_c - $facto
+                                                        ?>
+
+                                                        <tr>
+                                                            <th colspan="5" style="text-align: right">صورت وضعیت</th>
+                                                            @if($sort > 0)
+                                                                <th style="background-color: rgba(13,143,255,0.33)">{{number_format(abs($sort))}}</th>
+
+                                                            @elseif($sort < 0)
+                                                                <th style="background-color: rgba(255,0,0,0.29)">{{number_format(abs($sort))}}</th>
+
+                                                            @else
+                                                                <th>{{number_format($sort)}}</th>
+                                                            @endif
+                                                        </tr>
+
+                                                        </tfoot>
+                                                    </table>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+                <br/>
+                <div class="row">
+                    <div class="col-sm-9">
+                        {{--                        <input id="printbtn" class="btn btn-primary" type="button" value="تهیه نسخه چاپی"--}}
+                        {{--                               onclick="window.print();">--}}
+                    </div>
+                    <div class="col-sm-3">
+
+                        <button type="submit" class="btn btn-success" id="successProduct" value="تایید">
+                            تایید
+                        </button>
+                        &nbsp;&nbsp;&nbsp;
+
+                        <button type="submit" class="btn btn-danger" id="deleteProduct" value="عدم تایید">
+                            عدم تایید
+                        </button>
+                        &nbsp;&nbsp;&nbsp;
+                        <button type="submit" class="btn btn-info" id="back" value="بازگشت به صفحه قبل">
+                            بازگشت به صفحه قبل
+                        </button>
+                    </div>
+
+                </div>
+                <br/>
+            </div>
         </div>
-        <div class="col-sm-3">
-
-            <button type="submit" class="btn btn-success" id="successProduct" value="تایید">
-                تایید
-            </button>
-            &nbsp;&nbsp;&nbsp;
-
-            <button type="submit" class="btn btn-danger" id="deleteProduct" value="عدم تایید">
-                عدم تایید
-            </button>
-            &nbsp;&nbsp;&nbsp;
-            <button type="submit" class="btn btn-info" id="back" value="بازگشت به صفحه قبل">
-                بازگشت به صفحه قبل
-            </button>
-        </div>
-
     </div>
-    <br/>
 </div>
-
 </body>
-@include('sell.detail.modal')
 
-<script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
-<script src="{{asset('/public/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
+
 <script>
     $.widget.bridge('uibutton', $.ui.button);
 </script>
 <script src="{{asset('/public/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('/public/assets/sweetalert.js')}}"></script>
 <meta name="_token" content="{{ csrf_token() }}"/>
+<script>
+    $('.modalLinkk').click(function () {
+        var detail_factor = $(this).attr('data-id');
+        $('#ajaxModellistr').modal('show');
+        $('#factor').DataTable().destroy();
+        $('.factor').DataTable({
+            processing: true,
+            serverSide: true,
+            "ordering": false,
+            "paging": false,
+            "info": false,
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                url: "{{ route('admin.payment.list.detail.factor.pack') }}",
+                data: {
+                    detail_factor: detail_factor,
+                },
+            },
+            columns: [
+                {data: 'pack', name: 'pack'},
+                {data: 'user', name: 'user'},
+                {data: 'customer_name', name: 'customer_name'},
+                {data: 'product', name: 'product'},
+                {data: 'color', name: 'color'},
+                {data: 'total', name: 'total'},
+                {data: 'date', name: 'date'},
+            ],
+            rowsGroup:
+                [
+                    0, 1, 2, 6
+                ],
 
 
+        });
+    });
+
+
+    $('.modalLinkkk').click(function () {
+        var detail_factor = $(this).attr('data-id');
+        $('#ajaxModellistre').modal('show');
+        $('#factooooor').DataTable().destroy();
+        $('.factooooor').DataTable({
+            processing: true,
+            serverSide: true,
+            "ordering": false,
+            "paging": false,
+            "info": false,
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                url: "{{ route('admin.payment.list.detail.factor') }}",
+                data: {
+                    detail_factor: detail_factor,
+                },
+            },
+            columns: [
+                {data: 'pack', name: 'pack'},
+                {data: 'customer', name: 'customer'},
+                {data: 'user', name: 'user'},
+                {data: 'product', name: 'product'},
+                {data: 'color', name: 'color'},
+                {data: 'total', name: 'total'},
+                {data: 'created_at', name: 'created_at'},
+            ],
+            rowsGroup:
+                [
+                    0, 1, 2, 6
+                ],
+
+        });
+    });
+
+</script>
+
+<script src="{{asset('/public/assets/global/scripts/datatable.js')}}" type="text/javascript"></script>
+
+<script src="{{asset('/public/assets/global/plugins/datatables/datatables.min.js')}}" type="text/javascript"></script>
+
+<script src="{{asset('/public/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js')}}"
+        type="text/javascript"></script>
+
+<script src="{{asset('/public/assets/pages/scripts/table-datatables-colreorder.js')}}"
+        type="text/javascript"></script>
 <script type="text/javascript">
     $(function () {
         $.ajaxSetup({
@@ -546,8 +761,8 @@
                 var form = $('#CustomerSuccess').serialize();
                 $('#Success').modal('hide');
                 Swal.fire({
-                    title: 'تایید پیش فاکتور؟',
-                    text: "تایید مشخصات این پیش فاکتور!",
+                    title: 'تایید پیش فاکتور!',
+                    text: "پیش فاکتور تایید شود و به فروشنده اطلاع داده شود؟",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -563,8 +778,8 @@
                             dataType: 'json',
                             success: function (data) {
                                 Swal.fire({
-                                    title: 'موفق',
-                                    text: 'عملیات شما  با موفقیت در سیستم ثبت شد',
+                                    title: 'موفق!',
+                                    text: 'مشخصات پیش فاکتور با موفقیت تایید شد',
                                     icon: 'success',
                                     confirmButtonText: 'تایید'
                                 }).then((result) => {
@@ -598,8 +813,8 @@
                 var form = $('#Customer_Canceled').serialize();
                 $('#Delete').modal('hide');
                 Swal.fire({
-                    title: 'لغو پیش فاکتور؟',
-                    text: "پیش فاکتورهای لغو شده توسط مدیریت قابل بازیابی خواهند بود!",
+                    title: 'لغو پیش فاکتور!',
+                    text: "عدم تایید پیش فاکتور و ارسال آن به بخش پیش فاکتورهای تایید نشده؟",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -615,7 +830,7 @@
                             dataType: 'json',
                             success: function (data) {
                                 Swal.fire({
-                                    title: 'موفق',
+                                    title: 'موفق!',
                                     text: 'پیش فاکتور با موفقیت لغو شد',
                                     icon: 'success',
                                     confirmButtonText: 'تایید'
@@ -671,6 +886,7 @@
 </script>
 
 </html>
+@include('sell.detail.modal')
 
 
 

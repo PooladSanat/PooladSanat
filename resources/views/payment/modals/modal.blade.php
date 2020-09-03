@@ -144,7 +144,7 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption" id="caption">
-                       صدور صورت حساب
+                        صدور صورت حساب
                     </div>
                     <div class="caption pull-left">
                         <a data-dismiss="modal">
@@ -224,11 +224,77 @@
                                         <button style="width: 130px" type="submit" class="btn btn-success"
                                                 id="saveprice"
                                                 value="ثبت">
-                                             صورت حساب
+                                            صورت حساب
                                         </button>
                                         <button style="width: 130px" type="button" class="btn btn-danger"
                                                 data-dismiss="modal">
                                             انصراف
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="ajaxModellistr" aria-hidden="true">
+    <div class="modal-dialog col-md-12">
+        <div class="modal-body col-md-12">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption" id="caption">
+                        جزییات فاکتور
+                    </div>
+                    <div class="caption pull-left">
+                        <a data-dismiss="modal">
+                            <i style="color: white" class="pull-left fa fa-close"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                        <div class="form-group">
+
+                            <form autocomplete="off" id="productForm" name="productForm">
+                                @csrf
+                                <div class="row">
+
+                                    <div class="col-md-12">
+                                        <table class="table table-striped table-bordered factor" id="factor">
+                                            <thead style="background-color: #e8ecff">
+                                            <tr>
+                                                <td style="width: 1px">شماره فاکتور</td>
+                                                <td>فروشنده</td>
+                                                <td>خریدار</td>
+                                                <td>محصول</td>
+                                                <td>رنگ</td>
+                                                <td>تعداد</td>
+                                                <td>تاریخ</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+
+                                </div>
+                                <br/>
+                                <hr/>
+                                <div class="modal-footer">
+                                    <div class="text-left">
+                                        <button style="width: 130px" type="button" class="btn btn-danger"
+                                                data-dismiss="modal">
+                                            بستن
                                         </button>
 
                                     </div>

@@ -21,21 +21,15 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-
         var table = $('#mTable').DataTable({
             "paging": false,
             "info": false
         });
-
-
         $('#new').click(function () {
             var id = $('#id').val();
             $('#newmodel').modal('show');
             $('#id_com').val(id);
         });
-
-
         $('#newbtn').click(function (e) {
             e.preventDefault();
             $('#newbtn').text('در حال ثبت اطلاعات...');
@@ -86,7 +80,6 @@
                 }
             });
         });
-
         $('#end').click(function (e) {
             e.preventDefault();
             var id = $('#id').val();
@@ -125,7 +118,6 @@
                 }
             })
         });
-
         $('.modalLink').click(function () {
             var files = [];
             var passedID = $(this).attr('data-id');
@@ -169,6 +161,23 @@
 
         });
 
+        $('.modalLinkk').click(function () {
+            var passedID = $(this).attr('data-id');
+            $.ajax({
+                type: 'GET',
+                url: "{{route('admin.Complaints.file.check.des')}}",
+                data: {
+                    'id': passedID,
+                    '_token': $('input[name=_token]').val(),
+                },
+                success: function (data) {
+                    $('#newmoddell').modal('show');
+                    $('#description').val(data.description);
+                }
+            });
+
+
+        });
 
     });
 </script>

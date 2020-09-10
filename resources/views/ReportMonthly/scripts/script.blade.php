@@ -86,14 +86,21 @@
                         .reduce(function (a, b) {
                             return formatNumber(intVal(a) + intVal(b));
                         }, 0);
+                    var friTotaasl = api
+                        .column(5)
+                        .data()
+                        .reduce(function (a, b) {
+                            return formatNumber(intVal(a) + intVal(b));
+                        }, 0);
 
                     $(api.column(0).footer()).html('جمع کل');
                     $(api.column(1).footer()).html(wedTotal);
                     $(api.column(2).footer()).html(thuTotal);
                     $(api.column(3).footer()).html(friTotal);
                     $(api.column(4).footer()).html(friTotaal);
+                    $(api.column(5).footer()).html(friTotaasl);
 
-                    if (aData.total == 0 && aData.sum == 0 && aData.sa == 0 && aData.as == 0) {
+                    if (aData.total == 0 && aData.sum == 0 && aData.sa == 0 && aData.as == 0 && parseInt(aData.payment) == 0) {
                         $('td', nRow).css('background-color', 'rgba(76,82,85,0.36)');
                     }
                 }
@@ -129,6 +136,7 @@
                     {data: 'total', name: 'total'},
                     {data: 'sum', name: 'sum'},
                     {data: 'sa', name: 'sa'},
+                    {data: 'payment', name: 'payment'},
 
 
                 ],
@@ -255,6 +263,42 @@
                 {data: 'factor', name: 'factor'},
                 {data: 'number', name: 'number'},
                 {data: 'description', name: 'description'},
+            ]
+
+        });
+
+        $("#asnad").DataTable().destroy();
+        $('.asnad').DataTable({
+            processing: true,
+            serverSide: true,
+            "ordering": false,
+            "searching": false,
+            "orderable": false,
+            "bSort": false,
+            "paging": false,
+            "info": false,
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                url: "{{ route('admin.ReportMonthly.list.asnad') }}",
+                data: {
+                    detail_factor: detail_factor,
+                },
+            },
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'customer', name: 'customer'},
+                {data: 'payment_id', name: 'payment_id'},
+                {data: 'type', name: 'type'},
+                {data: 'shenase', name: 'shenase'},
+                {data: 'price', name: 'price'},
             ]
 
         });

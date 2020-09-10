@@ -88,7 +88,7 @@
                 ajax: "{{ route('admin.invoice.success') }}",
             },
             columns: [
-                {data: 'checkbox', orderable: false, searchable: false},
+                {data: 'checkbox', orderable: false, searchable: false ,  "className": "dt-center"},
                 {data: 'id', name: 'id'},
                 {data: 'invoice', name: 'invoice'},
                 {data: 'user', name: 'user'},

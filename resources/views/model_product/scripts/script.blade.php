@@ -32,7 +32,7 @@
             },
             ajax: "{{ route('admin.model.product.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'format', name: 'format'},
                 {data: 'insert', name: 'insert'},
                 {data: 'product', name: 'product'},

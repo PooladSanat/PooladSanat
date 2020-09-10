@@ -101,7 +101,7 @@
                 },
                 "deferRender": true,
                 columns: [
-                    {data: 'detail_id', name: 'detail_id'},
+                    {data: 'detail_id', name: 'detail_id', "className": "dt-center"},
                     {data: 'pack', name: 'pack'},
                     {data: 'user', name: 'user'},
                     {data: 'customer_name', name: 'customer_name'},

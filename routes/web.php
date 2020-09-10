@@ -440,26 +440,23 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/barnproduct/store', 'BarnProductController@store')->name('admin.barnproduct.store');
         Route::get('/barnproduct/update/list/{id?}', 'BarnProductController@update')->name('admin.barnproduct.update');
         Route::post('/barnproduct/restore', 'BarnProductController@restore')->name('admin.barnproduct.restore');
-
-
         Route::get('/barnproduct/receiptreturn', 'BarnProductController@receiptreturn')->name('admin.receiptreturn.list');
         Route::post('/receiptreturn/restore', 'BarnProductController@restorereturn')->name('admin.receiptreturn.restore');
         Route::get('/receiptreturn/receiptreturns/{id?}', 'BarnProductController@receiptwizardreturn')->name('admin.receiptreturn.wizard');
-
-
         Route::get('/barnproduct/receiptamster', 'BarnProductController@receiptcarncolor')->name('admin.receiptamster.list');
         Route::get('/receiptcroncolor/receiptreturns/{id?}', 'BarnProductController@receiptwizardcroncolor')->name('admin.receiptcroncolor.wizard');
         Route::post('/receiptcroncolor/restore', 'BarnProductController@restorecarncolor')->name('admin.restorecarncolor.restore');
-
         Route::get('/receiptpolim/receiptamster', 'BarnProductController@receiptpolim')->name('admin.receiptpolim.list');
         Route::get('/receiptpolim/receiptreturns/{id?}', 'BarnProductController@receiptwizardpolim')->name('admin.receiptpolim.wizard');
         Route::post('/receiptpolim/restore', 'BarnProductController@restorepolim')->name('admin.receiptpolim.restore');
+        Route::get('/receiptpolim/list/detail/factor', 'BarnProductController@ListList')->name('admin.receiptpolim.list.detail.factor');
 
 
         //BarnTemporaryController
         Route::get('/barntemporary/list', 'BarnTemporaryController@list')->name('admin.barntemporary.list');
 
         //BarnReturnsController
+        Route::get('/barnreturn/list', 'BarnReturnsController@list')->name('admin.barnreturn.list');
         Route::get('/barnreturn/list', 'BarnReturnsController@list')->name('admin.barnreturn.list');
 
     });
@@ -485,6 +482,10 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
 
 
+        Route::get('/ReportMonthly/list/asnad', 'ReportMonthlyController@asnad')->name('admin.ReportMonthly.list.asnad');
+
+
+
     });
 
     Route::group(["namespace" => "Payment"], function () {
@@ -504,6 +505,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/payment/admin/edit/{id?}', 'PaymentsController@edit')->name('admin.payment.edit');
         Route::post('/payment/admin/update', 'PaymentsController@EditUpdate')->name('admin.payment.edit.update');
         Route::get('/payment/list/detail/factor', 'PaymentsController@ListList')->name('admin.payment.list.detail.factor');
+        Route::get('/payment/list/detail/factor/detail', 'PaymentsController@ListListDetail')->name('admin.payment.list.detail.factor.detail');
         Route::get('/payment/list/detail/factor/payment', 'PaymentsController@ListListPayment')->name('admin.payment.list.detail.factor.payment');
         Route::get('/payment/check/list/{id?}', 'PaymentsController@CheckList')->name('admin.payment.check.list');
         Route::get('/payment/list/detail/factor/pack', 'PaymentsController@ListListpack')->name('admin.payment.list.detail.factor.pack');

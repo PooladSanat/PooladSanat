@@ -493,11 +493,11 @@
 </span>
                         </a>
                         <ul class="treeview-menu">
-                            @can('آرشیو فروش')
-                                <li><a href="{{route('admin.salesarchive.list')}}"><i
-                                            class="fa fa-circle-o"></i>آرشیو فروش</a>
-                                </li>
-                            @endcan
+{{--                            @can('آرشیو فروش')--}}
+{{--                                <li><a href="{{route('admin.salesarchive.list')}}"><i--}}
+{{--                                            class="fa fa-circle-o"></i>آرشیو فروش</a>--}}
+{{--                                </li>--}}
+{{--                            @endcan--}}
                             @can('پیش فاکتور های تایید نشده')
                                 <li><a href="{{route('admin.invoice.index')}}"><i
                                             class="fa fa-circle-o"></i>پیش فاکتورهای تایید نشده</a>
@@ -838,7 +838,7 @@
                             @endcan
                             @can('گزارش خروج کالا')
                                 <li><a href="{{route('admin.ReportMonthly.exit.list')}}"><i
-                                            class="fa fa-circle-o"></i>گزارش خروج کالا</a>
+                                            class="fa fa-circle-o"></i>آرشیو فروش</a>
                                 </li>
                             @endcan
                         </ul>

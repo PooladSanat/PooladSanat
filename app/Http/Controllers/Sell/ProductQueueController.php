@@ -120,7 +120,6 @@ class ProductQueueController extends Controller
     public function Liststore(Request $request)
     {
 
-
         $validator = Validator::make($request->all(), [
             'product_name.*' => 'required',
             'date' => 'required',

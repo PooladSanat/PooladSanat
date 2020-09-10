@@ -35,7 +35,7 @@
             },
             ajax: "{{ route('admin.polymeric.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'type', name: 'type'},
                 {data: 'grid', name: 'grid'},
                 {data: 'name', name: 'name'},

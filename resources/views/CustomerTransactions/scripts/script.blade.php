@@ -53,20 +53,34 @@
                         .column(3)
                         .data()
                         .reduce(function (a, b) {
-                            return formatNumber(intVal(a) + intVal(b));
+                            return intVal(a) + intVal(b);
                         }, 0);
                     var thuTotal = api
                         .column(4)
                         .data()
                         .reduce(function (a, b) {
-                            return formatNumber(intVal(a) + intVal(b));
+                            return intVal(a) + intVal(b);
                         }, 0);
 
 
-
                     $(api.column(0).footer()).html('جمع کل');
-                    $(api.column(3).footer()).html(wedTotal);
-                    $(api.column(4).footer()).html(thuTotal);
+                    $(api.column(3).footer()).html(formatNumber(wedTotal));
+                    $(api.column(4).footer()).html(formatNumber(thuTotal));
+
+
+                    if (thuTotal - wedTotal > 0) {
+                        $("#sum_pricee").text('').css('background-color', 'rgb(248,244,255)');
+                        $("#sum_price").text(formatNumber(Math.abs(thuTotal - wedTotal))).css('background-color', 'rgba(0,183,255,0.33)');
+                    } else if (thuTotal - wedTotal < 0) {
+                        $("#sum_price").text('').css('background-color', 'rgb(248,244,255)');
+                        $("#sum_pricee").text(formatNumber(Math.abs(thuTotal - wedTotal))).css('background-color', 'rgba(255,0,0,0.33)');
+                    } else {
+                        $("#sum_pricee").text('0').css('background-color', 'rgb(248,244,255)');
+
+                        $("#sum_price").text('0').css('background-color', 'rgb(248,244,255)');
+
+                    }
+
 
                 },
                 "language": {
@@ -89,7 +103,7 @@
                         }
                 },
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                     {data: 'date', name: 'date'},
                     {data: 'description', name: 'description'},
                     {data: 'sum', name: 'sum'},

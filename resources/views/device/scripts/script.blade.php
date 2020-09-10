@@ -20,7 +20,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 4, "dessc" ]],
+            "order": [[4, "dessc"]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -32,7 +32,7 @@
             },
             ajax: "{{ route('admin.device.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'code', name: 'code'},
                 {data: 'name', name: 'name'},
                 {data: 'model', name: 'model'},

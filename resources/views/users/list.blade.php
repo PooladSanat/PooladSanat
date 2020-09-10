@@ -1,4 +1,5 @@
 @extends('layouts.master')
+
 @section('content')
     @include('message.msg')
     <div class="row">
@@ -15,7 +16,7 @@
                            id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th style="width: 1px">ردیف</th>
+                            <th style="width: 1px;text-align: center">ردیف</th>
 
                             <th> نام و نام خانوادگی</th>
 

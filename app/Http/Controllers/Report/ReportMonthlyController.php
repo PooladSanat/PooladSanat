@@ -12,6 +12,7 @@ use App\User;
 use Cache;
 use Carbon\Carbon;
 use DB;
+use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Cache\Factory;
 use Illuminate\Contracts\Cache\Repository;
@@ -22,21 +23,32 @@ class ReportMonthlyController extends Controller
 {
     public function list(Request $request)
     {
-
-
         if (!empty($request->indate)) {
-            $indate = $request->indate;
+            $in = $request->indate;
         } else {
-            $indate = "1370/04/10";
+            $in = "1399/05/01";
         }
         if (!empty($request->todate)) {
-            $todate = $request->todate;
+            $to = $request->todate;
         } else {
-            $todate = "1470/04/10";
+            $to = "1399/05/31";
         }
+        $v = Verta::parse($in);
+        $vv = Verta::parse($to);
+        $iny = $v->year;
+        $inm = $v->month;
+        $ind = $v->day;
+        $inyy = $vv->year;
+        $inmm = $vv->month;
+        $indd = $vv->day;
+        $y = Verta::getGregorian($iny, $inm, $ind);
+        $innn = $y[0] . "/" . $y[1] . '/' . $y[2];
+        $yy = Verta::getGregorian($inyy, $inmm, $indd);
+        $innnn = $yy[0] . "/" . $yy[1] . '/' . $yy[2];
+
 
         if ($request->ajax()) {
-            $data = $this->displayDates($request->indate, $request->todate);
+            $data = $this->displayDates($innn, $innnn);
 
 
 //            $data = \DB::table('view_unionreportmontly')
@@ -47,53 +59,66 @@ class ReportMonthlyController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('date', function ($row) {
+                    $rew = Jalalian::forge($row)->format('Y/m/d');
                     $total = DB::table('View_UnionReportmontly')
-                        ->where('date', $row)
+                        ->where('date', $rew)
                         ->sum('total');
                     $number_return = DB::table('View_UnionReportmontly')
-                        ->where('date', $row)
+                        ->where('date', $rew)
                         ->sum('number_return');
                     $number = DB::table('View_UnionReportmontly')
-                        ->where('date', $row)
+                        ->where('date', $rew)
                         ->sum('number');
-                    if ($total > 0 or $number_return > 0 or $number > 0) {
+                    $detail_customer_payment = DB::table('detail_customer_payment')
+                        ->where('datee', $rew)
+                        ->sum('price');
+                    if ($total > 0 or $number_return > 0 or $number > 0 or $detail_customer_payment > 0) {
                         $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
-                     data-id="' . $row . '" data-original-title="جزییات"
+                     data-id="' . $rew . '" data-original-title="جزییات"
                      class="detail-tolid">
-                  ' . $row . '
+                  ' . $rew . '
                    </a>';
                         return $btn;
                     } else {
-                        return $row;
+                        return $rew;
                     }
                 })
                 ->addColumn('total', function ($row) {
-
-                    $total = DB::table('View_UnionReportmontly')
-                        ->where('date', $row)
+                    $rew = Jalalian::forge($row)->format('Y/m/d');
+                    $total = DB::table('factors')
+                        ->where('date', $rew)
                         ->sum('total');
                     return $total;
 
                 })
                 ->addColumn('sum', function ($row) {
-
+                    $rew = Jalalian::forge($row)->format('Y/m/d');
                     $sum = DB::table('View_UnionReportmontly')
-                        ->where('date', $row)
+                        ->where('date', $rew)
                         ->sum('sum');
                     return number_format($sum);
 
                 })
                 ->addColumn('sa', function ($row) {
-
+                    $rew = Jalalian::forge($row)->format('Y/m/d');
                     $number_return = DB::table('View_UnionReportmontly')
-                        ->where('date', $row)
+                        ->where('date', $rew)
                         ->sum('number_return');
                     return $number_return;
 
                 })
+                ->addColumn('payment', function ($row) {
+                    $rew = Jalalian::forge($row)->format('Y/m/d');
+                    $detail_customer_payment = DB::table('detail_customer_payment')
+                        ->where('datee', $rew)
+                        ->sum('price');
+                    return number_format($detail_customer_payment);
+
+                })
                 ->addColumn('as', function ($row) {
+                    $rew = Jalalian::forge($row)->format('Y/m/d');
                     $number = DB::table('View_UnionReportmontly')
-                        ->where('date', $row)
+                        ->where('date', $rew)
                         ->sum('number');
 //                    if ($number > 0) {
 //                        $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
@@ -318,6 +343,7 @@ class ReportMonthlyController extends Controller
                 ->whereIn('user_id', $user_id)
                 ->whereIn('customer_id', $customer)
                 ->whereBetween('date', array($indate, $todate))
+                ->orderBy('id', 'DESC')
                 ->get();
 
             return DataTables::of($data)
@@ -451,7 +477,6 @@ class ReportMonthlyController extends Controller
 
     }
 
-
     public function Mar(Request $request)
     {
 
@@ -490,6 +515,39 @@ class ReportMonthlyController extends Controller
 
     }
 
+    public function asnad(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $data = DB::table('detail_customer_payment')
+                ->where('datee', $request->detail_factor)
+                ->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('customer', function ($row) {
+                    $name = Customer::where('id', $row->customer_id)->first();
+                    return $name->name;
+                })
+                ->addColumn('payment_id', function ($row) {
+                    return 'بابت صورتحساب' . " " . $row->payment_id;
+                })
+                ->addColumn('type', function ($row) {
+                    if ($row->type == 1) {
+                        return 'نقدی';
+                    } else {
+                        return 'چکی';
+                    }
+                })
+                ->addColumn('price', function ($row) {
+                    return number_format($row->price);
+                })
+                ->rawColumns([])
+                ->make(true);
+        }
+
+        return view('ReportMonthly.list');
+
+    }
 
     public function show($id)
     {
@@ -497,18 +555,25 @@ class ReportMonthlyController extends Controller
 
     }
 
-
-    function displayDates($date1, $date2)
+    function displayDates($date1, $date2, $step = '+1 day', $format = 'Y/m/d')
     {
-        $format = 'Y/m/d';
         $dates = array();
         $current = strtotime($date1);
-        $date2 = strtotime($date2);
-        $stepVal = '+1 day';
-        while ($current <= $date2) {
+        $last = strtotime($date2);
+
+        while ($current <= $last) {
             $dates[] = date($format, $current);
-            $current = strtotime($stepVal, $current);
+            $current = strtotime($step, $current);
         }
+
         return $dates;
+    }
+
+    public static function convert_numbers($input)
+    {
+        $persian = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+        $english = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+        $string = str_replace($persian, $english, $input);
+        return $string;
     }
 }

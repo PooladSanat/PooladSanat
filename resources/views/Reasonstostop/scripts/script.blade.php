@@ -34,7 +34,7 @@
             },
             ajax: "{{ route('admin.Reasonstostop.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'reason', name: 'reason'},
                 {data: 'type', name: 'type'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},

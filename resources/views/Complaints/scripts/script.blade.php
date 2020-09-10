@@ -63,7 +63,7 @@
             },
             ajax: "{{ route('admin.Complaints.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'code', name: 'code'},
                 {data: 'date', name: 'date'},
                 {data: 'customer', name: 'customer'},

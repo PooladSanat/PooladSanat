@@ -32,7 +32,7 @@
             },
             ajax: "{{ route('admin.areas.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'country_id', name: 'country_id'},
                 {data: 'city', name: 'city'},
                 {data: 'areas', name: 'areas'},

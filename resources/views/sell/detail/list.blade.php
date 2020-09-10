@@ -387,7 +387,6 @@ $custmer = \App\Customer::where('id',$id->customer_id)->first();
                             </div>
 
                         </div>
-
                         <div class="tab-pane" id="b">
                             <div class="container">
                                 <div>
@@ -445,8 +444,6 @@ $custmer = \App\Customer::where('id',$id->customer_id)->first();
                             </div>
 
                         </div>
-
-
                         <div class="tab-pane" id="c">
                             <div class="container">
                                 <div>
@@ -592,10 +589,7 @@ $custmer = \App\Customer::where('id',$id->customer_id)->first();
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-
-
                     </div>
                 </div>
 

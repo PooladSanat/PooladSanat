@@ -13,10 +13,10 @@
                     <div class="tools"></div>
                 </div>
                 <div class="portlet-body">
-                    <table class="table table-fluid" id="mTable">
+                    <table class="table table-striped table-bordered" id="mTable">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th>شماره پیش فاکتور</th>
+                            <th style="text-align: center">شماره پیش فاکتور</th>
                             <th>تاریخ فروش</th>
                             <th>نام فروشنده</th>
                             <th>نام خریدار</th>
@@ -31,8 +31,7 @@
                         <tbody>
                         @foreach($details as $detail)
                             <tr>
-
-                                <td>{{$id->invoiceNumber}}</td>
+                                <td style="text-align: center">{{$id->invoiceNumber}}</td>
                                 <td>{{\Morilog\Jalali\Jalalian::forge($id->created_at)->format('Y/m/d')}}</td>
                                 <td>
                                     @foreach($users as $user)
@@ -77,18 +76,15 @@
                             </th>
                             <th>
                                 {{number_format($id->sum_sell)}}
-
                             </th>
                             <th>
                                 {{number_format($id->number_sell)}}
-
                             </th>
                             <th>
                                 {{number_format($id->price_sell)}}
                             </th>
                             <th>
                                 {{number_format($weight)}}
-
                             </th>
                         </tr>
                         </tfoot>
@@ -99,7 +95,14 @@
     </div>
     <script>
         $(document).ready(function () {
-            $('#mTable').DataTable();
+            $('#mTable').DataTable({
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": false,
+                "bInfo": false,
+                "bAutoWidth": false
+            })
+            ;
         });
     </script>
     @include('sell.scripts.detail')

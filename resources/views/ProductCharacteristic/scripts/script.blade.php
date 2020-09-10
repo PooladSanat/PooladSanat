@@ -32,7 +32,7 @@
             },
             ajax: "{{ route('admin.ProductCharacteristic.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'code', name: 'code'},
                 {data: 'commodity_id', name: 'commodity_id'},
                 {data: 'name', name: 'name'},

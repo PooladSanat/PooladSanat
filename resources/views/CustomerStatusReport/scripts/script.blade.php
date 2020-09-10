@@ -15,7 +15,9 @@
     var id_customer = null;
     var intime = null;
     var totime = null;
+
     $(function () {
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -58,18 +60,19 @@
                         $('#sum_jj').text(aData.rrecivepriceee).css('background-color', 'rgb(255,249,255)');
                     }
 
+
                     if (parseInt(aData.customerr) > 0) {
                         $('#sum_j').text(aData.customerr).css('background-color', 'rgba(255,106,107,0.4)');
                     } else {
                         $('#sum_j').text(aData.customerr).css('background-color', 'rgb(255,249,255)');
                     }
                     $('#sum_customer').text(aData.sum_customerr);
-                    if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) < 0) {
-                        $('#summ').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(255,106,107,0.4)');
-                    } else if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) > 0) {
-                        $('#summ').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(0,183,255,0.42)');
-                    } else if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) == 0) {
-                        $('#summ').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(255,249,255)');
+                    if (parseInt(aData.summmm) < 0) {
+                        $('#summ').text(formatNumber(Math.abs(aData.summmm))).css('background-color', 'rgba(255,106,107,0.4)');
+                    } else if (parseInt(aData.summmm) > 0) {
+                        $('#summ').text(formatNumber(Math.abs(aData.summmm))).css('background-color', 'rgba(0,183,255,0.42)');
+                    } else if (parseInt(aData.summmm) == 0) {
+                        $('#summ').text(formatNumber(Math.abs(aData.summmm))).css('background-color', 'rgba(255,249,255)');
                     }
 
 
@@ -82,23 +85,23 @@
                     }
 
 
-                    if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) < 0) {
-                        $('#b').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(255,106,107,0.4)');
-                    } else if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) > 0) {
-                        $('#b').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(0,183,255,0.42)');
-                    } else if (parseInt(aData.rrecivepricee) - parseInt(aData.customer) == 0) {
-                        $('#b').text(formatNumber(Math.abs(aData.rrecivepricee - aData.customer))).css('background-color', 'rgba(255,249,255)');
+                    if (parseInt(aData.summmm) < 0) {
+                        $('#b').text(formatNumber(Math.abs(aData.summmm))).css('background-color', 'rgba(255,106,107,0.4)');
+                    } else if (parseInt(aData.summmm) > 0) {
+                        $('#b').text(formatNumber(Math.abs(aData.summmm))).css('background-color', 'rgba(0,183,255,0.42)');
+                    } else if (parseInt(aData.summmm) == 0) {
+                        $('#b').text(formatNumber(Math.abs(aData.summmm))).css('background-color', 'rgba(255,249,255)');
                     }
                     var dd = aData.rrecivepricee - aData.customer;
 
-                    if (aData.account - dd < 0) {
-                        $('#c').text(formatNumber(Math.abs(dd - aData.account))).css('background-color', 'rgba(255,106,107,0.4)');
-                    } else if (aData.account - dd > 0) {
-                        $('#c').text(formatNumber(Math.abs(dd - aData.account))).css('background-color', 'rgba(0,183,255,0.42)');
-                    } else if (aData.account - dd == 0) {
-                        $('#c').text(formatNumber(Math.abs(dd - aData.account))).css('background-color', 'rgba(255,249,255)');
+                    if (parseInt(aData.accou) - parseInt(aData.summmm) < 0) {
+                        $('#c').text(formatNumber(Math.abs(aData.accou - aData.summmm))).css('background-color', 'rgba(0,183,255,0.42)');
+                    } else if (parseInt(aData.accou) - parseInt(aData.summmm) > 0) {
+                        $('#c').text(formatNumber(Math.abs(aData.accou - aData.summmm))).css('background-color', 'rgba(255,106,107,0.4)');
+                    } else if (parseInt(aData.accou) - parseInt(aData.summmm) == 0) {
+                        $('#c').text(formatNumber(Math.abs(aData.accou - aData.summmm))).css('background-color', 'rgba(255,249,255)');
                     }
-
+                    $("#cap").text("جزییات صورتحساب" + " " + aData.iid);
 
                 }
                 ,
@@ -121,7 +124,7 @@
                         }
                 },
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                     {data: 'id', name: 'id'},
                     {data: 'date', name: 'date'},
                     {data: 'price', name: 'price'},
@@ -178,7 +181,7 @@
                     "data": data
                 },
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                     {data: 'type', name: 'type'},
                     {data: 'payment', name: 'payment'},
                     {data: 'shenase', name: 'shenase'},
@@ -212,7 +215,9 @@
                 }
             });
         });
+
     });
+
     $('body').on('click', '.detail-factor', function () {
 
         var detail_factor = $(this).data('id');
@@ -221,6 +226,8 @@
         $('.factooooor').DataTable({
             processing: true,
             serverSide: true,
+            searching: false,
+
             "ordering": false,
             "paging": false,
             "info": false,
@@ -240,7 +247,56 @@
                 },
             },
             columns: [
-                {data: 'pack', name: 'pack'},
+                {data: 'id', name: 'id', "className": "dt-center"},
+                {data: 'customer', name: 'customer'},
+                {data: 'user', name: 'user'},
+                {data: 'factor', name: 'factor'},
+                {data: 'ta', name: 'ta'},
+                {data: 'type', name: 'type'},
+                {data: 'created_at', name: 'created_at'},
+            ],
+            rowsGroup:
+                [
+                    0, 1, 2, 3, 4, 5, 6
+                ],
+
+        });
+
+
+    });
+
+
+    $('body').on('click', '.detail-factor-product', function () {
+        var detail_factor = $(this).data('id');
+        $("#tt").removeClass('active');
+        $("#ff").addClass('active');
+        $("#t").removeClass('active');
+        $("#f").addClass('active');
+        $('#factooor').DataTable().destroy();
+        $('.factooor').DataTable({
+            processing: true,
+            serverSide: true,
+            searching: false,
+            "ordering": false,
+            "paging": false,
+            "info": false,
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: {
+                url: "{{ route('admin.payment.list.detail.factor.detail') }}",
+                data: {
+                    detail_factor: detail_factor,
+                },
+            },
+            columns: [
+                {data: 'id', name: 'id', "className": "dt-center"},
                 {data: 'customer', name: 'customer'},
                 {data: 'user', name: 'user'},
                 {data: 'product', name: 'product'},
@@ -250,7 +306,7 @@
             ],
             rowsGroup:
                 [
-                    0, 1, 2
+                    0, 1, 2, 6
                 ],
 
         });
@@ -259,7 +315,9 @@
     });
 
     $('#payment').addClass('active');
+
 </script>
+
 <script>
     kamaDatepicker('indate',
         {

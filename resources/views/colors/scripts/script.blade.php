@@ -23,7 +23,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 8, "dessc" ]],
+            "order": [[8, "dessc"]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -35,7 +35,7 @@
             },
             ajax: "{{ route('admin.color.listt') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'masterbatch', name: 'masterbatch'},
                 {data: 'manufacturer', name: 'manufacturer'},
                 {data: 'combination', name: 'combination'},

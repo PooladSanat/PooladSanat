@@ -40,7 +40,7 @@
 
             ajax: "{{ route('admin.bom.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'product', name: 'product'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
@@ -72,7 +72,7 @@
             },
             ajax: "{{ route('admin.bom.detail') }}" + '/' + details,
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'bom', name: 'bom'},
                 {data: 'number', name: 'number'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},

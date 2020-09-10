@@ -32,7 +32,7 @@
             },
             ajax: "{{ route('admin.insert.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'code', name: 'code'},
                 {data: 'manufacturer', name: 'manufacturer'},
                 {data: 'name', name: 'name'},

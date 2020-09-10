@@ -34,7 +34,7 @@
             },
             ajax: "{{ route('admin.colorchange.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'ofColor_id', name: 'ofColor_id'},
                 {data: 'toColor_id', name: 'toColor_id'},
                 {data: 'time', name: 'time'},

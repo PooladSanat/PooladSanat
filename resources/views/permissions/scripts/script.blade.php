@@ -4,11 +4,13 @@
 
 <script type="text/javascript">
     $(function () {
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
@@ -18,7 +20,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 3, "Acs" ]],
+            "order": [[3, "Acs"]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -30,18 +32,20 @@
             },
             ajax: "{{ route('admin.user.permission') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex' , "className": "dt-center"},
                 {data: 'name', name: 'name'},
                 {data: 'label', name: 'label'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
+
         $('#createNewProduct').click(function () {
             $('#productForm').trigger("reset");
             $('#ajaxModel').modal('show');
             $('#caption').text('افزودن دسترسی');
             $('#product_id').val('');
         });
+
         $('body').on('click', '.editProduct', function () {
             var product_id = $(this).data('id');
             $.get("{{ route('admin.permission.update') }}" + '/' + product_id, function (data) {
@@ -52,10 +56,11 @@
                 $('#label').val(data.label);
             })
         });
+
         $('#saveBtn').click(function (e) {
             e.preventDefault();
             $('#saveBtn').text('در حال ثبت اطلاعات...');
-            $('#saveBtn').prop( "disabled", true );
+            $('#saveBtn').prop("disabled", true);
             $.ajax({
                 data: $('#productForm').serialize(),
                 url: "{{ route('admin.permission.store') }}",
@@ -73,7 +78,7 @@
                             })
                         });
                         $('#saveBtn').text('ثبت');
-                        $('#saveBtn').prop( "disabled", false );
+                        $('#saveBtn').prop("disabled", false);
                     }
                     if (data.success) {
                         $('#productForm').trigger("reset");
@@ -89,15 +94,19 @@
                         $('#name').val('');
                         $('#label').val('');
                         $('#saveBtn').text('ثبت');
-                        $('#saveBtn').prop( "disabled", false );
+                        $('#saveBtn').prop("disabled", false);
 
                     }
                 }
             });
         });
+
         $('#product_id').val('');
+
         $('#name').val('');
+
         $('#label').val('');
+
     });
     $('body').on('click', '.deleteProduct', function () {
         var id = $(this).data("id");
@@ -131,5 +140,6 @@
             }
         })
     });
+
     $('#admin-user').addClass('active');
 </script>

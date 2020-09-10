@@ -34,7 +34,7 @@
             },
             ajax: "{{ route('admin.bank.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'name', name: 'name'},
                 {data: 'NameBank', name: 'NameBank'},
                 {data: 'CardNumber', name: 'CardNumber'},

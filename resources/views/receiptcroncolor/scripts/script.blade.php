@@ -33,7 +33,7 @@
             },
             ajax: "{{ route('admin.receiptamster.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'croncolor_id', name: 'croncolor_id'},
                 {data: 'color_id', name: 'color_id'},
                 {data: 'number', name: 'number'},

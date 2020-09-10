@@ -41,7 +41,7 @@
             },
             ajax: "{{ route('admin.barncolor.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'name', name: 'name'},
                 {data: 'manufacturer', name: 'manufacturer'},
                 {data: 'combination', name: 'combination'},

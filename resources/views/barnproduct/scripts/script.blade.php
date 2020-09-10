@@ -22,7 +22,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 6, "Accs" ]],
+            "order": [[6, "Accs"]],
             "language": {
                 "search": "جستجو:",
                 "lengthMenu": "نمایش _MENU_",
@@ -34,24 +34,17 @@
             },
             ajax: "{{ route('admin.barnproduct.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'product_id', name: 'product_id'},
                 {data: 'color_id', name: 'color_id'},
                 {data: 'Inventory', name: 'Inventory'},
-                {data: 'NumberSold', name: 'NumberSold'},
+                {data: 'Number', name: 'Number'},
                 {data: 'true', name: 'true'},
-
-                {
-                    data: 'action', name: 'action', orderable: false, searchable: false
-
-
-                },
+                {data: 'action', name: 'action', orderable: false, searchable: false},
 
 
             ]
         });
-
-
 
 
         $('#createNewProduct').click(function () {
@@ -72,6 +65,49 @@
                 $('#PhysicalInventory').val(data.Inventory);
                 $('#product_id').val(id);
             })
+
+        });
+
+
+        $('body').on('click', '.detail-factor', function () {
+            $("#caapp").text("جزییات محصول تقاضا داده شده");
+            var detail_factor = $(this).data('id');
+            $('#ajaxModellistre').modal('show');
+            $('#factooorrr').DataTable().destroy();
+            $('.factooorrr').DataTable({
+                processing: true,
+                serverSide: true,
+                searching: false,
+                "ordering": false,
+                "paging": false,
+                "info": false,
+                "language": {
+                    "search": "جستجو:",
+                    "lengthMenu": "نمایش _MENU_",
+                    "zeroRecords": "موردی یافت نشد!",
+                    "info": "نمایش _PAGE_ از _PAGES_",
+                    "infoEmpty": "موردی یافت نشد",
+                    "infoFiltered": "(جستجو از _MAX_ مورد)",
+                    "processing": "در حال پردازش اطلاعات"
+                },
+                ajax: {
+                    url: "{{ route('admin.receiptpolim.list.detail.factor') }}",
+                    data: {
+                        detail_factor: detail_factor,
+                    },
+                },
+                columns: [
+                    {data: 'pack', name: 'pack', "className": "dt-center"},
+                    {data: 'user', name: 'user'},
+                    {data: 'customer_name', name: 'customer_name'},
+                    {data: 'color', name: 'color'},
+                    {data: 'product', name: 'product'},
+                    {data: 'number', name: 'number'},
+                    {data: 'date', name: 'date'},
+                ]
+
+            });
+
 
         });
 

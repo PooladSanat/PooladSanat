@@ -32,7 +32,7 @@
             },
             ajax: "{{ route('admin.customers.index') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'name', name: 'name'},
                 {data: 'phone', name: 'phone'},
                 {data: 'tel', name: 'tel'},

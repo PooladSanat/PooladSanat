@@ -384,7 +384,8 @@
                                 <hr/>
                                 <div class="modal-footer">
                                     <div class="text-left">
-                                        <button style="width: 130px" type="submit" class="btn btn-success" id="saveBtnedit"
+                                        <button style="width: 130px" type="submit" class="btn btn-success"
+                                                id="saveBtnedit"
                                                 value="ثبت">
                                             ثبت
                                         </button>
@@ -450,7 +451,6 @@
                                     </div>
 
 
-
                                 </div>
                                 <br/>
                                 <hr/>
@@ -479,8 +479,8 @@
         <div class="modal-body col-md-12">
             <div class="portlet box blue">
                 <div class="portlet-title">
-                    <div class="caption" id="caption">
-                        جزییات صورت حساب
+                    <div class="caption" id="cap">
+
                     </div>
                     <div class="caption pull-left">
                         <a data-dismiss="modal">
@@ -496,41 +496,90 @@
                             <form autocomplete="off" id="productForm" name="productForm">
                                 @csrf
                                 <div class="row">
-
                                     <div class="col-md-12">
-                                        <table class="table table-striped table-bordered factooooor" id="factooooor">
-                                            <thead style="background-color: #e8ecff">
-                                            <tr>
-                                                <td style="width: 1px">شماره فاکتور</td>
-                                                <td>فروشنده</td>
-                                                <td>خریدار</td>
-                                                <td>محصول</td>
-                                                <td>رنگ</td>
-                                                <td>تعداد</td>
-                                                <td>تاریخ</td>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
+                                        <div class="nav-tabs-custom">
+                                            <ul class="nav nav-tabs" style="background-color: rgba(0,105,255,0.07)">
+                                                <li id="tt" class="active" style="width: 49%;"><a href="#t"
+                                                                                                  data-toggle="tab">مشخصات
+                                                        ریالی صورتحساب</a></li>
+                                                <li id="ff" style="width: 50%;"><a href="#f" data-toggle="tab">مشخصات
+                                                        فروش صورتحساب</a></li>
+                                            </ul>
+                                            <div class="tab-content">
 
-                                    </div>
+                                                <div class="active tab-pane" id="t">
+                                                    <table class="table table-striped table-bordered factooooor"
+                                                           id="factooooor">
+                                                        <thead style="background-color: #e8ecff">
+                                                        <tr>
+                                                            <td style="width: 1px">شماره فاکتور</td>
+                                                            <td>فروشنده</td>
+                                                            <td>خریدار</td>
+                                                            <td>قیمت(ریال)</td>
+                                                            <td>تخفیف(ریال)</td>
+                                                            <td>پرداخت</td>
+                                                            <td>تاریخ</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <br/>
+                                                    <hr/>
+                                                    <div class="modal-footer">
+                                                        <div class="text-left">
+                                                            <button style="width: 130px" type="button"
+                                                                    class="btn btn-danger"
+                                                                    data-dismiss="modal">
+                                                                بستن
+                                                            </button>
+
+                                                        </div>
+                                                    </div>
 
 
+                                                </div>
 
-                                </div>
-                                <br/>
-                                <hr/>
-                                <div class="modal-footer">
-                                    <div class="text-left">
-                                        <button style="width: 130px" type="button" class="btn btn-danger"
-                                                data-dismiss="modal">
-                                            بستن
-                                        </button>
+                                                <div class="tab-pane" id="f">
+                                                    <br/>
+                                                    <table class="table table-striped table-bordered factooor"
+                                                           id="factooor">
+                                                        <thead style="background-color: #e8ecff">
+                                                        <tr>
+                                                            <td>شماره فاکتور</td>
+                                                            <td>فروشنده</td>
+                                                            <td>خریدار</td>
+                                                            <td>محصول</td>
+                                                            <td>رنگ</td>
+                                                            <td>تعداد(عدد)</td>
+                                                            <td>تاریخ</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                    <br/>
+                                                    <hr/>
+                                                    <div class="modal-footer">
+                                                        <div class="text-left">
+                                                            <button style="width: 130px" type="button"
+                                                                    class="btn btn-danger"
+                                                                    data-dismiss="modal">
+                                                                بستن
+                                                            </button>
 
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
+
+
                         </div>
                     </div>
                 </div>

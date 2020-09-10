@@ -33,7 +33,7 @@
             },
             ajax: "{{ route('admin.receiptproduct.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'product_id', name: 'product_id'},
                 {data: 'color_id', name: 'color_id'},
                 {data: 'number', name: 'number'},

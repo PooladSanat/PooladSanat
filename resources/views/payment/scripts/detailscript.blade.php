@@ -62,7 +62,7 @@
                             }
                     },
                     columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                         {data: 'customer_name', name: 'customer_name'},
                         {data: 'user', name: 'user'},
                         {data: 'pack_id', name: 'pack_id'},
@@ -197,7 +197,7 @@
                             },
                         },
                         columns: [
-                            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                            {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                             {data: 'type', name: 'type'},
                             {data: 'shenase', name: 'shenase'},
                             {data: 'name', name: 'name'},
@@ -331,7 +331,7 @@
                 },
             },
             columns: [
-                {data: 'pack', name: 'pack'},
+                {data: 'pack', name: 'pack', "className": "dt-center"},
                 {data: 'user', name: 'user'},
                 {data: 'customer_name', name: 'customer_name'},
                 {data: 'product', name: 'product'},

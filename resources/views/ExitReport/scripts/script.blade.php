@@ -98,7 +98,7 @@
                         }
                 },
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                     {data: 'pack_id', name: 'pack_id'},
                     {data: 'date', name: 'date'},
                     {data: 'user_id', name: 'user_id'},

@@ -33,7 +33,7 @@
             },
             ajax: "{{ route('admin.seller.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'code', name: 'code'},
                 {data: 'company', name: 'company'},
                 {data: 'connector', name: 'connector'},

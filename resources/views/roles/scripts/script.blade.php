@@ -32,7 +32,7 @@
             },
             ajax: "{{ route('admin.role.show') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex' , "className": "dt-center"},
                 {data: 'name', name: 'name'},
                 {data: 'date', name: 'date'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},

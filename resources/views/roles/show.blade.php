@@ -13,7 +13,7 @@
                     <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th style="width: 1px">ردیف</th>
+                            <th style="width: 1px;text-align: center">ردیف</th>
                             <th>نقش</th>
                             <th>تاریخ ایجاد</th>
                             <th>عملیات</th>

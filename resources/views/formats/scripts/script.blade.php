@@ -39,7 +39,7 @@
             },
             ajax: "{{ route('admin.format.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'code', name: 'code'},
                 {data: 'name', name: 'name'},
                 {data: 'models', name: 'models'},

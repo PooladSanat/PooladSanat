@@ -50,7 +50,8 @@
 
                                         <select class="form-control" id="color" name="color">
                                             @foreach($colors as $color)
-                                                <option value="{{$color->id}}">{{$color->name}} - {{$color->manufacturer}} - {{$color->masterbatch}}</option>
+                                                <option value="{{$color->id}}">{{$color->name}}
+                                                    - {{$color->manufacturer}} - {{$color->masterbatch}}</option>
                                             @endforeach
                                         </select>
 
@@ -100,3 +101,55 @@
     </div>
 </div>
 
+<div class="modal fade" id="ajaxModellistre" aria-hidden="true">
+    <div class="modal-dialog col-md-12">
+        <div class="modal-body col-md-12">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption" id="caapp">
+
+                    </div>
+                    <div class="caption pull-left">
+                        <a data-dismiss="modal">
+                            <i style="color: white" class="pull-left fa fa-close"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                        <div class="form-group">
+
+                            <form autocomplete="off" id="productForm" name="productForm">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-striped table-bordered factooorrr"
+                                               id="factooorrr">
+                                            <thead style="background-color: #e8ecff">
+                                            <tr>
+                                                <td>شماره فاکتور</td>
+                                                <td>فروشنده</td>
+                                                <td>خریدار</td>
+                                                <td>رنگ</td>
+                                                <td>محصول</td>
+                                                <td>تعداد</td>
+                                                <td>تاریخ</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -209,9 +209,9 @@ class InvoiceController extends Controller
                 if (!empty($request->from_date)) {
                     $data = Invoice::onlyTrashed()
                         ->whereBetween('date', array($request->from_date, $request->to_date))
-                        ->get();
+                        ->orderBy('create', 'DESC')->get();
                 } else {
-                    $data = Invoice::onlyTrashed()->get();
+                    $data = Invoice::onlyTrashed() ->orderBy('create', 'DESC')->get();
                 }
                 return Datatables::of($data)
                     ->addIndexColumn()

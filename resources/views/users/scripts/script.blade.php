@@ -12,6 +12,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         $('#createNewProduct').click(function () {
             $('#ajaxModel').modal('show');
             $('#caption').text('افزودن کاربر');
@@ -22,6 +23,7 @@
             $('#password').val('');
             $('#select2-example').val('');
         });
+
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
@@ -46,7 +48,7 @@
             },
             ajax: "{{ route('admin.user.show') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex' , "className": "dt-center"},
                 {data: 'name', name: 'name'},
                 {data: 'role_name', name: 'role_name'},
                 {data: 'user_name', name: 'user_name'},
@@ -57,6 +59,7 @@
             ],
 
         });
+
         $('body').on('click', '.editProduct', function () {
             var product_id = $(this).data('id');
             $.get("{{ route('admin.user.u') }}" + '/' + product_id, function (data) {
@@ -73,6 +76,7 @@
 
             })
         });
+
         $('#saveBtn').click(function (e) {
             e.preventDefault();
             $('#saveBtn').text('در حال ثبت اطلاعات...');
@@ -120,6 +124,7 @@
                 }
             });
         });
+
         $('body').on('click', '.status', function () {
             var id = $(this).data('id');
             $.ajax({
@@ -149,10 +154,11 @@
                 }
             });
         });
+
         jQuery(function ($) {
             $("#phone").mask("99999999999");
         });
-        $('#admin-user').addClass('active');
 
+        $('#admin-user').addClass('active');
     });
 </script>

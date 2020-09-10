@@ -43,7 +43,7 @@
             ajax: "{{ route('admin.invoice.index') }}",
             "deferRender": true,
             columns: [
-                {data: 'invoiceNumber', name: 'invoiceNumber'},
+                {data: 'invoiceNumber', name: 'invoiceNumber', "className": "dt-center"},
                 {data: 'create', name: 'create'},
                 {data: 'user_id', name: 'user_id'},
                 {data: 'customer_id', name: 'customer_id'},

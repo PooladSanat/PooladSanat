@@ -16,7 +16,7 @@ $custome = \App\Customer::where('expert', auth()->user()->id)->get();
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption">
-                        گزارش خروج کالا
+                        گزارش آرشیو فروش
                     </div>
                     <div class="tools"></div>
                 </div>
@@ -113,7 +113,7 @@ $custome = \App\Customer::where('expert', auth()->user()->id)->get();
 
                         <button type="button" name="bulk_delete"
                                 id="bulk_delete" class="btn btn-success"
-                        >چاپ گزارش خروج کالا
+                        >چاپ گزارش آرشیو فروش
                         </button>
                     </div>
                 </div>

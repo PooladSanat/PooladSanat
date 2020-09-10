@@ -167,9 +167,6 @@
                                 @endif
 
 
-
-
-
                             </tr>
                             <?php
                             $tsum += $clearing->sum;
@@ -184,6 +181,20 @@
                             <th></th>
                             <th>{{number_format($tsum)}}</th>
                             <th>{{number_format($tprice)}}</th>
+
+                        </tr>
+                        <tr>
+                            <th colspan="3">باقیمانده حساب مشتری</th>
+                            @if($tprice - $tsum > 0)
+                                <th>0</th>
+                                <th style="background-color: rgba(0,183,255,0.4)">{{number_format(abs($tprice - $tsum))}}</th>
+                            @elseif($tprice - $tsum < 0)
+                                <th style="background-color: rgba(255,0,0,0.4)">{{number_format(abs($tprice - $tsum))}}</th>
+                                <th>0</th>
+                            @else
+                                <th>0</th>
+                                <th>0</th>
+                            @endif
 
                         </tr>
                         </tfoot>

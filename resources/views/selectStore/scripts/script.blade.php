@@ -33,7 +33,7 @@
             },
             ajax: "{{ route('admin.selectstore.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'name', name: 'name'},
                 {data: 'tel', name: 'tel'},
                 {data: 'address', name: 'address'},

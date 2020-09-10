@@ -22,9 +22,17 @@ class BarnProductController extends Controller
         $colors = Color::all();
         $products = Product::all();
         if ($request->ajax()) {
-            $data = BarnsProduct::orderBy('id', 'desc')->get();
+            $data = BarnsProduct::orderBy('product_id', 'desc')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('Number', function ($row) {
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                       class="detail-factor">
+                      ' . $row->NumberSold . '
+                       </a>';
+                    return $btn;
+                })
                 ->addColumn('product_id', function ($row) {
                     return $row->product->label;
                 })
@@ -32,10 +40,8 @@ class BarnProductController extends Controller
                     $color = Color::where('id', $row->color_id)->first();
                     if (!empty($color)) {
                         return $color->name;
-
                     } else {
                         return '';
-
                     }
                 })
                 ->addColumn('true', function ($row) {
@@ -44,12 +50,36 @@ class BarnProductController extends Controller
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
                 })
-                ->rawColumns([])
+                ->rawColumns(['Number', 'action'])
                 ->make(true);
 
         }
         return view('barnproduct.list', compact('colors', 'products'));
 
+
+    }
+
+
+    public function ListList(Request $request)
+    {
+        if ($request->ajax()) {
+            $id = BarnsProduct::where('id', $request->detail_factor)->first();
+            $product = Product::where('id', $id->product_id)->first();
+            $color = Color::where('id', $id->color_id)->first();
+
+            $data = \DB::table('View_Scheduling')
+                ->where('product', $product->label)
+                ->where('color', $color->name)
+                ->whereNull('total')
+                ->whereNull('statusfull')
+                ->get();
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->rawColumns([])
+                ->make(true);
+        }
+        return view('barnproduct.list');
 
     }
 
@@ -104,6 +134,7 @@ class BarnProductController extends Controller
         $products = Product::all();
         if ($request->ajax()) {
             $data = \DB::table('receiptproduct')
+                ->orderBy('date', 'desc')
                 ->get();
             return Datatables::of($data)
                 ->addIndexColumn()

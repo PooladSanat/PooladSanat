@@ -61,6 +61,11 @@
                             <th></th>
                             <th></th>
                         </tr>
+                        <tr>
+                            <th colspan="3">باقیمانده حساب مشتری</th>
+                            <th id="sum_pricee"></th>
+                            <th id="sum_price"></th>
+                        </tr>
                         {{--                        <tr>--}}
                         {{--                            <th colspan="5">مانده حساب(مانده حساب مشتری از قبل در سیستم)</th>--}}
                         {{--                            <th id="sum_customer">0</th>--}}
@@ -69,7 +74,7 @@
 
                         </tfoot>
                     </table>
-
+                    <br/>
                     <div class="text-left">
 
                         <button type="button" name="bulk_delete"

@@ -45,7 +45,7 @@
             },
             ajax: "{{ route('admin.CustomerAccount.index') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'name', name: 'name'},
                 {data: 'creditor', name: 'creditor'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},

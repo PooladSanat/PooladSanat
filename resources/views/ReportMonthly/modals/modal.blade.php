@@ -144,9 +144,14 @@
                                     <div class="col-md-12">
                                         <div class="nav-tabs-custom">
                                             <ul class="nav nav-tabs" style="background-color: rgba(0,105,255,0.07)">
-                                                <li class="active" style="width: 33%;"><a href="#t" data-toggle="tab">تعداد تولید</a></li>
-                                                <li style="width: 33%;"><a href="#f" data-toggle="tab">تعداد فروش</a></li>
-                                                <li style="width: 32.8%;"><a href="#m" data-toggle="tab">تعداد مرجوعی</a></li>
+                                                <li class="active" style="width: 24%;"><a href="#t" data-toggle="tab">تعداد
+                                                        تولید</a></li>
+                                                <li style="width: 24%;"><a href="#f" data-toggle="tab">تعداد فروش</a>
+                                                </li>
+                                                <li style="width: 25%;"><a href="#m" data-toggle="tab">تعداد مرجوعی</a>
+                                                </li>
+                                                <li style="width: 24%;"><a href="#n" data-toggle="tab">اسناد پرداختی</a>
+                                                </li>
                                             </ul>
                                             <div class="tab-content">
                                                 <div class="active tab-pane" id="t">
@@ -220,6 +225,38 @@
                                                             <td>فاکتور</td>
                                                             <td>تعداد مرجوعی</td>
                                                             <td>توضیحات</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <br/>
+                                                    <hr/>
+                                                    <div class="modal-footer">
+                                                        <div class="text-left">
+                                                            <button style="width: 130px" type="button"
+                                                                    class="btn btn-danger"
+                                                                    data-dismiss="modal">
+                                                                بستن
+                                                            </button>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="tab-pane" id="n">
+                                                    <table class="table table-striped table-bordered asnad"
+                                                           id="asnad">
+                                                        <thead style="background-color: #e8ecff">
+                                                        <tr>
+                                                            <td>ردیف</td>
+                                                            <td>خریدار</td>
+                                                            <td>بابت</td>
+                                                            <td>نوع پرداخت</td>
+                                                            <td>شناسه</td>
+                                                            <td>مبلغ(ریال)</td>
                                                         </tr>
                                                         </thead>
                                                         <tbody>

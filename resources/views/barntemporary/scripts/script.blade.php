@@ -33,7 +33,7 @@
             },
             ajax: "{{ route('admin.barntemporary.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'device_id', name: 'device_id'},
                 {data: 'product_id', name: 'product_id'},
                 {data: 'color_id', name: 'color_id'},

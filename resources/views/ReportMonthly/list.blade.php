@@ -37,11 +37,12 @@
                     <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
-                            <th style="width: 1px">تاریخ</th>
+                            <th style="width: 1px;text-align: center">تاریخ</th>
                             <th>تعداد تولید(عدد)</th>
                             <th>تعداد فروش(عدد)</th>
                             <th>مبلغ فروش(ریال)</th>
                             <th>تعداد مرجوعی(عدد)</th>
+                            <th>اسناد دریافتی(ریال)</th>
 
                         </tr>
                         </thead>
@@ -49,6 +50,7 @@
                         </tbody>
                         <tfoot align="right">
                         <tr>
+                            <th style="background-color: rgba(255,106,107,0.51)"></th>
                             <th style="background-color: rgba(255,106,107,0.51)"></th>
                             <th style="background-color: rgba(255,106,107,0.51)"></th>
                             <th style="background-color: rgba(255,106,107,0.51)"></th>

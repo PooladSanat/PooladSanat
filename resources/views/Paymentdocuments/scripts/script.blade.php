@@ -60,7 +60,7 @@
                         }
                 },
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                     {data: 'customer', name: 'customer'},
                     {data: 'payment_id', name: 'payment_id'},
                     {data: 'type', name: 'type'},

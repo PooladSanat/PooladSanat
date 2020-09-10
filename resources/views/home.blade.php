@@ -24,42 +24,42 @@
         ->whereNull('end')
         ->sum('total');
 
-    $farvardin = Invoice::where('Year', $v->year)
+    $farvardin = \App\Factors::where('Year', $v->year)
         ->where('Month', '1')
-        ->sum('number_sell');
-    $may = Invoice::where('Year', $v->year)
+        ->sum('total');
+    $may = \App\Factors::where('Year', $v->year)
         ->where('Month', '2')
-        ->sum('number_sell');
-    $June = Invoice::where('Year', $v->year)
+        ->sum('total');
+    $June = \App\Factors::where('Year', $v->year)
         ->where('Month', '3')
-        ->sum('number_sell');
-    $Arrows = Invoice::where('Year', $v->year)
+        ->sum('total');
+    $Arrows = \App\Factors::where('Year', $v->year)
         ->where('Month', '4')
-        ->sum('number_sell');
-    $August = Invoice::where('Year', $v->year)
+        ->sum('total');
+    $August = \App\Factors::where('Year', $v->year)
         ->where('Month', '5')
-        ->sum('number_sell');
-    $September = Invoice::where('Year', $v->year)
+        ->sum('total');
+    $September = \App\Factors::where('Year', $v->year)
         ->where('Month', '6')
-        ->sum('number_sell');
-    $stamp = Invoice::where('Year', $v->year)
+        ->sum('total');
+    $stamp = \App\Factors::where('Year', $v->year)
         ->where('Month', '7')
-        ->sum('number_sell');
-    $Aban = Invoice::where('Year', $v->year)
+        ->sum('total');
+    $Aban = \App\Factors::where('Year', $v->year)
         ->where('Month', '8')
-        ->sum('number_sell');
-    $Fire = Invoice::where('Year', $v->year)
+        ->sum('total');
+    $Fire = \App\Factors::where('Year', $v->year)
         ->where('Month', '9')
-        ->sum('number_sell');
-    $January = Invoice::where('Year', $v->year)
+        ->sum('total');
+    $January = \App\Factors::where('Year', $v->year)
         ->where('Month', '10')
-        ->sum('number_sell');
-    $Avalanche = Invoice::where('Year', $v->year)
+        ->sum('total');
+    $Avalanche = \App\Factors::where('Year', $v->year)
         ->where('Month', '11')
-        ->sum('number_sell');
-    $March = Invoice::where('Year', $v->year)
+        ->sum('total');
+    $March = \App\Factors::where('Year', $v->year)
         ->where('Month', '12')
-        ->sum('number_sell');
+        ->sum('total');
     ?>
     <?php
 
@@ -302,7 +302,7 @@
                                     <table class="table table-striped table-bordered">
                                         <thead style="background-color: #e8ecff">
                                         <tr>
-                                            <th style="background-color: #e8ecff">ردیف</th>
+                                            <th style="background-color: #e8ecff;text-align: center">ردیف</th>
                                             <th>مشتری</th>
                                             <th>تعداد خرید(عدد)</th>
                                             <th>مبلغ خرید(ریال)</th>
@@ -316,7 +316,7 @@
                                             <tr>
 
 
-                                                <td style="background-color: #e8ecff">{{$number++}}</td>
+                                                <td style="background-color: #e8ecff;text-align: center">{{$number++}}</td>
                                                 <td>
                                                     @foreach($customers as $customer)
 
@@ -362,7 +362,7 @@
                                     <table class="table table-striped table-bordered">
                                         <thead style="background-color: #e8ecff">
                                         <tr>
-                                            <th style="background-color: #e8ecff">ردیف</th>
+                                            <th style="background-color: #e8ecff;text-align: center">ردیف</th>
                                             <th>محصول</th>
                                             <th>رنگ</th>
                                             <th>تعداد فروش</th>
@@ -377,7 +377,7 @@
                                             <tr>
 
 
-                                                <td style="background-color: #e8ecff">{{$number++}}</td>
+                                                <td style="background-color: #e8ecff;text-align: center">{{$number++}}</td>
                                                 <td>
                                                     @foreach($product as $produc)
                                                         @if($productt->product_id == $produc->id)
@@ -746,6 +746,7 @@
             options: {
                 responsive: true,
                 maintainAspectRation: true,
+                valueFormatString: "$#,###,#0",
                 legend: {
                     position: 'top',
                 },

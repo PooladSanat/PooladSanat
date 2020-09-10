@@ -42,7 +42,7 @@
                     data:{from_date:from_date, to_date:to_date}
                 },
                 columns: [
-                    {data: 'checkbox', orderable: false, searchable: false},
+                    {data: 'checkbox', orderable: false, searchable: false, "className": "dt-center"},
                     {data: 'invoiceNumber', name: 'invoiceNumber'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'user_id', name: 'user_id'},

@@ -34,7 +34,7 @@
             },
             ajax: "{{ route('admin.colorscrap.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'format_id', name: 'format_id'},
                 {data: 'ofColor_id', name: 'ofColor_id'},
                 {data: 'toColor_id', name: 'toColor_id'},

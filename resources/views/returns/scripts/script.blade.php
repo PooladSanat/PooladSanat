@@ -55,7 +55,7 @@
             },
             ajax: "{{ route('admin.returns.list') }}",
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                 {data: 'code', name: 'code'},
                 {data: 'date', name: 'date'},
                 {data: 'costumer_id', name: 'costumer_id'},

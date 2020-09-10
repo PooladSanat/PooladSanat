@@ -68,8 +68,8 @@ class PaymentsController extends Controller
                 ->whereIn('customer_id', $customer)
                 ->whereIn('user_id', $user)
                 ->whereBetween('date', array($indate, $todate))
+                ->orderBy('date', 'DESC')
                 ->orderBy('customer_id', 'desc')
-                ->orderBy('date', 'desc')
                 ->get();
 
 
@@ -142,6 +142,14 @@ class PaymentsController extends Controller
                 ->get();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('id', function ($row) {
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->pack . '" data-original-title="ویرایش"
+                       class="detail-factor-product">
+                      ' . $row->pack . '
+                       </a>';
+                    return $btn;
+                })
                 ->addColumn('product', function ($row) {
                     $detail = DB::table('invoice_product')
                         ->where('id', $row->detail_id)
@@ -149,6 +157,14 @@ class PaymentsController extends Controller
                     $product = Product::where('id', $detail->product_id)
                         ->first();
                     return $product->label;
+                })
+                ->addColumn('ta', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $product = Invoice::where('id', $detail->invoice_id)
+                        ->first();
+                    return number_format($product->ta);
                 })
                 ->addColumn('color', function ($row) {
                     $detail = DB::table('invoice_product')
@@ -183,10 +199,22 @@ class PaymentsController extends Controller
                         ->first();
                     return $detail->salesNumber;
                 })
+                ->addColumn('factor', function ($row) {
+                    $detail = DB::table('factors')
+                        ->where('pack_id', $row->pack)
+                        ->first();
+                    return number_format($detail->sum);
+                })
+                ->addColumn('type', function ($row) {
+                    $detail = DB::table('factors')
+                        ->where('pack_id', $row->pack)
+                        ->first();
+                    return $detail->type;
+                })
                 ->addColumn('created_at', function ($row) {
                     return Jalalian::forge($row->created_at)->format('Y/m/d');
                 })
-                ->rawColumns([])
+                ->rawColumns(['id'])
                 ->make(true);
         }
 
@@ -196,7 +224,6 @@ class PaymentsController extends Controller
 
     public function ListListpack(Request $request)
     {
-
         if ($request->ajax()) {
             $data = DB::table('View_Scheduling')
                 ->where('pack', $request->detail_factor)
@@ -205,7 +232,7 @@ class PaymentsController extends Controller
                 ->addIndexColumn()
 //                ->addColumn('product', function ($row) {
 //                    $detail = DB::table('invoice_product')
-//                        ->where('id', $row->detail_id)
+//                        ->whe re('id', $row->detail_id)
 //                        ->first();
 //                    $product = Product::where('id', $detail->product_id)
 //                        ->first();
@@ -214,9 +241,7 @@ class PaymentsController extends Controller
                 ->rawColumns([])
                 ->make(true);
         }
-
         return view('bills.list');
-
     }
 
     public function ListListPayment(Request $request)
@@ -274,9 +299,7 @@ class PaymentsController extends Controller
                 ->rawColumns([])
                 ->make(true);
         }
-
         return view('ExitReport.list');
-
     }
 
     public function detaillist(Request $request)
@@ -320,8 +343,8 @@ class PaymentsController extends Controller
                 ->whereIn('customer_id', $customer)
                 ->whereIn('user_id', $user)
                 ->whereBetween('date', array($indate, $todate))
+                ->orderBy('date', 'DESC')
                 ->orderBy('customer_id', 'desc')
-                ->orderBy('date', 'desc')
                 ->get();
 
             return Datatables::of($data)
@@ -903,6 +926,72 @@ class PaymentsController extends Controller
         return \response()->json($detail);
 
     }
+
+
+    public function ListListDetail(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $data = DB::table('schedulings')
+                ->where('pack', $request->detail_factor)
+                ->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('id', function ($row) {
+                    return $row->pack;
+                })
+                ->addColumn('product', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $product = Product::where('id', $detail->product_id)
+                        ->first();
+                    return $product->label;
+                })
+                ->addColumn('color', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $color = Color::where('id', $detail->color_id)
+                        ->first();
+                    return $color->name;
+                })
+                ->addColumn('customer', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $customer = Invoice::where('id', $detail->invoice_id)
+                        ->first();
+                    $name = User::where('id', $customer->user_id)->first();
+                    return $name->name;
+                })
+                ->addColumn('user', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    $customer = Invoice::where('id', $detail->invoice_id)
+                        ->first();
+                    $name = Customer::where('id', $customer->customer_id)->first();
+                    return $name->name;
+
+                })
+                ->addColumn('total', function ($row) {
+                    $detail = DB::table('invoice_product')
+                        ->where('id', $row->detail_id)
+                        ->first();
+                    return $detail->salesNumber;
+                })
+                ->addColumn('created_at', function ($row) {
+                    return Jalalian::forge($row->created_at)->format('Y/m/d');
+                })
+                ->rawColumns([])
+                ->make(true);
+        }
+
+        return view('bills.list');
+
+    }
+
 
     public function EditUpdate(Request $request)
     {

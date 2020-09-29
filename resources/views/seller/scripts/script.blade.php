@@ -158,5 +158,5 @@
         $("#tel").mask("99999999999");
     });
     $('#foundation').addClass('active');
-    $('#foundation_c').addClass('active');
+    $('#foundation_d').addClass('active');
 </script>

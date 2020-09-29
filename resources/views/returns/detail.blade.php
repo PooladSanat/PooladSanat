@@ -2,6 +2,11 @@
 <html xml:lang="fa">
 <head>
     <style>
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         div.header {
             display: block;
             text-align: center;
@@ -114,321 +119,248 @@
                     <table>
                         <thead>
                         <tr>
-                            <th style="background-color: rgba(135,142,145,0.5)">
+                            <th width="20%">
+                                <img width="40%" src="{{asset('/public/icon/logo.jpeg')}}">
+                            </th>
+                            <th width="50%"><h4>فرم اعلام محصول صندلی مرجوعی</h4></th>
+                            <th width="20%" style="text-align: right">
+                                تاریخ: {{$date}}
+                                <br/>
+                                شماره: {{$id}}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="3" style="background-color: rgba(135,142,145,0.18)">
                                     <span
-                                        style="text-align: center;font-size: 15px">جزییات درخواست مرجوع کالای کد {{$id}}</span>
+                                        style="text-align: center;font-size: 15px">اعلام مشخصات مشتری و کالای مرجوعی</span>
+                            </th>
+
+                        </tr>
+                        <tr>
+                            <th colspan="3">
                                 <br/>
-                                <div class="row">
-                                    <div class="col-sm-10">
+                                <h6 style="text-align: right"><strong>نام مشتری:</strong> {{$customer_name->name}}</h6>
+                                <h6 style="text-align: right"><strong>تاریخ خروج از انبار (بار اصلی
+                                        مشتری):</strong> {{$invoices_date->date}}</h6>
+                                <br/>
+                                <table style="width: 60%" class="center">
+                                    <thead style="background-color: rgba(135,142,145,0.18)">
+                                    <tr>
+                                        <th>نام کالای مرجوعی</th>
+                                        <th>رنگ</th>
+                                        <th>تعداد(عدد)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($detail_return as $item)
+                                        <tr>
+                                            <td>
+                                                @foreach($products as $product)
+                                                    @if($product->id == $item->product_id)
+                                                        {{$product->label}}
+                                                    @endif
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                @foreach($colors as $color)
+                                                    @if($color->id == $item->color_id)
+                                                        {{$color->name}}
+                                                    @endif
+                                                @endforeach
+                                            </td>
+                                            <td>{{$item->number}}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                                <br/>
+                                <h6 style="text-align: right"><strong>دلایل مشتری عودت
+                                        محصول:</strong> {{$returns->Description_m}}</h6>
+                                <h6 style="text-align: right"><strong>دلایل فروش جهت پذیرش محصول مشتری
+                                        مرجوعی:</strong> {{$returns->Description_v}}</h6>
+                                <h6 style="text-align: right"><strong>هزینه حمل:</strong> {{$returns->Cost}}</h6>
+                                <br/>
+                                @if(!empty($sign))
+                                    <img src="{{url($sign->sign)}}" width="150">
+                                @else
+                                    <h6 style="text-align: center">نام و امضاء مدیر فروش:</h6>
+                                @endif
 
-                                    </div>
-                                    <div class="col-sm-2">
-
-                                    </div>
-                                </div>
                             </th>
                         </tr>
-                        </thead>
-                    </table>
-                    <br/>
-                    <table>
-                        <thead>
                         <tr>
-                            <th style="background-color: rgba(23,0,255,0.14)">
-                                <span style="text-align: center;font-size: 15px">مشخصات کالای مرجوعی</span>
-                                <br/>
-                                <div class="row">
-                                    <div class="col-sm-10">
+                            <th colspan="3" style="background-color: rgba(135,142,145,0.18)">
+                                    <span
+                                        style="text-align: center;font-size: 15px">مجوز مرجوع نمودن بار توسط مشتری (قائم مقام مدیر عامل)</span>
 
-                                    </div>
-                                    <div class="col-sm-2">
+                            </th>
 
-                                    </div>
-                                </div>
+                        </tr>
+                        <tr>
+                            <th colspan="3">
+                                <h6 style="text-align: right">بدینوسیله با مرجوع نمودن محصول توسط مشتری به شرح فوق به
+                                    انبار
+                                    موافقت میگردد</h6>
+                                @if(!empty($sign_))
+                                    <img src="{{url($sign_->sign)}}" width="150">
+                                @else
+                                    <h6 style="text-align: center">امضاء:</h6>
+                                @endif
                             </th>
                         </tr>
-                        </thead>
-                    </table>
-                    <table>
-                        <thead>
                         <tr>
-                            <th width="220">نام مشتری</th>
-                            <th>
-                                @foreach($customers as $customer)
-                                    @if($customer->id == $return->customer_id)
-                                        {{$customer->name}}
-                                    @endif
-                                @endforeach
+                            <th colspan="3" style="background-color: rgba(135,142,145,0.18)">
+                                    <span
+                                        style="text-align: center;font-size: 15px">اعلام مشخصات کمی کالای مرجوعی (انبار)</span>
                             </th>
-                            <th width="200">نام کارشناس فروش</th>
-                            <th>
-                                @foreach($invoices as $invoice)
+                        </tr>
+                        <tr>
+                            <th colspan="3">
+                                @if(!empty($sign__))
+                                    <h6 style="text-align: right"><strong>تاریخ
+                                            دریافت: </strong>{{\Morilog\Jalali\Jalalian::forge($barn->created_at)->format('Y/m/d')}}
+                                    </h6>
+                                @endif
+                                <table>
+                                    <thead style="background-color: rgba(135,142,145,0.18)">
+                                    <tr>
+                                        <th>ردیف</th>
+                                        <th>نام کالا</th>
+                                        <th>رنگ</th>
+                                        <th>تعداد(عدد)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    $number = 1;
+                                    ?>
+                                    @foreach($barn_temporaries as $item)
+                                        <tr>
+                                            <td>{{$number++}}</td>
+                                            <td>
+                                                @foreach($products as $product)
+                                                    @if($product->id == $item->product_id)
+                                                        {{$product->label}}
+                                                    @endif
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                @foreach($colors as $color)
+                                                    @if($color->id == $item->color_id)
+                                                        {{$color->name}}
+                                                    @endif
+                                                @endforeach
+                                            </td>
+                                            <td>{{$item->number}}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                                <br/>
+                                @if(!empty($sign__))
+                                    <img src="{{url($sign__->sign)}}" width="150">
+                                @else
+                                    <h6 style="text-align: center">امضاء مدیر انبار:</h6>
+                                @endif
+                            </th>
 
-                                    @if($invoice->id == $invoices_id->invoice_id)
+
+                        </tr>
+                        <tr>
+                            <th colspan="3" style="background-color: rgba(135,142,145,0.18)">
+                                    <span
+                                        style="text-align: center;font-size: 15px">اعلام وضعیت کیفی کالای مرجوعی (کنترل کیفیت)</span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="3">
+
+                                <table>
+                                    <thead style="background-color: rgba(135,142,145,0.18)">
+                                    <tr>
+                                        <th>ردیف</th>
+                                        <th>نام کالا</th>
+                                        <th>رنگ</th>
+                                        <th>تعداد کل</th>
+                                        <th>تعداد سالم</th>
+                                        <th>تعداد معیوب(مشتری)</th>
+                                        <th>تعداد معیوب(پولاد)</th>
+                                    </tr>
+                                    </thead>
+                                    @if(!empty($qc))
+                                        <tbody>
                                         <?php
-                                        $sum_invoice += $invoice->number_sell;
+                                        $number = 1;
                                         ?>
-                                        @foreach($users as $user)
-                                            @if($invoice->user_id == $user->id)
-                                                {{$user->name}}
-                                            @endif
+                                        @foreach($detail_return as $item)
+                                            <tr>
+                                                <td>{{$number++}}</td>
+                                                <td>
+                                                    @foreach($products as $product)
+                                                        @if($product->id == $item->product_id)
+                                                            {{$product->label}}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
+                                                <td>
+                                                    @foreach($colors as $color)
+                                                        @if($color->id == $item->color_id)
+                                                            {{$color->name}}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
+                                                <td>{{$item->number}}</td>
+                                                <td>{{$item->Healthy}}</td>
+                                                <td>{{$item->wastage}}</td>
+                                                <td>{{$item->wastagem}}</td>
+                                            </tr>
                                         @endforeach
+                                        </tbody>
                                     @endif
-                                @endforeach
+                                </table>
+                                <br/>
+
+                                @if(!empty($sign___))
+                                    <img src="{{url($sign___->sign)}}" width="150">
+                                @else
+                                    <h6 style="text-align: center">امضاء مدیر کنترل کیفیت:</h6>
+                                @endif
                             </th>
                         </tr>
+                        <tr>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th style="background-color: rgba(135,142,145,0.18)">
+                                        @if(!empty($sign_->statustwo))
+                                            <span
+                                                style="text-align: center;font-size: 15px">{{$admin->descriptiontwo}}</span>
+                                        @else
+                                            <span style="text-align: center;font-size: 15px">اعلام نظر قائم مقام مدیر عمل در شرکت پولاد</span>
+                                        @endif
+
+                                    </th>
+                                    <th colspan="3">
+                                        <br/>
+                                        @if(!empty($sign_->statustwo))
+                                            <img src="{{url($sign_->sign)}}" width="150">
+                                        @else
+                                            <h6 style="text-align: center">امضاء قائم مقام:</h6>
+                                        @endif
+
+                                    </th>
+                                </tr>
+                                </thead>
+                            </table>
+
+                        </tr>
+                        <tr>
+
+                        </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td>تاریخ خروج از انبار</td>
-                            <td>
-                                {{\Morilog\Jalali\Jalalian::forge($return->created_at)->format('Y/m/d')}}
-                            </td>
-                            <td>شماره فاکتور فروش</td>
-                            <td>
-
-
-                                @foreach($invoices_ids as $invoices_id)
-                                    @foreach($invoices as $invoice)
-                                        @if($invoice->id == $invoices_id->invoice_id)
-                                            {{$invoice->invoiceNumber}} -
-
-                                        @endif
-                                    @endforeach
-                                @endforeach
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>تعداد محصول فروخته شده</td>
-                            <td>{{$sum_invoice}}</td>
-                            <td>تعداد محصول مرجوع شده</td>
-                            <td>{{$sum}}</td>
-                        </tr>
-                        <tr>
-                            <td>کد شکایت مشتری مربوطه</td>
-                            <td>
-                                @if(!empty($complaints->code))
-                                    <a href="{{route('admin.Complaints.list.detail', $invoices_id->complaints_id)}}">{{$complaints->code}}</a>
-                                @endif
-                            </td>
-                            <td>هزینه حمل به عهده</td>
-                            <td>{{$return->Cost}}</td>
-                        </tr>
-                        <tr>
-                            <td>دلایل مشتری جهت عودت محصول</td>
-                            <td colspan="3">{{$return->Description_m}}</td>
-                        </tr>
-                        <tr>
-                            <td>دلایل واحد فروش جهت پذیرش</td>
-                            <td colspan="3">{{$return->Description_v}}</td>
-                        </tr>
-
-                        </tbody>
                     </table>
-                    <br/>
-                    <br/>
-                    @if(!empty($manager))
-                        <table>
-                            <thead>
-                            <tr>
-                                <th style="background-color: rgba(23,0,255,0.14)">
-                                                            <span
-                                                                style="text-align: center;font-size: 15px">اعلام نظر مدیر فروش</span>
-                                    <br/>
-                                    <div class="row">
-                                        <div class="col-sm-10">
 
-                                        </div>
-                                        <div class="col-sm-2">
 
-                                        </div>
-                                    </div>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-
-                        </table>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th width="250">توضیحات مدیر فروش</th>
-                                <th>{{$manager->description}}</th>
-                            </tr>
-                            </thead>
-                        </table>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th height="50" width="250">وضعیت</th>
-                                @if($manager->status == 1)
-                                    <th style="background-color: rgba(0,162,60,0.31)">
-                                        تایید
-                                    </th>
-
-                                @else
-                                    <th style="background-color: rgba(255,0,0,0.32)">
-                                        عدم تایید
-                                    </th>
-
-                                @endif
-                                    <th>امضاء مدیر فروش</th>
-                                    <th>
-                                        @foreach($users as $user)
-                                            @if($user->id == $manager->user_id)
-                                                @if(!empty($user->sign))
-                                                    <img src="{{url($user->sign)}}" width="100" class="user-image"
-                                                         alt="User Image">
-
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                    </th>
-                            </tr>
-                            </thead>
-                        </table>
-                    @endif
-                    <br/>
-                    <br/>
-                    @if(!empty($qc))
-                        <table>
-                            <thead>
-                            <tr>
-                                <th style="background-color: rgba(23,0,255,0.14)">
-                                                            <span
-                                                                style="text-align: center;font-size: 15px">اعلام نظر واحد کنترل کیفی</span>
-                                    <br/>
-                                    <div class="row">
-                                        <div class="col-sm-10">
-
-                                        </div>
-                                        <div class="col-sm-2">
-
-                                        </div>
-                                    </div>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-
-                        </table>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th height="50" width="250">تعداد محصول سالم</th>
-                                <th>
-                                    {{$Healthy}}
-                                </th>
-                                <th>تعداد محصول معیوب</th>
-                                <th>
-                                    {{$wastage}}
-                                </th>
-                            </tr>
-                            </thead>
-                        </table>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th height="50" width="250">وضعیت</th>
-                                @if($qc->status == 1)
-                                    <th style="background-color: rgba(0,162,60,0.31)">
-                                        تایید
-                                    </th>
-
-                                @else
-                                    <th style="background-color: rgba(255,0,0,0.32)">
-                                        عدم تایید
-                                    </th>
-
-                                @endif
-                                <th height="50" width="250">توضیحات تکمیلی</th>
-                                <th>
-                                    {{$qc->description}}
-                                </th>
-                                <th height="50" width="250">امضاء مدیر کنترل کیفیت</th>
-                                <th>
-                                    @foreach($users as $user)
-                                        @if($user->id == $qc->user_id)
-                                            @if(!empty($user->sign))
-                                                <img src="{{url($user->sign)}}" width="100" class="user-image"
-                                                     alt="User Image">
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                </th>
-                            </tr>
-                            </thead>
-                        </table>
-                    @endif
-                    <br/>
-                    <br/>
-                    @if(!empty($barn))
-                        <table>
-                            <thead>
-                            <tr>
-                                <th style="background-color: rgba(23,0,255,0.14)">
-                                                            <span
-                                                                style="text-align: center;font-size: 15px">اعلام نظر مسئول انبار</span>
-                                    <br/>
-                                    <div class="row">
-                                        <div class="col-sm-10">
-
-                                        </div>
-                                        <div class="col-sm-2">
-
-                                        </div>
-                                    </div>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-
-                        </table>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th width="250">توضیحات مسئول انبار در خصوص مرجوع بار</th>
-                                <th>{{$barn->description}}</th>
-                            </tr>
-                            </thead>
-                        </table>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th height="50" width="250">وضعیت</th>
-                                @if($barn->status == 1)
-                                    <th style="background-color: rgba(0,162,60,0.31)">
-                                        تایید
-                                    </th>
-
-                                @else
-                                    <th style="background-color: rgba(255,0,0,0.32)">
-                                        عدم تایید
-                                    </th>
-
-                                @endif
-                                <th>امضاء مسئول انبار</th>
-                                <th>
-                                    @foreach($users as $user)
-                                        @if($user->id == $barn->user_id)
-                                            @if(!empty($user->sign))
-                                                <img src="{{url($user->sign)}}" width="100" class="user-image"
-                                                     alt="User Image">
-
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                </th>
-                            </tr>
-                            </thead>
-                        </table>
-                    @endif
                     <br/>
                     <br/>
                     <a class="btn btn-primary" href="javascript:void(0)" id="printer">تهیه نسخه چاپی</a>

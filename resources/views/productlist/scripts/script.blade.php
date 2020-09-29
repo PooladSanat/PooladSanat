@@ -2,6 +2,11 @@
 <script src="{{asset('/public/js/a2.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/bower_components/jquery/dist/jquery.min.js')}}"></script>
 <script src="{{asset('/public/assets/select2.js')}}"></script>
+<script src="{{asset('/public/js/datatab.js')}}" type="text/javascript"></script>
+<script src="{{asset('/public/js/row.js')}}" type="text/javascript"></script>
+
+<link rel="stylesheet" href="{{asset('/public/css/kamadatepicker.min.css')}}">
+<script src="{{asset('/public/js/kamadatepicker.min.js')}}"></script>
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
     $(function () {
@@ -11,74 +16,66 @@
             }
         });
 
-        $('#sort').change(function () {
-            $('.data-table').DataTable().destroy();
-            var id = $(this).val();
-            $.ajax({
-                type: "GET",
-                url: "{{route('admin.product.list.sort')}}?id=" + id,
-                success: function (res) {
-                    if (res) {
-                        var table = $('.data-table').DataTable({
-                            processing: true,
-                            serverSide: true,
-                            retrieve: true,
-                            aaSorting: [],
-                            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
-                            },
-                            "bInfo": false,
-                            "paging": false,
-                            "bPaginate": false,
-                            "columnDefs": [
-                                {"orderable": false, "targets": 0},
-                            ],
-                            "order": [[ 6, "desc" ]],
-                            "language": {
-                                "search": "جستجو:",
-                                "lengthMenu": "نمایش _MENU_",
-                                "zeroRecords": "موردی یافت نشد!",
-                                "info": "نمایش _PAGE_ از _PAGES_",
-                                "infoEmpty": "موردی یافت نشد",
-                                "infoFiltered": "(جستجو از _MAX_ مورد)",
-                                "processing": "در حال پردازش اطلاعات"
-                            },
-                            ajax: "{{route('admin.product.list.sort')}}?id=" + id,
-                            columns: [
-                                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                                {data: 'product', name: 'product'},
-                                {data: 'color', name: 'color'},
-                                {data: 'number', name: 'number'},
-                                {data: 'date', name: 'date'},
-                                {data: 'datem', name: 'datem'},
-                                {data: 'action', name: 'action', orderable: false, searchable: false},
-                            ],
-                        });
-                        table.on('row-reorder', function (e, details) {
-                            if (details.length) {
-                                var rows = [];
-                                details.forEach(element => {
-                                    rows.push({
-                                        id: table.row(element.node).data().id,
-                                        position: element.newData
-                                    });
-                                });
 
-                                $.ajax({
-                                    method: 'POST',
-                                    url: "{{ route('admin.product.list.Soort') }}",
-                                    data: {rows, "_token": "{{ csrf_token() }}"}
-                                }).done(function () {
-                                    table.draw();
-                                });
-                            }
-                        });
-                    } else {
+        var table = $('.data-table').DataTable({
+            processing: true,
+            serverSide: true,
+            retrieve: true,
+            aaSorting: [],
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+            },
+            "bInfo": false,
+            "paging": false,
+            "bPaginate": false,
+            "columnDefs": [
+                {"orderable": false, "targets": 0},
+            ],
+            "order": [[7, "sdesc"]],
+            "language": {
+                "search": "جستجو:",
+                "lengthMenu": "نمایش _MENU_",
+                "zeroRecords": "موردی یافت نشد!",
+                "info": "نمایش _PAGE_ از _PAGES_",
+                "infoEmpty": "موردی یافت نشد",
+                "infoFiltered": "(جستجو از _MAX_ مورد)",
+                "processing": "در حال پردازش اطلاعات"
+            },
+            ajax: "{{route('admin.product.list.sort')}}",
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
+                {data: 'user', name: 'user'},
+                {data: 'product', name: 'product'},
+                {data: 'color', name: 'color'},
+                {data: 'number', name: 'number'},
+                {data: 'Priority', name: 'Priority'},
+                {data: 'date', name: 'date'},
+                {data: 'datem', name: 'datem'},
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+            ],
+            rowsGroup:
+                [
+                    1
+                ],
+        });
 
-                    }
-                }
-
-            });
+        table.on('row-reorder', function (e, details) {
+            if (details.length) {
+                var rows = [];
+                details.forEach(element => {
+                    rows.push({
+                        id: table.row(element.node).data().id,
+                        position: element.newData
+                    });
+                });
+                $.ajax({
+                    method: 'POST',
+                    url: "{{ route('admin.product.list.Soort') }}",
+                    data: {rows, "_token": "{{ csrf_token() }}"}
+                }).done(function () {
+                    table.draw();
+                });
+            }
         });
 
         $('#createNewProduct').click(function () {
@@ -224,7 +221,7 @@
         })
     });
 
-    $('#manufacturing').addClass('active');
+    $('#barnam').addClass('active');
 
     $('#f').select2({
         width: '100%',
@@ -237,3 +234,22 @@
     });
 
 </script>
+
+<script>
+    kamaDatepicker('date',
+        {
+            buttonsColor: "red",
+            forceFarsiDigits: false,
+            sync: true,
+            gotoToday: true,
+            highlightSelectedDay: true,
+            markHolidays: true,
+            markToday: true,
+            previousButtonIcon: "fa fa-arrow-circle-left",
+            nextButtonIcon: "fa fa-arrow-circle-right",
+
+        });
+</script>
+
+
+

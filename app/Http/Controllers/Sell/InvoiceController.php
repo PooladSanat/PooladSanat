@@ -211,7 +211,7 @@ class InvoiceController extends Controller
                         ->whereBetween('date', array($request->from_date, $request->to_date))
                         ->orderBy('create', 'DESC')->get();
                 } else {
-                    $data = Invoice::onlyTrashed() ->orderBy('create', 'DESC')->get();
+                    $data = Invoice::onlyTrashed()->orderBy('create', 'DESC')->get();
                 }
                 return Datatables::of($data)
                     ->addIndexColumn()
@@ -579,7 +579,6 @@ class InvoiceController extends Controller
             ->where('invoice_id', $id->id)
             ->sum('taxAmount');
 
-
         return view('sell.detail', compact('details', 'id',
             'colors', 'customers', 'users', 'products', 'weight', 'taxAmount'));
 
@@ -746,6 +745,17 @@ class InvoiceController extends Controller
         }
         return Response::json(['errors' => $validator->errors()]);
 
+
+    }
+
+    public function ToList(Request $request)
+    {
+
+        $invoice_product = DB::table('invoice_product')
+            ->whereIn('id', $request->id)
+            ->get();
+
+        return response()->json(['details' => $invoice_product]);
 
     }
 
@@ -937,6 +947,37 @@ class InvoiceController extends Controller
 
         $product = \DB::table('customer_history_payment')->where('customer_id', $customer_id->customer_id)->first();
         return response()->json($product);
+
+    }
+
+    public function savetolist(Request $request)
+    {
+        $created_at = Carbon::now();
+
+        $count = count($request->numff);
+        for ($i = 0; $i < $count; $i++) {
+            $invoice_product = DB::table('invoice_product')
+                ->where('id', $request->numff[$i])
+                ->first();
+            $user = DB::table('invoices')
+                ->where('id', $invoice_product->invoice_id)
+                ->first();
+
+            DB::table('detail_invoice_list')->insert([
+                'invoice_id' => $invoice_product->invoice_id,
+                'user_id' => $user->user_id,
+                'invoice_product' => $invoice_product->id,
+                'number' => $request->sum_ss[$i],
+                'date' => $request->date_mm[$i],
+                'Priority' => $request->olavitt[$i],
+                'product_id' => $invoice_product->product_id,
+                'color_id' => $invoice_product->color_id,
+                'created_at' => $created_at,
+            ]);
+
+        }
+
+        return response()->json(['success' => 'success']);
 
     }
 
@@ -1281,7 +1322,6 @@ class InvoiceController extends Controller
             ));
 
     }
-
 
     public function PrintDetaill(Invoice $id)
     {

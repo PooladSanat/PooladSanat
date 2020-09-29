@@ -70,7 +70,6 @@ class ProductQueueController extends Controller
     {
         if ($request->ajax()) {
             $data = \DB::table('detail_invoice_list')
-                ->where('product_id', $request->id)
                 ->orderBy('Order', 'ASC')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -78,12 +77,16 @@ class ProductQueueController extends Controller
                     $product = Product::where('id', $row->product_id)->first();
                     return $product->label;
                 })
+                ->addColumn('user', function ($row) {
+                    $product = \App\User::where('id', $row->user_id)->first();
+                    return $product->name;
+                })
                 ->addColumn('color', function ($row) {
                     $color_id = \DB::table('invoice_product')
                         ->where('id', $row->invoice_product)
                         ->pluck('color_id');
                     $color = Color::where('id', $color_id)->first();
-                    return $color->name . " - " . $color->manufacturer;
+                    return $color->name;
                 })
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
@@ -108,6 +111,7 @@ class ProductQueueController extends Controller
 
     public function Soort(Request $request)
     {
+
         foreach ($request->input('rows', []) as $row) {
             $data = \DB::table('detail_invoice_list')
                 ->where('id', $row['id'])->update([
@@ -222,7 +226,7 @@ class ProductQueueController extends Controller
         $btn = '<a href="' . route('admin.product.list.wizard', $row->id) . '" data-toggle="tooltip"
                       data-id="' . $row->id . '" data-original-title="ویرایش"
                       >
-                        <i class="fa fa-tasks fa-lg" title="برنامه ریزی"></i>
+                        <i class="fa fa-tasks fa-lg" title="ثبت اطلاعات تولید"></i>
                        </a>&nbsp;&nbsp;';
 
         $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"

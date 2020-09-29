@@ -14,6 +14,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         load_data();
 
         function load_data(customer_id = '', indate = '', todate = '') {
@@ -91,6 +92,7 @@
                 $('#pricesum').val(data.sum);
                 $('#pricesuumm').val(data.summ);
                 $('#customer_ideeeer').val(data.name_customer);
+                $('#fac').val(data.pack);
 
 
                 var table1 = $('.gfgf').DataTable({
@@ -98,6 +100,7 @@
                     serverSide: true,
                     "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                         $('td:eq(0)', nRow).css('background-color', '#e8ecff');
+                        $('#sortsort').text('جزییات صورتحساب' + " " + aData.sort);
                     },
                     "bInfo": false,
                     "paging": false,
@@ -143,7 +146,7 @@
         });
 
         $('body').on('click', '.detail-admin', function () {
-            var id_id = $(this).data('id');
+            id_id = $(this).data('id');
             $.get("{{ route('admin.payment.updatee') }}" + '/' + id_id, function (data) {
                 $('#ajaxadmin').modal('show');
                 $('#customer_iderr').val(id_id);
@@ -166,7 +169,86 @@
                 $('#p11').val(data.detail_customersa);
                 $('#m1').text(data.baghi);
                 $('#f1').text(data.final);
-            })
+
+            });
+
+            function formatNumber(num) {
+                return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+            }
+
+            $('#statussort').DataTable().destroy();
+            $('.statussort').DataTable({
+                processing: true,
+                serverSide: true,
+                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                    if (parseInt(aData.s) > 0) {
+                        $('td:eq(5)', nRow).css('background-color', 'rgba(0,183,255,0.37)');
+                    } else if (parseInt(aData.s) < 0) {
+                        $('td:eq(5)', nRow).css('background-color', 'rgba(255,0,0,0.4)');
+                    } else {
+                        $('td:eq(5)', nRow).css('background-color', '#f8f4ff');
+                    }
+
+                    $("#aaaaa").text(formatNumber(aData.a)).css('background-color', 'rgba(255,0,0,0.4)');
+                    $("#bbbbb").text(formatNumber(aData.b)).css('background-color', 'rgba(0,183,255,0.37)');
+                    ;
+                    var ff = aData.b - aData.a;
+                    if (ff > 0) {
+                        $("#cccc").text(formatNumber(Math.abs(ff))).css('background-color', 'rgba(0,183,255,0.37)');
+
+                    } else if (ff < 0) {
+                        $("#cccc").text(formatNumber(Math.abs(ff))).css('background-color', 'rgba(255,0,0,0.4)');
+
+                    } else if (ff == 0) {
+                        $("#cccc").text(formatNumber(Math.abs(ff))).css('background-color', '#f8f4ff');
+
+                    }
+                    if (aData.sort == 0) {
+                        $('#sssss').text(formatNumber(aData.sort)).css('background-color', '#f8f4ff');
+
+                    } else {
+                        $('#sssss').text(formatNumber(aData.sort)).css('background-color', 'rgba(255,0,0,0.4)');
+
+                    }
+                    if (ff - aData.sort < 0) {
+                        $('#sdsdsdsds').text(formatNumber(Math.abs(ff - aData.sort))).css('background-color', 'rgba(255,0,0,0.4)');
+
+                    } else if (ff - aData.sort > 0) {
+                        $('#sdsdsdsds').text(formatNumber(Math.abs(ff - aData.sort))).css('background-color', 'rgba(0,183,255,0.37)');
+
+                    } else if (ff - aData.sort == 0) {
+                        $('#sdsdsdsds').text(formatNumber(Math.abs(ff - aData.sort))).css('background-color', '#f8f4ff');
+                    }
+
+                },
+                "ordering": false,
+                "paging": false,
+                "info": false,
+                "language": {
+                    "search": "جستجو:",
+                    "lengthMenu": "نمایش _MENU_",
+                    "zeroRecords": "موردی یافت نشد!",
+                    "info": "نمایش _PAGE_ از _PAGES_",
+                    "infoEmpty": "موردی یافت نشد",
+                    "infoFiltered": "(جستجو از _MAX_ مورد)",
+                    "processing": "در حال پردازش اطلاعات"
+                },
+                ajax: {
+                    url: "{{ route('admin.payment.list.detail.statussort') }}",
+                    data: {
+                        detail_factor: id_id,
+                    },
+                },
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
+                    {data: 'id', name: 'id'},
+                    {data: 'date', name: 'date'},
+                    {data: 'price', name: 'price'},
+                    {data: 'payment', name: 'payment'},
+                    {data: 'ss', name: 'ss'},
+                ]
+            });
+
         });
 
         $('#admin').click(function (e) {
@@ -328,7 +410,6 @@
 
     });
 
-
     $('body').on('click', '.detail-gate-admin', function () {
         var id = $(this).data("id");
         Swal.fire({
@@ -434,6 +515,7 @@
             $('#daatee').val(data.date);
             $('#name_userr').val(data.name_user);
             $('#prricee').val(data.price);
+            $('#descriptionnnmnmn').val(data.descriptionn);
         })
     });
 
@@ -445,6 +527,9 @@
         $('.factor').DataTable({
             processing: true,
             serverSide: true,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('#capsort').text('جزییات صورتحساب' + " " + aData.sort);
+            },
             "ordering": false,
             "paging": false,
             "info": false,

@@ -7,7 +7,7 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption">
-                        صف تولید
+                        درخواست تولید
                     </div>
 
                     <div class="tools"></div>
@@ -16,35 +16,17 @@
 
 
                 <div class="portlet-body">
-                    <div class="row">
-                        <div class="col-md-4">
-
-                        </div>
-                        <div class="col-md-3">
-                            <label>انتخاب محصول
-                            </label>
-                            <select id="sort" name="sort" class="form-control">
-                                <option>انتخاب کنید</option>
-                                @foreach($products as $productt)
-                                    @foreach($product as $produc)
-                                        @if($productt->id == $produc->product_id)
-                                            <option value="{{$productt->id}}">{{$productt->label}}</option>
-                                        @endif
-                                    @endforeach
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <br/>
                     <table class="table table-striped table-bordered data-table" id="data-table">
                         <thead style="background-color: #e8ecff">
                         <tr>
                             <th style="width: 1px">ردیف</th>
+                            <th>کارشناس فروش</th>
                             <th>محصول</th>
                             <th>رنگ</th>
                             <th>تعداد(عدد)</th>
-                            <th>تاریخ مورد نظر مشتری</th>
-                            <th>تاریخ مورد نظر برنامه ریز</th>
+                            <th>اولویت</th>
+                            <th>تاریخ درخواستی کارشناس</th>
+                            <th>تاریخ اتمام تولید</th>
                             <th>عملیات</th>
                         </tr>
                         </thead>

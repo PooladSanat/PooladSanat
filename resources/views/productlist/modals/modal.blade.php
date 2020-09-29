@@ -117,7 +117,7 @@
                                                 style="color: red"
                                                 class="required-mark">*</span>
                                         </label>
-                                        <input type="text" id="date" name="date" class="form-control example1"
+                                        <input type="text" id="date" name="date" class="form-control"
                                                required>
 
                                     </div>

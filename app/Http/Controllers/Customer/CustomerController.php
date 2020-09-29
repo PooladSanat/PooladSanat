@@ -214,15 +214,22 @@ class CustomerController extends Controller
 
                 })
                 ->addColumn('price', function ($row) {
-                    $detail = \DB::table('customer_accounts')
+                    $factors = \DB::table('factors')
                         ->where('customer_id', $row->id)
-                        ->first();
-                    if (!empty($detail)) {
-                        return number_format($detail->creditor);
-                    } else {
-                        return 0;
-                    }
-
+                        ->sum('sum');
+                    $detail_customer_payment = \DB::table('detail_customer_payment')
+                        ->where('customer_id', $row->id)
+                        ->sum('price');
+                    return $detail_customer_payment - $factors;
+                })
+                ->addColumn('pricee', function ($row) {
+                    $factors = \DB::table('factors')
+                        ->where('customer_id', $row->id)
+                        ->sum('sum');
+                    $detail_customer_payment = \DB::table('detail_customer_payment')
+                        ->where('customer_id', $row->id)
+                        ->sum('price');
+                    return number_format(abs($detail_customer_payment - $factors));
                 })
                 ->rawColumns([])
                 ->make(true);
@@ -235,14 +242,29 @@ class CustomerController extends Controller
     public function traconesh(Request $request)
     {
 
+
         if ($request->ajax()) {
             $data = \DB::table('View_Transaction')
                 ->where('date', '!=', "1399")
                 ->where('customer_id', $request->customer_id)
+                ->orderBy('date', 'DESC')
                 ->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('date', function ($row) {
+                    $detail_customer_payment = \DB::table('detail_customer_payment')
+                        ->where('descriptionn', $row->descriptionn)
+                        ->where('customer_id', $row->customer_id)
+                        ->where('date', $row->date)
+                        ->first();
+                    if (!empty($detail_customer_payment)) {
+                        return $detail_customer_payment->datee;
+
+                    } else {
+                        return $row->date;
+                    }
+                })
                 ->addColumn('price', function ($row) {
                     return number_format($row->price);
                 })
@@ -270,6 +292,7 @@ class CustomerController extends Controller
             $data = \DB::table('invoices')
                 ->whereNull('dele')
                 ->where('customer_id', $request->customer_id)
+                ->orderBy('date', 'DESC')
                 ->get();
 
             return DataTables::of($data)
@@ -299,6 +322,7 @@ class CustomerController extends Controller
             $data = \DB::table('detail_customer_payment')
                 ->where('date', '!=', '1399')
                 ->where('customer_id', $request->customer_id)
+                ->orderBy('date', 'DESC')
                 ->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -327,9 +351,9 @@ class CustomerController extends Controller
                     return Jalalian::forge($row->created_at)->format('Y/m/d');
                 })
                 ->addColumn('status', function ($row) {
-                    if ($row->type != 2){
+                    if ($row->type != 2) {
                         return 'وصول شده';
-                    }else{
+                    } else {
                         if ($row->status == 1) {
                             return 'وصول نشده';
                         } elseif ($row->status == 2) {
@@ -421,15 +445,19 @@ class CustomerController extends Controller
                     'phone_personel.required' => 'لطفا شماره تماس مشتری را وارد کنید',
                     'phone_personel.integer' => 'شماره تلفن مشتری باید از نوع عددی باشد',
                 ]);
-        if ($request->hasFile('certificate_documents_company')) {
-            $file = $request->file('certificate_documents_company');
-            $name = time() . '.' . $file->getClientOriginalExtension();
-            $certificate_documents_company = $request->file('certificate_documents_company')
-                ->move('public/documents/certificate/', $name);
+        if (!empty($request->certificate_documents_company)) {
+            if ($request->hasFile('certificate_documents_company')) {
+                $file = $request->file('certificate_documents_company');
+                $name = time() . '.' . $file->getClientOriginalExtension();
+                $certificate_documents_company = $request->file('certificate_documents_company')
+                    ->move('public/documents/certificate/', $name);
+            }
         } else {
             $certificate_documents_company = null;
 
         }
+
+
         if ($request->hasFile('cart_documents_company')) {
             $file = $request->file('cart_documents_company');
             $name = time() . '.' . $file->getClientOriginalExtension();
@@ -646,6 +674,7 @@ class CustomerController extends Controller
         $document = \DB::table('customer_documents')
             ->where('customer_id', $request->id)
             ->first();
+
         $types = \App\TypeCustomer::where('id', $request->type)->get();
         foreach ($types as $type)
             if ($type->type == 1) {
@@ -708,14 +737,18 @@ class CustomerController extends Controller
                     ]);
         if ($type->type == 1) {
 
+
             if ($request->hasFile('certificate_documents_company')) {
                 $file = $request->file('certificate_documents_company');
                 $name = time() . '.' . $file->getClientOriginalExtension();
                 $certificate_documents_company = $request->file('certificate_documents_company')
                     ->move('public/documents/certificate/', $name);
             } else {
-                $certificate_documents_company = $document->certificate_documents_company;
-
+                if (!empty($document)) {
+                    $certificate_documents_company = $document->certificate_documents_company;
+                } else {
+                    $certificate_documents_company = null;
+                }
             }
             if ($request->hasFile('cart_documents_company')) {
                 $file = $request->file('cart_documents_company');
@@ -723,7 +756,14 @@ class CustomerController extends Controller
                 $cart_documents_company = $request->file('cart_documents_company')
                     ->move('public/documents/cart/', $name);
             } else {
-                $cart_documents_company = $document->cart_documents_company;
+
+                if (!empty($document)) {
+                    $cart_documents_company = $document->cart_documents_company;
+                } else {
+                    $cart_documents_company = null;
+                }
+
+
             }
             if ($request->hasFile('activity_documents_company')) {
                 $file = $request->file('activity_documents_company');
@@ -731,7 +771,12 @@ class CustomerController extends Controller
                 $activity_documents_company = $request->file('activity_documents_company')
                     ->move('public/documents/activity/', $name);
             } else {
-                $activity_documents_company = $document->activity_documents_company;
+                if (!empty($document)) {
+                    $activity_documents_company = $document->activity_documents_company;
+                } else {
+                    $activity_documents_company = null;
+                }
+
 
             }
             if ($request->hasFile('store_documents_company')) {
@@ -740,7 +785,12 @@ class CustomerController extends Controller
                 $store_documents_company = $request->file('store_documents_company')
                     ->move('public/documents/store/', $name);
             } else {
-                $store_documents_company = $document->store_documents_company;
+                if (!empty($document)) {
+                    $store_documents_company = $document->store_documents_company;
+                } else {
+                    $store_documents_company = null;
+                }
+
 
             }
             if ($request->hasFile('ownership_documents_company')) {
@@ -749,7 +799,12 @@ class CustomerController extends Controller
                 $ownership_documents_company = $request->file('ownership_documents_company')
                     ->move('public/documents/ownership/', $name);
             } else {
-                $ownership_documents_company = $document->ownership_documents_company;
+                if (!empty($document)) {
+                    $ownership_documents_company = $document->ownership_documents_company;
+                } else {
+                    $ownership_documents_company = null;
+                }
+
 
             }
             if ($request->hasFile('established_documents_company')) {
@@ -758,7 +813,12 @@ class CustomerController extends Controller
                 $established_documents_company = $request->file('established_documents_company')
                     ->move('public/documents/established/', $name);
             } else {
-                $established_documents_company = $document->established_documents_company;
+                if (!empty($document)) {
+                    $established_documents_company = $document->established_documents_company;
+                } else {
+                    $established_documents_company = null;
+                }
+
 
             }
             if ($request->hasFile('sstore_documents_company')) {
@@ -767,7 +827,12 @@ class CustomerController extends Controller
                 $sstore_documents_company = $request->file('sstore_documents_company')
                     ->move('public/documents/sstore/', $name);
             } else {
-                $sstore_documents_company = $document->sstore_documents_company;
+                if (!empty($document)) {
+                    $sstore_documents_company = $document->sstore_documents_company;
+                } else {
+                    $sstore_documents_company = null;
+                }
+
 
             }
             if ($request->hasFile('pstore_documents_company')) {
@@ -776,7 +841,12 @@ class CustomerController extends Controller
                 $pstore_documents_company = $request->file('pstore_documents_company')
                     ->move('public/documents/pstore/', $name);
             } else {
-                $pstore_documents_company = $document->pstore_documents_company;
+                if (!empty($document)) {
+                    $pstore_documents_company = $document->pstore_documents_company;
+                } else {
+                    $pstore_documents_company = null;
+                }
+
 
             }
             if ($request->hasFile('final_documents_company')) {
@@ -785,7 +855,12 @@ class CustomerController extends Controller
                 $final_documents_company = $request->file('final_documents_company')
                     ->move('public/documents/final/', $name);
             } else {
-                $final_documents_company = $document->final_documents_company;
+                if (!empty($document)) {
+                    $final_documents_company = $document->final_documents_company;
+                } else {
+                    $final_documents_company = null;
+                }
+
 
             }
         }
@@ -804,9 +879,45 @@ class CustomerController extends Controller
                         'expert' => $request->expert,
                         'description' => $request->description,
                     ]);
+
                 if ($type->type == 1) {
-                    \DB::table('customer_company')
-                        ->where('customer_id', $request->id)->update([
+                    $customer_company = \DB::table('customer_company')
+                        ->where('customer_id', $request->id)->first();
+
+                    $customer_work = \DB::table('customer_work')
+                        ->where('customer_id', $request->id)->first();
+
+                    $customer_bank = \DB::table('customer_bank')
+                        ->where('customer_id', $request->id)->first();
+
+                    $customer_securing = \DB::table('customer_securing')
+                        ->where('customer_id', $request->id)->first();
+
+                    $customer_documents = \DB::table('customer_documents')
+                        ->where('customer_id', $request->id)->first();
+
+                    $company_personal = \DB::table('company_personal')
+                        ->where('customer_id', $request->id)->first();
+
+
+                    if (!empty($customer_company)) {
+                        \DB::table('customer_company')
+                            ->where('customer_id', $request->id)->update([
+                                'code_company' => $request->code_company,
+                                'Established_company' => $request->Established_company,
+                                'tel_company' => $request->tel_company,
+                                'fax_company' => $request->fax_company,
+                                'adders_company' => $request->adders_company,
+                                'post_company' => $request->post_company,
+                                'phone_company' => $request->phone_company,
+                                'home' => $request->adders_home,
+                                'email_company' => $request->email_company,
+                                'national_company' => $request->national_company,
+                                'date_birth' => $request->date_birth,
+                            ]);
+                    } else {
+                        \DB::table('customer_company')->insert([
+                            'customer_id' => $request->id,
                             'code_company' => $request->code_company,
                             'Established_company' => $request->Established_company,
                             'tel_company' => $request->tel_company,
@@ -819,94 +930,198 @@ class CustomerController extends Controller
                             'national_company' => $request->national_company,
                             'date_birth' => $request->date_birth,
                         ]);
-                    \DB::table('customer_work')
-                        ->where('customer_id', $request->id)->update([
-                            'name_work_company' => $request->name_work_company,
-                            'date_work_company' => $request->date_work_company,
-                            'tel_work_company' => $request->tel_work_company,
-                            'fax_work_company' => $request->fax_work_company,
-                            'panel_work_company' => $request->panel_work_company,
-                            'dimensions_work_company' => $request->dimensions_work_company,
-                            'post_work_company' => $request->post_work_company,
-                            'telstore_work_company' => $request->telstore_work_company,
-                            'status_work_company' => $request->status_work_company,
-                            'type_work_company' => $request->type_work_company,
-                            'owner_work_company' => $request->owner_work_company,
-                            'dec_work_company' => $request->dec_work_company,
-                            'license_work_company' => $request->license_work_company,
-                            'numlicense_work_company' => $request->numlicense_work_company,
-                            'credibilitylicense_work_company' => $request->credibilitylicense_work_company,
-                            'store_work_company' => $request->store_work_company,
-                            'dimensionsstore_work_company' => $request->dimensionsstore_work_company,
-                            'activity_work_company' => $request->activity_work_company,
-                            'oactivity_work_company' => $request->oactivity_work_company,
-                            'addersstore_work_company' => $request->addersstore_work_company,
+                    }
 
-                        ]);
-                    \DB::table('customer_bank')
-                        ->where('customer_id', $request->id)
-                        ->delete();
-                    try {
-                        $bank = count(collect($request)->get('name_bank_company'));
-                        for ($i = 0; $i <= $bank; $i++) {
-                            \DB::table('customer_bank')->insert([
-                                'customer_id' => $request->id,
-                                'name_bank_company' => $request->get('name_bank_company')[$i],
-                                'branch_bank_company' => $request->get('branch_bank_company')[$i],
-                                'account_bank_company' => $request->get('account_bank_company')[$i],
-                                'date_bank_company' => $request->get('date_bank_company')[$i],
+                    if (!empty($customer_work)) {
+                        \DB::table('customer_work')
+                            ->where('customer_id', $request->id)->update([
+                                'name_work_company' => $request->name_work_company,
+                                'date_work_company' => $request->date_work_company,
+                                'tel_work_company' => $request->tel_work_company,
+                                'fax_work_company' => $request->fax_work_company,
+                                'panel_work_company' => $request->panel_work_company,
+                                'dimensions_work_company' => $request->dimensions_work_company,
+                                'post_work_company' => $request->post_work_company,
+                                'telstore_work_company' => $request->telstore_work_company,
+                                'status_work_company' => $request->status_work_company,
+                                'type_work_company' => $request->type_work_company,
+                                'owner_work_company' => $request->owner_work_company,
+                                'dec_work_company' => $request->dec_work_company,
+                                'license_work_company' => $request->license_work_company,
+                                'numlicense_work_company' => $request->numlicense_work_company,
+                                'credibilitylicense_work_company' => $request->credibilitylicense_work_company,
+                                'store_work_company' => $request->store_work_company,
+                                'dimensionsstore_work_company' => $request->dimensionsstore_work_company,
+                                'activity_work_company' => $request->activity_work_company,
+                                'oactivity_work_company' => $request->oactivity_work_company,
+                                'addersstore_work_company' => $request->addersstore_work_company,
+
                             ]);
-                        }
-                    } catch (\Exception $e) {
+                    } else {
+                        \DB::table('customer_work')
+                            ->insert([
+                                'customer_id' => $request->id,
+                                'name_work_company' => $request->name_work_company,
+                                'date_work_company' => $request->date_work_company,
+                                'tel_work_company' => $request->tel_work_company,
+                                'fax_work_company' => $request->fax_work_company,
+                                'panel_work_company' => $request->panel_work_company,
+                                'dimensions_work_company' => $request->dimensions_work_company,
+                                'post_work_company' => $request->post_work_company,
+                                'telstore_work_company' => $request->telstore_work_company,
+                                'status_work_company' => $request->status_work_company,
+                                'type_work_company' => $request->type_work_company,
+                                'owner_work_company' => $request->owner_work_company,
+                                'dec_work_company' => $request->dec_work_company,
+                                'license_work_company' => $request->license_work_company,
+                                'numlicense_work_company' => $request->numlicense_work_company,
+                                'credibilitylicense_work_company' => $request->credibilitylicense_work_company,
+                                'store_work_company' => $request->store_work_company,
+                                'dimensionsstore_work_company' => $request->dimensionsstore_work_company,
+                                'activity_work_company' => $request->activity_work_company,
+                                'oactivity_work_company' => $request->oactivity_work_company,
+                                'addersstore_work_company' => $request->addersstore_work_company,
+
+                            ]);
                     }
-                    \DB::table('customer_securing')
-                        ->where('customer_id', $request->id)
-                        ->delete();
-                    try {
-                        $securing = count(collect($request)->get('name_securing_company'));
-                        for ($i = 0; $i <= $securing; $i++) {
-                            \DB::table('customer_securing')->insert([
-                                'customer_id' => $request->id,
-                                'name_securing_company' => $request->get('name_securing_company')[$i],
-                                'date_securing_company' => $request->get('date_securing_company')[$i],
-                            ]);
+
+
+                    if (!empty($customer_bank)) {
+                        \DB::table('customer_bank')
+                            ->where('customer_id', $request->id)
+                            ->delete();
+                        try {
+                            $bank = count(collect($request)->get('name_bank_company'));
+                            for ($i = 0; $i <= $bank; $i++) {
+                                \DB::table('customer_bank')->insert([
+                                    'customer_id' => $request->id,
+                                    'name_bank_company' => $request->get('name_bank_company')[$i],
+                                    'branch_bank_company' => $request->get('branch_bank_company')[$i],
+                                    'account_bank_company' => $request->get('account_bank_company')[$i],
+                                    'date_bank_company' => $request->get('date_bank_company')[$i],
+                                ]);
+                            }
+                        } catch (\Exception $e) {
                         }
-                    } catch (\Exception $e) {
+                    } else {
+                        try {
+                            $bank = count(collect($request)->get('name_bank_company'));
+                            for ($i = 0; $i <= $bank; $i++) {
+                                \DB::table('customer_bank')->insert([
+                                    'customer_id' => $request->id,
+                                    'name_bank_company' => $request->get('name_bank_company')[$i],
+                                    'branch_bank_company' => $request->get('branch_bank_company')[$i],
+                                    'account_bank_company' => $request->get('account_bank_company')[$i],
+                                    'date_bank_company' => $request->get('date_bank_company')[$i],
+                                ]);
+                            }
+                        } catch (\Exception $e) {
+                        }
                     }
-                    \DB::table('customer_documents')
-                        ->where('customer_id', $request->id)
-                        ->update([
-                            'certificate_documents_company' => $certificate_documents_company,
-                            'cart_documents_company' => $cart_documents_company,
-                            'activity_documents_company' => $activity_documents_company,
-                            'store_documents_company' => $store_documents_company,
-                            'ownership_documents_company' => $ownership_documents_company,
-                            'established_documents_company' => $established_documents_company,
-                            'sstore_documents_company' => $sstore_documents_company,
-                            'pstore_documents_company' => $pstore_documents_company,
-                            'final_documents_company' => $final_documents_company,
-                        ]);
-                    \DB::table('company_personal')
-                        ->where('customer_id', $request->id)
-                        ->delete();
-                    try {
-                        $size = count(collect($request)->get('per_side_company'));
-                        for ($i = 0; $i <= $size; $i++) {
-                            \DB::table('company_personal')->insert([
-                                'customer_id' => $request->id,
-                                'per_side_company' => $request->get('per_side_company')[$i],
-                                'per_sex_company' => $request->get('per_sex_company')[$i],
-                                'per_title_company' => $request->get('per_title_company')[$i],
-                                'per_name_company' => $request->get('per_name_company')[$i],
-                                'per_phone_company' => $request->get('per_phone_company')[$i],
-                                'per_inside_company' => $request->get('per_inside_company')[$i],
-                                'per_email_company' => $request->get('per_email_company')[$i],
-                                'per_tel_company_company' => $request->get('per_tel_company_company')[$i],
-                            ]);
+
+                    if (!empty($customer_securing)) {
+                        \DB::table('customer_securing')
+                            ->where('customer_id', $request->id)
+                            ->delete();
+                        try {
+                            $securing = count(collect($request)->get('name_securing_company'));
+                            for ($i = 0; $i <= $securing; $i++) {
+                                \DB::table('customer_securing')->insert([
+                                    'customer_id' => $request->id,
+                                    'name_securing_company' => $request->get('name_securing_company')[$i],
+                                    'date_securing_company' => $request->get('date_securing_company')[$i],
+                                ]);
+                            }
+                        } catch (\Exception $e) {
                         }
-                        return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
-                    } catch (\Exception $e) {
-                        return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
+                    } else {
+                        try {
+                            $securing = count(collect($request)->get('name_securing_company'));
+                            for ($i = 0; $i <= $securing; $i++) {
+                                \DB::table('customer_securing')->insert([
+                                    'customer_id' => $request->id,
+                                    'name_securing_company' => $request->get('name_securing_company')[$i],
+                                    'date_securing_company' => $request->get('date_securing_company')[$i],
+                                ]);
+                            }
+                        } catch (\Exception $e) {
+                        }
+                    }
+
+                    if (!empty($customer_documents)) {
+                        \DB::table('customer_documents')
+                            ->where('customer_id', $request->id)
+                            ->update([
+                                'certificate_documents_company' => $certificate_documents_company,
+                                'cart_documents_company' => $cart_documents_company,
+                                'activity_documents_company' => $activity_documents_company,
+                                'store_documents_company' => $store_documents_company,
+                                'ownership_documents_company' => $ownership_documents_company,
+                                'established_documents_company' => $established_documents_company,
+                                'sstore_documents_company' => $sstore_documents_company,
+                                'pstore_documents_company' => $pstore_documents_company,
+                                'final_documents_company' => $final_documents_company,
+                            ]);
+                    } else {
+                        \DB::table('customer_documents')
+                            ->insert([
+                                'customer_id' => $request->id,
+                                'certificate_documents_company' => $certificate_documents_company,
+                                'cart_documents_company' => $cart_documents_company,
+                                'activity_documents_company' => $activity_documents_company,
+                                'store_documents_company' => $store_documents_company,
+                                'ownership_documents_company' => $ownership_documents_company,
+                                'established_documents_company' => $established_documents_company,
+                                'sstore_documents_company' => $sstore_documents_company,
+                                'pstore_documents_company' => $pstore_documents_company,
+                                'final_documents_company' => $final_documents_company,
+                            ]);
+                    }
+
+                    if (!empty($company_personal)) {
+                        \DB::table('company_personal')
+                            ->where('customer_id', $request->id)
+                            ->delete();
+                        try {
+                            $size = count(collect($request)->get('per_side_company'));
+                            for ($i = 0; $i <= $size; $i++) {
+                                \DB::table('company_personal')->insert([
+                                    'customer_id' => $request->id,
+                                    'per_side_company' => $request->get('per_side_company')[$i],
+                                    'per_sex_company' => $request->get('per_sex_company')[$i],
+                                    'per_title_company' => $request->get('per_title_company')[$i],
+                                    'per_name_company' => $request->get('per_name_company')[$i],
+                                    'per_phone_company' => $request->get('per_phone_company')[$i],
+                                    'per_inside_company' => $request->get('per_inside_company')[$i],
+                                    'per_email_company' => $request->get('per_email_company')[$i],
+                                    'per_tel_company_company' => $request->get('per_tel_company_company')[$i],
+                                ]);
+                            }
+                            return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
+                        } catch (\Exception $e) {
+                            return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
+                        }
+
+                    } else {
+                        try {
+                            $size = count(collect($request)->get('per_side_company'));
+                            for ($i = 0; $i <= $size; $i++) {
+                                \DB::table('company_personal')->insert([
+                                    'customer_id' => $request->id,
+                                    'per_side_company' => $request->get('per_side_company')[$i],
+                                    'per_sex_company' => $request->get('per_sex_company')[$i],
+                                    'per_title_company' => $request->get('per_title_company')[$i],
+                                    'per_name_company' => $request->get('per_name_company')[$i],
+                                    'per_phone_company' => $request->get('per_phone_company')[$i],
+                                    'per_inside_company' => $request->get('per_inside_company')[$i],
+                                    'per_email_company' => $request->get('per_email_company')[$i],
+                                    'per_tel_company_company' => $request->get('per_tel_company_company')[$i],
+                                ]);
+                            }
+                            return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
+                        } catch (\Exception $e) {
+                            return response()->json(['success' => 'مشخصات مشتری با موفقیت در سیستم ثبت شد']);
+                        }
                     }
                 } else
                     \DB::table('customer_personal')

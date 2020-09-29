@@ -150,6 +150,9 @@ class PaymentsController extends Controller
                        </a>';
                     return $btn;
                 })
+                ->addColumn('sort', function ($row) use ($request) {
+                    return $request->detail_factor;
+                })
                 ->addColumn('product', function ($row) {
                     $detail = DB::table('invoice_product')
                         ->where('id', $row->detail_id)
@@ -491,6 +494,9 @@ class PaymentsController extends Controller
                         return 'چکی';
                     }
                 })
+                ->addColumn('sort', function ($row) use ($request) {
+                    return $request->id_id;
+                })
                 ->addColumn('price', function ($row) {
                     return number_format($row->price);
                 })
@@ -687,10 +693,17 @@ class PaymentsController extends Controller
 
     public function update($id)
     {
+        $pack = array();
 
         $pack_iidd = \DB::table('clearing_factor')
             ->where('clearing_id', $id)
             ->first();
+        $pack_isdd = \DB::table('clearing_factor')
+            ->where('clearing_id', $id)
+            ->get();
+        foreach ($pack_isdd as $item) {
+            $pack[] = $item->pack_id;
+        }
 
         $idd = \DB::table('factors')
             ->where('pack_id', $pack_iidd->pack_id)
@@ -736,7 +749,7 @@ class PaymentsController extends Controller
         return response()->json([
             'name_customer' => $name_custome, 'name' => $name,
             'price' => $pri, 'pricee' => $prii, 'date' => $dat, 'sum' => $p,
-            'summ' => $pp]);
+            'summ' => $pp, 'pack' => $pack]);
 
     }
 
@@ -927,6 +940,76 @@ class PaymentsController extends Controller
 
     }
 
+    public function statussort(Request $request)
+    {
+        $dataa = \DB::table('clearing')
+            ->where('id', $request->detail_factor)
+            ->first();
+
+        if ($request->ajax()) {
+
+            $data = \DB::table('clearing')
+                ->where('customer_id', $dataa->customer_id)
+                ->where('id', "!=", $request->detail_factor)
+                ->orderBy('date', 'desc')
+                ->get();
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('price', function ($row) {
+                    return number_format($row->price);
+                })
+                ->addColumn('payment', function ($row) use ($request) {
+                    $detail_customer_payment = DB::table('detail_customer_payment')
+                        ->where('payment_id', $row->id)
+                        ->sum('price');
+                    return number_format($detail_customer_payment);
+                })
+                ->addColumn('s', function ($row) use ($request) {
+                    $detail_customer_payment = DB::table('detail_customer_payment')
+                        ->where('payment_id', $row->id)
+                        ->sum('price');
+                    return $detail_customer_payment - $row->price;
+                })
+                ->addColumn('ss', function ($row) use ($request) {
+                    $detail_customer_payment = DB::table('detail_customer_payment')
+                        ->where('payment_id', $row->id)
+                        ->sum('price');
+                    $t = abs($detail_customer_payment - $row->price);
+                    return number_format($t);
+                })
+
+
+                ->addColumn('a', function ($row) use ($dataa,$request) {
+                    $clearing = \DB::table('clearing')
+                        ->where('customer_id', $dataa->customer_id)
+                        ->where('id', "!=", $request->detail_factor)
+                        ->sum('price');
+                    return $clearing;
+                })
+                ->addColumn('b', function ($row) use ($dataa,$request) {
+                    $clearing = \DB::table('detail_customer_payment')
+                        ->where('customer_id', $dataa->customer_id)
+                        ->where('payment_id', "!=", $request->detail_factor)
+                        ->sum('price');
+                    return $clearing;
+                })
+
+                ->addColumn('sort', function ($row) use ($dataa,$request) {
+                    $factor = \DB::table('factors')
+                        ->where('customer_id', $dataa->customer_id)
+                        ->whereNull("sort")
+                        ->sum('sum');
+                    return $factor;
+                })
+
+                ->rawColumns([''])
+                ->make(true);
+        }
+
+        return view('bills.list');
+
+    }
 
     public function ListListDetail(Request $request)
     {
@@ -992,7 +1075,6 @@ class PaymentsController extends Controller
 
     }
 
-
     public function EditUpdate(Request $request)
     {
         $detail = DB::table('detail_customer_payment')
@@ -1015,6 +1097,7 @@ class PaymentsController extends Controller
                 'name' => $request->naamee,
                 'name_user' => $request->name_userr,
                 'price' => $request->prricee,
+                'descriptionn' => $request->descriptionnnmnmn,
             ]);
         return \response()->json(['success' => 'success']);
 

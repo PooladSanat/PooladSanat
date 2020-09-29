@@ -4,8 +4,6 @@
 <script src="{{asset('/public/js/datatab.js')}}" type="text/javascript"></script>
 <script src="{{asset('/public/js/row.js')}}" type="text/javascript"></script>
 <style>
-
-
     .as-console-wrapper {
         display: none !important;
     }
@@ -15,6 +13,17 @@
 <meta name="_token" content="{{ csrf_token() }}"/>
 <script type="text/javascript">
     $(function () {
+            <?php
+            $productss = \App\Product::all();
+            ?>
+        var produc = [];
+        @foreach($productss as $produc)
+        produc.push({
+            'id': '{{$produc->id}}',
+            'label': '{{$produc->label}}',
+        });
+            @endforeach
+
         var invoice_product = [];
         @foreach($invoice_products as $invoice_product)
         invoice_product.push({
@@ -47,6 +56,7 @@
         });
         @endforeach
 
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -62,7 +72,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 10, "desc" ]],
+            "order": [[10, "desc"]],
             "ordering": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $('td:eq(0)', nRow).css('background-color', '#e8ecff');
@@ -88,7 +98,7 @@
                 ajax: "{{ route('admin.invoice.success') }}",
             },
             columns: [
-                {data: 'checkbox', orderable: false, searchable: false ,  "className": "dt-center"},
+                {data: 'checkbox', orderable: false, searchable: false, "className": "dt-center"},
                 {data: 'id', name: 'id'},
                 {data: 'invoice', name: 'invoice'},
                 {data: 'user', name: 'user'},
@@ -105,7 +115,6 @@
                 2, 3, 4
             ],
         });
-
 
         $('body').on('click', '.cancel', function () {
             var id = $(this).data('id');
@@ -402,6 +411,53 @@
             });
         });
 
+        $('#savetolist').click(function (e) {
+            e.preventDefault();
+            $('#savetolist').text('در حال ثبت اطلاعات...');
+            $('#savetolist').prop("disabled", true);
+            var form = $('#tolistform')[0];
+            var data = new FormData(form);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "{{ route('admin.invoice.tolist.sotre.detail') }}",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                success: function (data) {
+                    if (data.errors) {
+                        $('#ToList').modal('hide');
+                        jQuery.each(data.errors, function (key, value) {
+                            Swal.fire({
+                                title: 'خطا!',
+                                text: value,
+                                icon: 'error',
+                                confirmButtonText: 'تایید'
+                            })
+                        });
+                        $('#savetolist').text('ثبت');
+                        $('#savetolist').prop("disabled", false);
+                    }
+                    if (data.success) {
+                        $('#tolistform').trigger("reset");
+                        $('#ToList').modal('hide');
+                        Swal.fire({
+                            title: 'موفق',
+                            text: 'درخواست شما برای صف تولید ارسال شد',
+                            icon: 'success',
+                            confirmButtonText: 'تایید',
+                        });
+                        $('#savetolist').text('ثبت');
+                        $('#savetolist').prop("disabled", false);
+                    }
+                }
+            });
+        });
+
+
         $('#saveToList').click(function (e) {
             e.preventDefault();
             $('#saveToList').text('در حال ثبت اطلاعات...');
@@ -587,8 +643,135 @@
             });
 
 
-        })
-        ;
+        });
+
+        $(document).on('click', '#To_List', function () {
+            $('.numfff').remove();
+            $('.productt_mmm').remove();
+            $('.colorr_mmm').remove();
+            $('.sum_mmm').remove();
+            $('.sum_sss').remove();
+            $('.date_mmm').remove();
+            $('.olavittt').remove();
+            var test = null;
+            var id = [];
+            var include = [];
+            $('.student_checkbox:checked').each(function () {
+                id.push($(this).val());
+            });
+            $.ajax({
+                url: "{{ route('admin.invoice.add.tolist')}}",
+                method: "get",
+                data: {id: id},
+                success: function (data) {
+                    $('#ToList').modal('show');
+                    added_inputs4_array = [];
+                    data.details.forEach(function (entry) {
+                        var invoice_p = {
+                            'id': entry.id,
+                            'product_id': entry.product_id,
+                            'color_id': entry.color_id,
+                            'salesNumber': entry.salesNumber,
+                        };
+                        added_inputs4_array.push(invoice_p);
+
+                    });
+
+                    if (added_inputs4_array.length >= 1)
+                        for (var a in added_inputs4_array)
+                            added_inputs_array_table3(added_inputs4_array[a], a);
+
+                    function added_inputs_array_table3(data, a) {
+                        var myNode = document.createElement('div');
+                        myNode.id = 'numf' + a;
+                        myNode.innerHTML += "<div class='form-group'>" +
+                            "<input readonly type=\"text\" id=\'numff" + a + "\'  name=\"numff[]\"\n" +
+                            "class=\"form-control numfff\"/>" +
+                            "</div></div></div>";
+                        document.getElementById('numf').appendChild(myNode);
+                        $('#numff' + a + '').val(data.id);
+
+
+                        var myNode = document.createElement('div');
+                        myNode.id = 'product_m' + a;
+                        myNode.innerHTML += "<div class='form-group'>" +
+                            "<input readonly type=\"text\" id=\'productt_m" + a + "\'  name=\"productt_m[]\"\n" +
+                            "class=\"form-control productt_mmm\"/>" +
+                            "</div></div></div>";
+                        document.getElementById('product_m').appendChild(myNode);
+
+                        for (var pi in produc) {
+                            if (data.product_id == produc[pi].id) {
+                                $('#productt_m' + a + '').val(produc[pi].label);
+                            }
+                        }
+
+
+                        var myNode = document.createElement('div');
+                        myNode.id = 'color_m' + a;
+                        myNode.innerHTML += "<div class='form-group'>" +
+                            "<input readonly type=\"text\" id=\'colorr_m" + a + "\'  name=\"colorr_m[]\"\n" +
+                            "class=\"form-control colorr_mmm\"/>" +
+                            "</div></div></div>";
+                        document.getElementById('color_m').appendChild(myNode);
+
+                        for (var po in color) {
+                            if (data.color_id == color[po].id) {
+                                $('#colorr_m' + a + '').val(color[po].name);
+                            }
+                        }
+
+
+
+
+                        var myNode = document.createElement('div');
+                        myNode.id = 'sum_m' + a;
+                        myNode.innerHTML += "<div class='form-group'>" +
+                            "<input readonly type=\"text\" id=\'sum_mm" + a + "\'  name=\"sum_mm[]\"\n" +
+                            "class=\"form-control sum_mmm\"/>" +
+                            "</div></div></div>";
+                        document.getElementById('sum_m').appendChild(myNode);
+                        $('#sum_mm' + a + '').val(data.salesNumber);
+
+
+                        var myNode = document.createElement('div');
+                        myNode.id = 'sum_s' + a;
+                        myNode.innerHTML += "<div class='form-group'>" +
+                            "<input type=\"text\" id=\'sum_ss" + a + "\'  name=\"sum_ss[]\"\n" +
+                            "class=\"form-control sum_sss\"/>" +
+                            "</div></div></div>";
+                        document.getElementById('sum_s').appendChild(myNode);
+
+                        var myNode = document.createElement('div');
+                        myNode.id = 'date_m' + a;
+                        myNode.innerHTML += "<div class='form-group'>" +
+                            "<input type=\"text\" id=\'date_mm" + a + "\'  name=\"date_mm[]\"\n" +
+                            "class=\"form-control date_mmm\"/>" +
+                            "</div></div></div>";
+                        document.getElementById('date_m').appendChild(myNode);
+
+
+                        var myNode = document.createElement('div');
+                        myNode.id = 'olavit' + a;
+                        myNode.innerHTML += "<div class='form-group'>" +
+                            "<select id=\'olavitt" + a + "\'  name=\"olavitt[]\"\n" +
+                            "class=\"form-control olavittt\"/>" +
+                            "<option>انتخاب کنید</option>" +
+                            "<option value='بسیار مهم'>بسیار مهم</option>" +
+                            "<option value='مهم'>مهم</option>" +
+                            "<option value='عادی'>عادی</option>" +
+                            "</select>" +
+                            "</div></div></div>";
+                        document.getElementById('olavit').appendChild(myNode);
+
+
+                    }
+
+                }
+
+            });
+
+        });
 
         $('#saveBtnListS').click(function (e) {
             e.preventDefault();
@@ -712,7 +895,6 @@
             });
         });
 
-
         kamaDatepicker('datev',
             {
                 buttonsColor: "red",
@@ -738,8 +920,31 @@
                 nextButtonIcon: "fa fa-arrow-circle-right",
             });
 
-    })
-    ;
+
+    });
+
+    function deleteService4(id, event) {
+        event.preventDefault();
+        $('#invoiceeee' + id).remove();
+        $('#productttt' + id).remove();
+        $('#colorrrr' + id).remove();
+        $('#totalnumberrrr' + id).remove();
+        $('#numberrrr' + id).remove();
+        $('#reasonssss' + id).remove();
+        $('#actionttt' + id).remove();
+
+
+    }
+
+    function addInput12() {
+        var data = {
+            'title': '',
+            'icon': '',
+        };
+        added_inputs4_array.push(data);
+        added_inputs_array_table3(data, added_inputs4_array.length - 1);
+    }
+
     $('#sell').addClass('active');
 
 

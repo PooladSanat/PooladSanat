@@ -789,7 +789,6 @@
                                 <i style="color: white" class="pull-left fa fa-close"></i>
                             </a>
                         </div>
-
                     </div>
                     <div class="portlet-body form">
                         <div class="form-body">
@@ -858,8 +857,6 @@
                                                     data-dismiss="modal">
                                                 انصراف
                                             </button>
-
-
                                         </div>
                                     </div>
                                 </form>
@@ -874,4 +871,83 @@
 </div>
 
 
+<div class="modal fade" id="ToList" aria-hidden="true">
+    <div class="modal-dialog col-md-12">
+        <div class="modal-content">
+            <div class="modal-body col-md-12">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            ارسال برای صف تولید
+                        </div>
+                        <div class="caption pull-left">
+                            <a data-dismiss="modal">
+                                <i style="color: white" class="pull-left fa fa-close"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body form">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <form autocomplete="off" id="tolistform" name="tolistform">
+                                    <input type="hidden" id="id_d" name="id_d">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table table-responsive">
+                                                <table
+                                                    class="table table-responsive table-striped table-bordered">
+                                                    <thead style="background-color: #e8ecff">
+                                                    <tr>
+                                                        <td>شماره فروش</td>
+                                                        <td>محصول</td>
+                                                        <td>رنگ</td>
+                                                        <td>تعداد کل</td>
+                                                        <td>تعداد ارسالی برای تولید</td>
+                                                        <td>تاریخ</td>
+                                                        <td>الویت</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody
+                                                        id="TextBoxContainer">
+                                                    <tr>
+                                                        <td id="numf"></td>
+                                                        <td id="product_m"></td>
+                                                        <td id="color_m"></td>
+                                                        <td id="sum_m"></td>
+                                                        <td id="sum_s"></td>
+                                                        <td id="date_m"></td>
+                                                        <td id="olavit"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <hr/>
+                                    <div class="modal-footer">
+                                        <div class="text-left">
+                                            <button style="width: 130px" type="button" class="btn btn-success"
+                                                    id="savetolist"
+                                                    data-dismiss="modal">
+                                                ثبت
+                                            </button>
+                                            <button style="width: 130px" type="button" class="btn btn-danger"
+                                                    data-dismiss="modal">
+                                                انصراف
+                                            </button>
 
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

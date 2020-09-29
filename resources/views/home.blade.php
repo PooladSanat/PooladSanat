@@ -707,6 +707,10 @@
 
 
     <script>
+        function formatNumber(num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
+
         var DEFAULT_DATASET_SIZE = 7,
             addedCount = 0,
             color = Chart.helpers.color;
@@ -744,15 +748,17 @@
             type: 'bar',
             data: barDataa,
             options: {
-                responsive: true,
-                maintainAspectRation: true,
-                valueFormatString: "$#,###,#0",
-                legend: {
-                    position: 'top',
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return formatNumber(Number(tooltipItem.yLabel));
+                        }
+                    }
                 },
-                title: {
+                legend: {
                     display: true,
-                }
+                },
+
             }
         });
     </script>
@@ -796,15 +802,17 @@
             type: 'bar',
             data: barData,
             options: {
-                responsive: true,
-                maintainAspectRation: true,
-                legend: {
-                    position: 'top',
-                    color: chartColors.blue,
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return formatNumber(Number(tooltipItem.yLabel));
+                        }
+                    }
                 },
-                title: {
+                legend: {
                     display: true,
                 },
+
             }
         });
 
@@ -819,6 +827,8 @@
         $('body').on('click', '.detail-customer', function () {
             var passedID = $(this).attr('data-id');
             $('#ajaxcustomer').modal('show');
+
+
             $("#information").DataTable().destroy();
             $('.information').DataTable({
                 processing: true,
@@ -838,6 +848,7 @@
                         $('td:eq(5)', nRow).css('background-color', 'rgb(255,255,255,255)');
                     }
                     $('#adde').text(aData.adders);
+                    $('#cappattioon').text('مشخصات کلی مشتری' + " " + "(" + aData.name + ")");
 
                 }
                 ,
@@ -862,7 +873,7 @@
                     {data: 'type', name: 'type'},
                     {data: 'phone', name: 'phone'},
                     {data: 'tel', name: 'tel'},
-                    {data: 'price', name: 'price'},
+                    {data: 'pricee', name: 'pricee'},
                 ]
             });
 
@@ -929,7 +940,7 @@
                 },
 
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', "className": "dt-center"},
                     {data: 'date', name: 'date'},
                     {data: 'description', name: 'description'},
                     {data: 'sum', name: 'sum'},
@@ -997,7 +1008,7 @@
                 },
 
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex' , "className": "dt-center"},
                     {data: 'date', name: 'date'},
                     {data: 'invoiceNumber', name: 'invoiceNumber'},
                     {data: 'totalfinal', name: 'totalfinal'},
@@ -1069,7 +1080,7 @@
                 },
 
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex' , "className": "dt-center"},
                     {data: 'customer', name: 'customer'},
                     {data: 'payment_id', name: 'payment_id'},
                     {data: 'type', name: 'type'},

@@ -16,13 +16,22 @@ class BarnTemporaryController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('device_id', function ($row) {
-                    return $row->device->name;
+                    return 'بابت مرجوعی با کد' . " " . $row->return_id;
                 })
                 ->addColumn('product_id', function ($row) {
                     return $row->product->label;
                 })
                 ->addColumn('color_id', function ($row) {
                     return $row->color->manufacturer . ' - ' . $row->color->name;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->status == 1) {
+                        return 'تایید';
+                    } elseif ($row->status == 2) {
+                        return 'عدم تایید';
+                    } else {
+                        return 'در حال بررسی';
+                    }
                 })
                 ->rawColumns([])
                 ->make(true);

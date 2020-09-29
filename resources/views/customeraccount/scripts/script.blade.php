@@ -52,14 +52,12 @@
             ]
         });
 
-
         $('body').on('click', '.payment-customer', function () {
             var id = $(this).data('id');
             $('#customer_id').val(id);
 
 
         });
-
 
         $('body').on('click', '.editpaymentcustomer', function () {
             var id = $(this).data('id');
@@ -70,7 +68,6 @@
             })
 
         });
-
 
         $('body').on('click', '.editpayment', function () {
             var id = $(this).data('id');
@@ -84,6 +81,7 @@
                 $('#price').val(data.price);
                 $('#date').val(data.date);
                 $('#id_customer').val(data.customer_id);
+                $('#shahr').val(data.descriptionn);
             })
 
         });
@@ -170,9 +168,6 @@
             });
         });
 
-
-
-
         $('body').on('click', '.deletepayment', function () {
             var id = $(this).data("id");
             Swal.fire({
@@ -227,7 +222,6 @@
             })
         });
 
-
         var table1 = $('.ee').DataTable({
             processing: true,
             serverSide: true,
@@ -269,6 +263,7 @@
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
+
         $('#saveBtn').click(function (e) {
             e.preventDefault();
             $('#saveBtn').text('در حال ثبت اطلاعات...');

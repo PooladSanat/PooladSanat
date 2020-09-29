@@ -1,6 +1,6 @@
 <div class="modal fade" id="ajaxadmin" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-body">
+    <div class="modal-dialog col-md-12">
+        <div class="modal-body col-md-12">
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption" id="caption">
@@ -22,104 +22,150 @@
                                 <input type="hidden" name="cid" id="cid">
                                 <input type="hidden" name="p11" id="p11">
                                 @csrf
+
                                 <div class="row">
-                                    <div class="col-md-5">
-                                        <label>نام مشتری</label>
-                                        <input readonly type="text" name="cnamee" id="cnamee" class="form-control">
-
-                                    </div>
-
-
-                                    <div class="col-md-4">
-                                        <label> اسناد پرداختی مشتری</label>
-                                        <input readonly type="text" name="document_customer_payment"
-                                               id="document_customer_payment"
-                                               class="form-control">
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label> فاکتورهای صادرشده</label>
-                                        <input readonly type="text" name="factor_customer_payment"
-                                               id="factor_customer_payment"
-                                               class="form-control">
-                                        <input readonly type="hidden" name="pricesummm" id="pricesummm"
-                                               class="form-control">
-                                    </div>
-
                                     <div class="col-md-12">
-                                        <label>توضیحات ثبت کننده:</label>
-                                        <input readonly type="text" name="des"
-                                               id="des"
-                                               class="form-control">
+                                        <div class="nav-tabs-custom">
+                                            <ul class="nav nav-tabs" style="background-color: rgba(0,105,255,0.07)">
+                                                <li class="active" style="width: 50%;"><a href="#a" data-toggle="tab">مشخصات صورتحساب</a></li>
+                                                <li style="width: 48%;"><a href="#b" data-toggle="tab">صورت وضعیت مشتری</a></li>
+                                                 </ul>
+                                            <div class="tab-content">
+                                                <div class="active tab-pane" id="a">
+                                                    <br/>
+                                                    <div class="col-md-5">
+                                                        <label>نام مشتری</label>
+                                                        <input readonly type="text" name="cnamee" id="cnamee" class="form-control">
+
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label> اسناد پرداختی مشتری</label>
+                                                        <input readonly type="text" name="document_customer_payment"
+                                                               id="document_customer_payment"
+                                                               class="form-control">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label> فاکتورهای صادرشده</label>
+                                                        <input readonly type="text" name="factor_customer_payment"
+                                                               id="factor_customer_payment"
+                                                               class="form-control">
+                                                        <input readonly type="hidden" name="pricesummm" id="pricesummm"
+                                                               class="form-control">
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label>توضیحات ثبت کننده:</label>
+                                                        <input readonly type="text" name="des"
+                                                               id="des"
+                                                               class="form-control">
+                                                    </div>
+
+
+                                                    <br/>
+                                                    <br/>
+                                                    <br/>
+                                                    <br/>
+                                                    <br/>
+                                                    <br/>
+                                                    <br/>
+
+                                                    <div class="col-md-12">
+                                                        <table style="border:2px solid black;" class="table table-bordered">
+                                                            <thead>
+                                                            <tr>
+                                                                <th scope="col" style="width: 250px">شرح</th>
+                                                                <th scope="col">بدهکار(ریال)</th>
+                                                                <th scope="col">بستانکار(ریال)</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <th scope="row" style="width: 250px">مبلغ صورتحساب</th>
+                                                                <td></td>
+                                                                <td id="b1" style="color: rgb(255,43,28)"></td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" style="width: 250px">مبلغ پرداختی مشتری (بابت این صورت
+                                                                    حساب)
+                                                                </th>
+                                                                <td id="p1" style="color: #0014fb"></td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">مانده حساب مشتری (از قبل در سیستم)</th>
+                                                                <td id="m1" style="color: #0014fb"></td>
+                                                                <td></td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <th scope="row">مبلغ قابل پرداخت</th>
+                                                                <td></td>
+                                                                <td id="f1" style="color: rgb(255,43,28)"></td>
+                                                            </tr>
+
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <br/>
+
+                                                    <div class="col-md-3">
+                                                        <label>وضعیت</label>
+                                                        <select name="status" id="status" class="form-control">
+                                                            <option value="1">تایید</option>
+                                                            <option value="2">عدم تایید</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-9">
+                                                        <label>توضیحات</label>
+                                                        <input type="text" name="description_admin" id="description_admin"
+                                                               class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="b">
+                                                    <br/>
+                                                    <table class="table table-striped table-bordered statussort" id="statussort">
+                                                        <thead style="background-color: #e8ecff">
+                                                        <tr>
+                                                            <th style="width: 1%">ردیف</th>
+                                                            <th>کد صورتحساب</th>
+                                                            <th>تاریخ صدور</th>
+                                                            <th>مبلغ صورتحساب</th>
+                                                            <th>جمع اسناد دریافتی</th>
+                                                            <th>مانده حساب</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+
+                                                        <tfoot align="right">
+                                                        <tr>
+                                                            <th colspan="3">جمع کل</th>
+                                                            <th id="aaaaa">0</th>
+                                                            <th id="bbbbb">0</th>
+                                                            <th id="cccc">0</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th colspan="5">جمع فاکتور های در جریان</th>
+                                                            <th id="sssss">0</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th colspan="5">صورت وضعیت</th>
+                                                            <th id="sdsdsdsds">0</th>
+                                                        </tr>
+
+
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-
-
-                                    <br/>
-                                    <br/>
-                                    <br/>
-                                    <br/>
-                                    <br/>
-                                    <br/>
-                                    <br/>
-
-                                    <div class="col-md-12">
-                                        <table style="border:2px solid black;" class="table table-bordered">
-                                            <thead>
-                                            <tr>
-                                                <th scope="col" style="width: 250px">شرح</th>
-                                                <th scope="col">بدهکار(ریال)</th>
-                                                <th scope="col">بستانکار(ریال)</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row" style="width: 250px">مبلغ صورتحساب</th>
-                                                <td></td>
-                                                <td id="b1" style="color: rgb(255,43,28)"></td>
-
-                                            </tr>
-                                            <tr>
-                                                <th scope="row" style="width: 250px">مبلغ پرداختی مشتری (بابت این صورت
-                                                    حساب)
-                                                </th>
-                                                <td id="p1" style="color: #0014fb"></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">مانده حساب مشتری (از قبل در سیستم)</th>
-                                                <td id="m1" style="color: #0014fb"></td>
-                                                <td></td>
-                                            </tr>
-
-                                            <tr>
-                                                <th scope="row">مبلغ قابل پرداخت</th>
-                                                <td></td>
-                                                <td id="f1" style="color: rgb(255,43,28)"></td>
-                                            </tr>
-
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <br/>
-
-                                    <div class="col-md-3">
-                                        <label>وضعیت</label>
-                                        <select name="status" id="status" class="form-control">
-                                            <option value="1">تایید</option>
-                                            <option value="2">عدم تایید</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-9">
-                                        <label>توضیحات</label>
-                                        <input type="text" name="description_admin" id="description_admin"
-                                               class="form-control">
-                                    </div>
-
-
                                 </div>
+
+
                                 <br/>
                                 <hr/>
                                 <div class="modal-footer">
@@ -152,8 +198,8 @@
         <div class="modal-body col-md-12">
             <div class="portlet box blue">
                 <div class="portlet-title">
-                    <div class="caption" id="caption">
-                        تسویه حساب صورت حساب
+                    <div class="caption" id="sortsort">
+
                     </div>
                     <div class="caption pull-left">
                         <a data-dismiss="modal">
@@ -195,6 +241,11 @@
                                         <input readonly type="text" name="pricesum" id="pricesum" class="form-control">
                                         <input readonly type="hidden" name="pricesuumm" id="pricesuumm"
                                                class="form-control">
+
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label>فاکتورهای موجود در صورتحساب:</label>
+                                        <input type="text" disabled name="fac" id="fac" class="form-control">
 
                                     </div>
 
@@ -404,7 +455,11 @@
                                         <input type="number" name="prricee" id="prricee" class="form-control">
 
                                     </div>
+                                    <div class="col-md-12">
+                                        <label>شرح</label>
+                                        <input type="text" name="descriptionnnmnmn" id="descriptionnnmnmn" class="form-control">
 
+                                    </div>
 
                                 </div>
                                 <br/>
@@ -439,8 +494,8 @@
         <div class="modal-body col-md-12">
             <div class="portlet box blue">
                 <div class="portlet-title">
-                    <div class="caption" id="caption">
-                        جزییات صورت حساب
+                    <div class="caption" id="capsort">
+
                     </div>
                     <div class="caption pull-left">
                         <a data-dismiss="modal">

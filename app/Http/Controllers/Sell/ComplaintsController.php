@@ -175,6 +175,7 @@ class ComplaintsController extends Controller
             ->where('id', $request->id)
             ->first();
         $detail_returns = DB::table('detail_returns')
+            ->whereNull('state')
             ->where('complaints_id', $request->id)
             ->get();
 
@@ -183,6 +184,7 @@ class ComplaintsController extends Controller
                 ->where('id', $request->id)
                 ->first();
             $detail_returns = DB::table('detail_returns')
+                ->whereNull('state')
                 ->where('return_id', $request->id)
                 ->get();
             return response()->json(['data' => $data, 'detail_returns' => $detail_returns]);

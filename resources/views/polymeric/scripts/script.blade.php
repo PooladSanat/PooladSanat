@@ -160,7 +160,7 @@
     });
 
     $('#foundation').addClass('active');
-    $('#foundation_c').addClass('active');
+    $('#foundation_d').addClass('active');
     $('.price').mask("#,##0", {
         reverse: true
     });

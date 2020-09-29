@@ -15,11 +15,12 @@
                         <thead style="background-color: #e8ecff">
                         <tr>
                             <th style="width: 1px">ردیف</th>
-                            <th>ماشین</th>
+                            <th>بابت</th>
                             <th>محصول</th>
                             <th>رنگ</th>
                             <th>تاریخ</th>
                             <th>تعداد</th>
+                            <th>وضعیت</th>
                         </tr>
                         </thead>
                         <tbody>

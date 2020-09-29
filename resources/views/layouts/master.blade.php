@@ -205,14 +205,14 @@
                                 <p>
                                     {{auth()->user()->name}}
                                 </p>
-                                    <?php
-                                    $id = DB::table('role_user')
-                                        ->where('user_id', auth()->user()->id)
-                                        ->first();
-                                    $name = DB::table('roles')
-                                        ->where('id', $id->role_id)
-                                        ->first();
-                                    ?>
+                                <?php
+                                $id = DB::table('role_user')
+                                    ->where('user_id', auth()->user()->id)
+                                    ->first();
+                                $name = DB::table('roles')
+                                    ->where('id', $id->role_id)
+                                    ->first();
+                                ?>
                                 <h2 style="font-size: 13px;color: white">{{$name->name}}</h2>
                             </li>
                             <li class="user-footer">
@@ -246,7 +246,8 @@
                     @if(!empty(auth()->user()->avatar))
                         <img src="{{url(auth()->user()->avatar)}}" class="img-circle" alt="User Image">
                     @else
-                        <img src="{{url('/public/icon/Blank-Avatar-Man-in-Suit.jpg')}}" class="img-circle" alt="User Image">
+                        <img src="{{url('/public/icon/Blank-Avatar-Man-in-Suit.jpg')}}" class="img-circle"
+                             alt="User Image">
                     @endif
                 </div>
                 <div class="pull-right info">
@@ -308,7 +309,7 @@
                  || Gate::check('تعریف شهرها و مناطق')
                  || Gate::check('گروه کالایی') || Gate::check('مشخصه محصول')
                  || Gate::check('تعریف محصول') || Gate::check('BOM') || Gate::check('تعریف قالب ساز') || Gate::check('تعریف قالب')
-                 || Gate::check('Insert های قالب') || Gate::check('انتصاب محصول به قالب'))
+                  || Gate::check('Insert های قالب') || Gate::check('انتصاب محصول به قالب'))
                     <li class="treeview" id="foundation">
                         <a href="#">
                             <i class="fa fa-star"></i> <span>تعاریف پایه</span>
@@ -358,7 +359,7 @@
                            || Gate::check('Insert های قالب') || Gate::check('انتصاب محصول به قالب'))
                                 <li class="treeview" id="foundation_b">
                                     <a href="#">
-                                        <span>قالب ها</span>
+                                        <span>قالب و دستگاه</span>
                                         <span class="pull-left-container">
               <i class="fa fa-angle-right pull-left"></i>
             </span>
@@ -379,6 +380,11 @@
                                                         class="fa fa-circle-o"></i>Insert های قالب </a>
                                             </li>
                                         @endcan
+                                            @can('تعریف دستگاه')
+                                                <li><a href="{{route('admin.device.list')}}"><i
+                                                            class="fa fa-circle-o"></i>تعریف دستگاه</a>
+                                                </li>
+                                            @endcan
                                         @can('انتصاب محصول به قالب')
                                             <li><a href="{{route('admin.model.product.list')}}"><i
                                                         class="fa fa-circle-o"></i>انتصاب محصول به قالب</a>
@@ -390,12 +396,12 @@
 
                             @if(Gate::check('تعریف رنگ') || Gate::check('تعریف مستربچ')
                                                   || Gate::check('مواد پلیمیری') || Gate::check('تامین کنندگان')
-                                                   || Gate::check('تعریف دستگاه') || Gate::check('تعریف دستگاه')
+                                                   || Gate::check('تعریف دستگاه')
                                                     || Gate::check('ضایعات رنگ') || Gate::check('زمان تغیر رنگ')
                                                     || Gate::check('تعریف شهرها و مناطق'))
                                 <li class="treeview" id="foundation_c">
                                     <a href="#">
-                                        <span>تعاریف دیگر</span>
+                                        <span>رنگ و مستربچ</span>
                                         <span class="pull-left-container">
               <i class="fa fa-angle-right pull-left"></i>
             </span>
@@ -411,21 +417,6 @@
                                                         class="fa fa-circle-o"></i>تعریف مستربچ</a>
                                             </li>
                                         @endcan
-                                        @can('مواد پلیمیری')
-                                            <li><a href="{{route('admin.polymeric.list')}}"><i
-                                                        class="fa fa-circle-o"></i>مواد پلیمیری</a>
-                                            </li>
-                                        @endcan
-                                        @can('تامین کنندگان')
-                                            <li><a href="{{route('admin.seller.list')}}"><i
-                                                        class="fa fa-circle-o"></i>تامین کنندگان</a>
-                                            </li>
-                                        @endcan
-                                        @can('تعریف دستگاه')
-                                            <li><a href="{{route('admin.device.list')}}"><i
-                                                        class="fa fa-circle-o"></i>تعریف دستگاه</a>
-                                            </li>
-                                        @endcan
                                         @can('ضایعات رنگ')
                                             <li><a href="{{route('admin.colorscrap.list')}}"><i
                                                         class="fa fa-circle-o"></i>ضایعات رنگ</a>
@@ -436,6 +427,46 @@
                                                         class="fa fa-circle-o"></i>زمان تغیر رنگ</a>
                                             </li>
                                         @endcan
+
+
+
+                                    </ul>
+                                </li>
+                            @endif
+
+                                <li class="treeview" id="foundation_d">
+                                    <a href="#">
+                                        <span>مواد و تامین کنندگان</span>
+                                        <span class="pull-left-container">
+              <i class="fa fa-angle-right pull-left"></i>
+            </span>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        @can('مواد پلیمیری')
+                                            <li><a href="{{route('admin.polymeric.list')}}"><i
+                                                        class="fa fa-circle-o"></i>مواد پلیمیری</a>
+                                            </li>
+                                        @endcan
+                                        @can('تامین کنندگان')
+                                            <li><a href="{{route('admin.seller.list')}}"><i
+                                                        class="fa fa-circle-o"></i>تامین کنندگان</a>
+                                            </li>
+                                        @endcan
+
+
+                                    </ul>
+                                </li>
+
+
+                                <li class="treeview" id="foundation_g">
+                                    <a href="#">
+                                        <span>تعاریف دیگر</span>
+                                        <span class="pull-left-container">
+              <i class="fa fa-angle-right pull-left"></i>
+            </span>
+                                    </a>
+                                    <ul class="treeview-menu">
+
                                         @can('تعریف شهرها و مناطق')
 
                                             <li><a href="{{route('admin.areas.list')}}"><i
@@ -443,14 +474,16 @@
                                             </li>
                                         @endcan
 
+
+
                                     </ul>
                                 </li>
-                            @endif
-
+                                <li><a href="{{route('admin.information.list')}}"><i
+                                            class="fa fa-circle-o"></i>تعریف اطلاعات تولید</a>
+                                </li>
                         </ul>
                     </li>
                 @endif
-
 
                 @if(Gate::check('مشتریان') || Gate::check('انواع مشتریان')
                  || Gate::check('حساب مشتریان'))
@@ -479,12 +512,9 @@
                     </li>
                 @endif
 
-
                 @if(Gate::check('آرشیو فروش') || Gate::check('پیش فاکتور های تایید نشده')
                 || Gate::check('پیش فاکتور های تایید شده') || Gate::check('پیش فاکتور های لغو شده')
-                || Gate::check('زمان بندی بارگیری') || Gate::check('مرجوعی ها')
-                || Gate::check('هدف گذاری فروش')|| Gate::check('مرجوعی')
-                || Gate::check('شکایات'))
+                || Gate::check('زمان بندی بارگیری')|| Gate::check('هدف گذاری فروش'))
                     <li class="treeview" id="sell">
                         <a href="#">
                             <i class="fa fa-line-chart"></i> <span>فروش</span>
@@ -493,11 +523,11 @@
 </span>
                         </a>
                         <ul class="treeview-menu">
-{{--                            @can('آرشیو فروش')--}}
-{{--                                <li><a href="{{route('admin.salesarchive.list')}}"><i--}}
-{{--                                            class="fa fa-circle-o"></i>آرشیو فروش</a>--}}
-{{--                                </li>--}}
-{{--                            @endcan--}}
+                            {{--                            @can('آرشیو فروش')--}}
+                            {{--                                <li><a href="{{route('admin.salesarchive.list')}}"><i--}}
+                            {{--                                            class="fa fa-circle-o"></i>آرشیو فروش</a>--}}
+                            {{--                                </li>--}}
+                            {{--                            @endcan--}}
                             @can('پیش فاکتور های تایید نشده')
                                 <li><a href="{{route('admin.invoice.index')}}"><i
                                             class="fa fa-circle-o"></i>پیش فاکتورهای تایید نشده</a>
@@ -523,16 +553,7 @@
                                             class="fa fa-circle-o"></i>حواله های خروج کالا</a>
                                 </li>
                             @endcan
-                            @can('مرجوعی')
-                                <li><a href="{{route('admin.returns.list')}}"><i
-                                            class="fa fa-circle-o"></i>مرجوعی ها</a>
-                                </li>
-                            @endcan
-                            @can('شکایات')
-                                <li><a href="{{route('admin.Complaints.list')}}"><i
-                                            class="fa fa-circle-o"></i>لیست شکایات</a>
-                                </li>
-                            @endcan
+
                             @can('هدف گذاری فروش')
                                 <li><a href="{{route('admin.target.list')}}"><i
                                             class="fa fa-circle-o"></i>هدف گذاری فروش</a>
@@ -542,6 +563,34 @@
                         </ul>
                     </li>
                 @endif
+
+                <li class="treeview" id="retu">
+                    <a href="#">
+                        <i class="fa ion-arrow-return-right"></i> <span>مرجوعی ها</span>
+                        <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        @can('مرجوعی')
+                            <li><a href="{{route('admin.returns.list')}}"><i
+                                        class="fa fa-circle-o"></i>لیست مرجوعی</a>
+                            </li>
+                        @endcan
+                        <li><a href="{{route('admin.returns.list.nosuccess')}}"><i
+                                    class="fa fa-circle-o"></i>مرجوعی های تایید نشده</a>
+                        </li>
+                        <li><a href="{{route('admin.returns.list.scheduling')}}"><i
+                                    class="fa fa-circle-o"></i>حواله های خروج از انبار موقت</a>
+                        </li>
+                        @can('شکایات')
+                            <li><a href="{{route('admin.Complaints.list')}}"><i
+                                        class="fa fa-circle-o"></i>لیست شکایات</a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
 
                 @if(Gate::check('فاکتور های تسویه نشده') || Gate::check('صورت حساب های تسویه نشده')
                  || Gate::check('فاکتور های تسویه شده') || Gate::check('صورت حساب های تسویه شده')
@@ -595,6 +644,9 @@
                                         class="fa fa-circle-o"></i>لیست تراکنش های مشتری</a>
                             </li>
 
+                                <li><a href="#"><i
+                                            class="fa fa-circle-o"></i>درخواست وجه</a>
+                                </li>
 
                         </ul>
                     </li>
@@ -628,11 +680,47 @@
                 {{--                @endif--}}
 
 
+                <li class="treeview" id="barnam">
+                    <a href="#">
+                        <i class="fa fa-tasks"></i> <span>برنامه ریزی</span>
+                        <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
 
+                        @can('صف تولید')
+                            <li><a href="{{route('admin.product.list.list')}}"><i
+                                        class="fa fa-circle-o"></i>درخواست تولید</a>
+                            </li>
+                        @endcan
 
+                            <li><a href="#"><i
+                                        class="fa fa-circle-o"></i>جدول خطوط تولید</a>
+                            </li>
 
+                            <li><a href="#"><i
+                                        class="fa fa-circle-o"></i>شارژ انبار</a>
+                            </li>
 
+{{--                        @can('پلن خطوط تولید')--}}
+{{--                            <li><a href="{{route('admin.pPlanning.list')}}"><i--}}
+{{--                                        class="fa fa-circle-o"></i>پلن خطوط تولید</a>--}}
+{{--                            </li>--}}
+{{--                        @endcan--}}
+{{--                        @can('سفارش تولید')--}}
+{{--                            <li><a href="{{route('admin.productionorder.list')}}"><i--}}
+{{--                                        class="fa fa-circle-o"></i>سفارش تولید</a>--}}
+{{--                            </li>--}}
+{{--                        @endcan--}}
+{{--                        @can('برنامه ریزی تولید')--}}
+{{--                            <li><a href="{{route('admin.viewproduct.list')}}"><i--}}
+{{--                                        class="fa fa-circle-o"></i>برنامه ریزی تولید</a>--}}
+{{--                            </li>--}}
+{{--                        @endcan--}}
 
+                    </ul>
+                </li>
 
 
                 @if(Gate::check('تولید') || Gate::check('صف تولید')
@@ -652,26 +740,7 @@
                                             class="fa fa-circle-o"></i>تولید</a>
                                 </li>
                             @endcan
-                            @can('صف تولید')
-                                <li><a href="{{route('admin.product.list.list')}}"><i
-                                            class="fa fa-circle-o"></i>صف تولید</a>
-                                </li>
-                            @endcan
-                            @can('پلن خطوط تولید')
-                                <li><a href="{{route('admin.pPlanning.list')}}"><i
-                                            class="fa fa-circle-o"></i>پلن خطوط تولید</a>
-                                </li>
-                            @endcan
-                            @can('سفارش تولید')
-                                <li><a href="{{route('admin.productionorder.list')}}"><i
-                                            class="fa fa-circle-o"></i>سفارش تولید</a>
-                                </li>
-                            @endcan
-                            @can('برنامه ریزی تولید')
-                                <li><a href="{{route('admin.viewproduct.list')}}"><i
-                                            class="fa fa-circle-o"></i>برنامه ریزی تولید</a>
-                                </li>
-                            @endcan
+
                             @can('ثبت اتفاقات تولید')
                                 <li class="treeview" id="manufacturing_m">
                                     <a href="#">
@@ -715,10 +784,6 @@
                         </ul>
                     </li>
                 @endif
-
-
-
-
 
                 @if(Gate::check('انبار مستربچ') || Gate::check('انبار مواد پلیمیری')
                     || Gate::check('انبار کالاهای ساخته شده') || Gate::check('انبار کالاهای ساخته شده')
@@ -811,15 +876,14 @@
                                     </ul>
                                 </li>
                             @endif
-
+                                <li><a href="#"><i
+                                            class="fa fa-circle-o"></i>کالای امانی</a>
+                                </li>
 
                         </ul>
                     </li>
 
                 @endif
-
-
-
 
                 @if(Gate::check('گزارش عملکرد ماهانه')||Gate::check('گزارش خروج کالا'))
 

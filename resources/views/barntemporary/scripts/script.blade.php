@@ -39,6 +39,7 @@
                 {data: 'color_id', name: 'color_id'},
                 {data: 'date', name: 'date'},
                 {data: 'number', name: 'number'},
+                {data: 'status', name: 'status'},
             ]
         });
 

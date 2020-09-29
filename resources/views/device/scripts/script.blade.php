@@ -135,5 +135,5 @@
         })
     });
     $('#foundation').addClass('active');
-    $('#foundation_c').addClass('active');
+    $('#foundation_b').addClass('active');
 </script>

@@ -41,7 +41,7 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 8, "Acs" ]],
+            "order": [[8, "Acs"]],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $('td:eq(0)', nRow).css('background-color', '#e8ecff');
                 if (aData.status == 'اتمام یافته') {
@@ -446,7 +446,6 @@
         added_inputs_array_table3(data, added_inputs3_array.length - 1);
     }
 
-
     $('body').on('click', '.deleteProduct', function () {
         var id = $(this).data("id");
         Swal.fire({
@@ -480,10 +479,10 @@
         })
     });
 
+    $('#retu').addClass('active');
 
-
-    $('#sell').addClass('active');
 </script>
+
 <script>
     kamaDatepicker('datee',
         {
@@ -512,6 +511,7 @@
 
         });
 </script>
+
 <script language="javascript">
 
 

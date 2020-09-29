@@ -209,6 +209,12 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::delete('/areas/delete/{id?}', 'AreasController@delete')->name('admin.areas.delete');
 
 
+        //ProductionInformationController
+        Route::get('/information/list', 'ProductionInformationController@list')->name('admin.information.list');
+        Route::post('/information/store', 'ProductionInformationController@store')->name('admin.information.store');
+
+
+
     });
 
     Route::group(["namespace" => "Customer"], function () {
@@ -224,7 +230,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/CustomerAccount/detail', 'CustomerAccountController@detail')->name('admin.CustomerAccount.list.detail');
         Route::post('/CustomerAccount/store', 'CustomerAccountController@store')->name('admin.CustomerAccount.store');
         Route::post('/CustomerAccount/storee', 'CustomerAccountController@storee')->name('admin.CustomerAccount.storee');
-        Route::post('/CustomerAccount/edit', 'CustomerAccountController@edit')->name('admin.CustomerAccount.edit');
         Route::post('/CustomerAccount/edit', 'CustomerAccountController@edit')->name('admin.CustomerAccount.edit');
         Route::post('/CustomerAccount/payment/update', 'CustomerAccountController@patmentupdate')->name('admin.CustomerAccount.payment.update');
         Route::get('/CustomerAccount/list/{id?}', 'CustomerAccountController@list')->name('admin.CustomerAccount.list');
@@ -325,6 +330,13 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/invoice/cancel', 'InvoiceController@cancel')->name('admin.invoices.success.detail.cancel');
 
 
+        Route::post('/invoice/savetolist', 'InvoiceController@savetolist')->name('admin.invoice.tolist.sotre.detail');
+
+
+
+        Route::get('invoice/list/add', 'InvoiceController@ToList')->name('admin.invoice.add.tolist');
+
+
         //TargetController
         Route::get('/target/list', 'TargetController@list')->name('admin.target.list');
         Route::post('/target/store', 'TargetController@store')->name('admin.target.store');
@@ -369,6 +381,22 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/Returns/print/{id?}', 'ReturnsController@print')->name('admin.Returns.list.detail.print');
         Route::post('/Returns/store/manager', 'ReturnsController@manager')->name('admin.returns.store.manager');
         Route::post('/Returns/store/success', 'ReturnsController@success')->name('admin.returns.store.success.barn');
+        Route::get('/Returns/dm/{id?}', 'ReturnsController@dm')->name('admin.returns.check.dm');
+        Route::post('/Returns/store/admi', 'ReturnsController@admi')->name('admin.returns.store.manager.admi');
+        Route::get('/Returns/stoore/admiin', 'ReturnsController@admiin')->name('admin.returns.store.manager.admii');
+        Route::get('/Returns/chat/{id?}', 'ReturnsController@chat')->name('admin.return.check.chat');
+        Route::get('/Returns/edit/update', 'ReturnsController@update')->name('admin.returns.edit.update');
+        Route::post('/Returns/storee/update', 'ReturnsController@storeeupdate')->name('admin.returns.store.store.update');
+        Route::delete('/Returns/delete/{id?}', 'ReturnsController@delete')->name('admin.returns.delete');
+        Route::post('/Returns/store/barn/admin', 'ReturnsController@barnadmin')->name('admin.returns.store.store.barn.admin');
+        Route::get('/Returns/list/nosuccess', 'ReturnsController@nosuccess')->name('admin.returns.list.nosuccess');
+        Route::get('/Returns/list/success/select', 'ReturnsController@select')->name('admin.returns.list.nosuccess.select');
+        Route::get('/Returns/list/scheduling', 'ReturnsController@scheduling')->name('admin.returns.list.scheduling');
+        Route::post('/Returns/list/store', 'ReturnsController@Liststore')->name('admin.returns.success.list.store');
+        Route::get('/Returns/list/exit/{id?}', 'ReturnsController@exit')->name('admin.returns.exit');
+
+
+
 
 
         //ComplaintsController
@@ -381,8 +409,9 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/Complaints/close', 'ComplaintsController@close')->name('admin.Complaints.close');
         Route::get('/Complaints/check', 'ComplaintsController@check')->name('admin.Complaints.check');
         Route::get('/Complaints/file', 'ComplaintsController@file')->name('admin.Complaints.file.check');
-
         Route::get('/Complaints/filedes', 'ComplaintsController@filedes')->name('admin.Complaints.file.check.des');
+
+
 
 
     });
@@ -509,6 +538,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/payment/list/detail/factor/payment', 'PaymentsController@ListListPayment')->name('admin.payment.list.detail.factor.payment');
         Route::get('/payment/check/list/{id?}', 'PaymentsController@CheckList')->name('admin.payment.check.list');
         Route::get('/payment/list/detail/factor/pack', 'PaymentsController@ListListpack')->name('admin.payment.list.detail.factor.pack');
+        Route::get('/payment/statussort/statussort', 'PaymentsController@statussort')->name('admin.payment.list.detail.statussort');
 
 
 
@@ -525,6 +555,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/PaymentDocument/store/payment', 'PaymentDocumentController@store')->name('admin.CustomerAccount.store.payment');
 
     });
+
 
     Route::group(["namespace" => "Manufacturing"], function () {
 
@@ -623,7 +654,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
     Route::get('/showDatatable', 'TestController@showDatatable')->name('showDatatable');
     Route::get('/refresh', 'TestController@refresh')->name('admin.table.refresh');
     Route::post('/updateOrder', 'TestController@updateOrder')->name('updateOrder');
-
     Route::get('/send', 'NotifController@tttt');
 
 

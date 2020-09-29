@@ -38,7 +38,10 @@
                         <tbody>
                         </tbody>
                     </table>
-                    <a class="btn btn-primary" href="javascript:void(0)" id="bulk_delete">ارسال برای زمان بندی بارگیری</a>
+                    <a class="btn btn-primary" href="javascript:void(0)" id="bulk_delete">ارسال برای زمان بندی
+                        بارگیری</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="btn btn-danger" href="javascript:void(0)" id="To_List">ارسال برای صف تولید</a>
                 </div>
             </div>
         </div>

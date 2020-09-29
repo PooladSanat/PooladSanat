@@ -323,15 +323,23 @@ class CustomerAccountController extends Controller
 
     public function edit(Request $request)
     {
+
+
         $CustomerAccount = CustomerAccount::where('customer_id', $request->id_customer)->first();
+
         $detail_customer_payment = \DB::table('detail_customer_payment')
             ->where('id', $request->id_payment)->first();
+
+        $clearing = \DB::table('clearing')
+            ->where('id', $detail_customer_payment->payment_id)->first();
+
         \DB::beginTransaction();
         try {
             CustomerAccount::where('customer_id', $request->id_customer)
                 ->update([
                     'creditor' => $CustomerAccount->creditor - $detail_customer_payment->price + $request->price,
                 ]);
+
             \DB::table('detail_customer_payment')
                 ->where('id', $request->id_payment)
                 ->update([
@@ -341,7 +349,31 @@ class CustomerAccountController extends Controller
                     'shenase' => $request->shanase,
                     'price' => $request->price,
                     'date' => $request->date,
+                    'descriptionn' => $request->shahr,
                 ]);
+            if ($request->price < $clearing->price) {
+                $clearings = array();
+                $clearing_factor = \DB::table('clearing_factor')
+                    ->where('clearing_id', $clearing->id)->get();
+                foreach ($clearing_factor as $item) {
+                    $clearings[] = $item->pack_id;
+                }
+                \DB::table('factors')
+                    ->whereIn('pack_id', $clearings)
+                    ->update([
+                        'end' => null,
+                        'payment' => 0,
+                    ]);
+                \DB::table('clearing')
+                    ->where('id', $clearing->id)
+                    ->update([
+                        'status' => 0,
+                    ]);
+                \DB::table('payments')
+                    ->where('clearing_id', $clearing->id)
+                    ->delete();
+            }
+
             \DB::commit();
         } catch (Exception $exception) {
             \DB::rollBack();

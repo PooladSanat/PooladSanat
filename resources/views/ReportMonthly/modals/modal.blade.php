@@ -150,7 +150,7 @@
                                                 </li>
                                                 <li style="width: 25%;"><a href="#m" data-toggle="tab">تعداد مرجوعی</a>
                                                 </li>
-                                                <li style="width: 24%;"><a href="#n" data-toggle="tab">اسناد پرداختی</a>
+                                                <li style="width: 24%;"><a href="#n" data-toggle="tab">اسناد دریافتی</a>
                                                 </li>
                                             </ul>
                                             <div class="tab-content">

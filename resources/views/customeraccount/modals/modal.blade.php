@@ -211,6 +211,11 @@
                                             <input type="text" class="form-control" id="date" name="date">
                                         </div>
 
+                                        <div class="col-md-12">
+                                            <label>شرح</label>
+                                            <input type="text" class="form-control" id="shahr" name="shahr">
+                                        </div>
+
                                     </div>
 
                                 </div>

@@ -20,8 +20,8 @@
                                     <input type="hidden" name="id" id="id">
                                     @csrf
                                     <div class="row">
-                                        <div class="col-md-12">
 
+                                        <div class="col-md-12">
                                                 <label>نام صاحب حساب
                                                     <span
                                                         style="color: red"
@@ -30,11 +30,9 @@
                                                 <input type="text" id="name" name="name" class="form-control"
                                                        placeholder="لطفا نام صاحب حساب را وارد کنید"
                                                        required>
-
                                         </div>
 
                                         <div class="col-md-12">
-
                                                 <label>نام بانک
                                                     <span
                                                         style="color: red"
@@ -43,19 +41,17 @@
                                                 <input type="text" id="NameBank" name="NameBank" class="form-control"
                                                        placeholder="لطفا نام بانک را وارد کنید"
                                                        required>
-
                                         </div>
 
                                         <div class="col-md-12">
-
                                                 <label>شماره کارت
                                                 </label>
                                                 <input type="text" id="CardNumber" name="CardNumber"
                                                        class="form-control"
                                                        placeholder="لطفا شماره کارت را وارد کنید"
                                                        required>
-
                                         </div>
+
                                         <div class="col-md-12">
 
                                                 <label>شماره حساب
@@ -79,16 +75,13 @@
                                         </div>
 
                                         <div class="col-md-12">
-
                                                 <label>وضعیت حساب
                                                 </label>
                                                 <select class="form-control" name="status" id="status">
                                                     <option value="1">فعال</option>
                                                     <option value="2"> غیر فعال</option>
                                                 </select>
-
                                         </div>
-
 
                                     </div>
                                     <br/>

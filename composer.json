@@ -20,6 +20,7 @@
         "milon/barcode": "^6.0",
         "morilog/jalali": "3.*",
         "renatomarinho/laravel-page-speed": "^1.8",
+        "simplesoftwareio/simple-qrcode": "^4.0",
         "sofa/eloquence": "~5.3",
         "spatie/db-dumper": "^2.15",
         "spatie/laravel-activitylog": "^3.9",

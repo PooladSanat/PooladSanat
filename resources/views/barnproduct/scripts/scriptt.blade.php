@@ -15,7 +15,7 @@
         load_data();
 
         function load_data(from_check = '') {
-            $('#data-table').DataTable({
+            $('#data-tableew').DataTable({
                 processing: true,
                 serverSide: true,
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -39,7 +39,7 @@
                 },
 
                 ajax: {
-                    ajax: "{{ route('admin.barnproduct.list') }}",
+                    ajax: "{{ route('admin.barnproduct.listtwo') }}",
                     data:
                         {
                             from_check: from_check,

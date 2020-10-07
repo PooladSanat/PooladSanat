@@ -138,6 +138,7 @@
             $('#changedateModel').modal('show');
             $('#id_d').val(id);
         });
+
         $('body').on('click', '.change-datee', function () {
             var id = $(this).data('id');
             $('#changedateModele').modal('show');
@@ -295,7 +296,6 @@
                 }
             });
         });
-
 
         $('body').on('click', '.plus-number', function () {
             var product_id = $(this).data('id');

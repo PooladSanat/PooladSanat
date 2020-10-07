@@ -171,6 +171,7 @@ return [
         ConsoleTVs\Charts\ChartsServiceProvider::class,
         Milon\Barcode\BarcodeServiceProvider::class,
         NotificationChannels\ChatAPI\ChatAPIServiceProvider::class,
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
 
 
 
@@ -245,6 +246,7 @@ return [
         'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
 
     ],
 

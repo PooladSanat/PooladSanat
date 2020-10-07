@@ -17,7 +17,7 @@
         <div class="col-md-3">
             {!!$a!!}
         </div>
-        <br/>
+
 
 
 

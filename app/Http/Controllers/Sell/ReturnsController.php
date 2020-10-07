@@ -15,11 +15,14 @@ use App\Product;
 use App\Returns;
 use App\Setting;
 use App\User;
+use BaconQrCode\Encoder\QrCode;
 use Carbon\Carbon;
 use DB;
 use Gate;
 use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
+use Milon\Barcode\DNS1D;
+use Milon\Barcode\DNS2D;
 use Mockery\Exception;
 use Morilog\Jalali\Jalalian;
 use Response;
@@ -118,7 +121,6 @@ class ReturnsController extends Controller
         return view('returns.list', compact('customers', 'colors', 'products'));
 
     }
-
 
     public function scheduling(Request $request)
     {
@@ -1062,7 +1064,7 @@ class ReturnsController extends Controller
     public function success(Request $request)
     {
         $date = Carbon::now();
-        $carbon = Carbon::now()->timezone('Asia/Tehran');
+        $carbon = Carbon::now();
         $has = DB::table('barn_temporaries')
             ->where('return_id', $request->id_d)
             ->first();
@@ -1200,6 +1202,19 @@ class ReturnsController extends Controller
             ->first();
         return response()->json($data);
 
+    }
+
+    public function qr(Request $request)
+    {
+
+        $print = $request->print;
+        $returns = DB::table('returns')
+            ->where('id', $request->id)->first();
+        $name = Customer::where('id', $returns->customer_id)->first();
+        $merge = 'R' . $request->id . ' - ' . $name->name;
+        $a = DNS2D::getBarcodePNGPath($merge, 'QRCODE');
+        $view = \View::make('returns.qr', compact('a', 'returns', 'print'));
+        return $view->render();
     }
 
     public function storeinvoice(Request $request)
@@ -1347,6 +1362,8 @@ class ReturnsController extends Controller
 
             }
             if ($row->status == 4) {
+
+
                 if (Gate::check('نظر QC')) {
                     $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->id . '" data-original-title="درخواست مرجوعی"
@@ -1354,6 +1371,15 @@ class ReturnsController extends Controller
                        <i class="fa fa-file-text fa-lg" title="نظر QC"></i>
                        </a>&nbsp;&nbsp;';
                 }
+            }
+            if ($row->status != 1 and $row->status != 2 and $row->status != 3) {
+
+                $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="درخواست مرجوعی"
+                       class="qr">
+                       <i class="fa fa-barcode fa-lg" title="چاپ QR"></i>
+                       </a>&nbsp;&nbsp;';
+
             }
             if ($row->status == 3) {
                 if (Gate::check('نظر انبار')) {

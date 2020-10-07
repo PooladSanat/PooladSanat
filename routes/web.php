@@ -214,7 +214,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/information/store', 'ProductionInformationController@store')->name('admin.information.store');
 
 
-
     });
 
     Route::group(["namespace" => "Customer"], function () {
@@ -267,7 +266,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/customers/detail/traconesh', 'CustomerController@traconesh')->name('admin.customer.detail.traconesh.list');
         Route::get('/customers/detail/kharid', 'CustomerController@kharid')->name('admin.customer.detail.kharid.list');
         Route::get('/customers/detail/asnad', 'CustomerController@asnad')->name('admin.customer.detail.asnad.list');
-
 
 
     });
@@ -333,7 +331,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/invoice/savetolist', 'InvoiceController@savetolist')->name('admin.invoice.tolist.sotre.detail');
 
 
-
         Route::get('invoice/list/add', 'InvoiceController@ToList')->name('admin.invoice.add.tolist');
 
 
@@ -386,7 +383,17 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/Returns/stoore/admiin', 'ReturnsController@admiin')->name('admin.returns.store.manager.admii');
         Route::get('/Returns/chat/{id?}', 'ReturnsController@chat')->name('admin.return.check.chat');
         Route::get('/Returns/edit/update', 'ReturnsController@update')->name('admin.returns.edit.update');
+
+
+
         Route::post('/Returns/storee/update', 'ReturnsController@storeeupdate')->name('admin.returns.store.store.update');
+
+
+
+        Route::get('/Returns/qr', 'ReturnsController@qr')->name('admin.returns.store.store.qr');
+
+
+
         Route::delete('/Returns/delete/{id?}', 'ReturnsController@delete')->name('admin.returns.delete');
         Route::post('/Returns/store/barn/admin', 'ReturnsController@barnadmin')->name('admin.returns.store.store.barn.admin');
         Route::get('/Returns/list/nosuccess', 'ReturnsController@nosuccess')->name('admin.returns.list.nosuccess');
@@ -394,9 +401,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/Returns/list/scheduling', 'ReturnsController@scheduling')->name('admin.returns.list.scheduling');
         Route::post('/Returns/list/store', 'ReturnsController@Liststore')->name('admin.returns.success.list.store');
         Route::get('/Returns/list/exit/{id?}', 'ReturnsController@exit')->name('admin.returns.exit');
-
-
-
 
 
         //ComplaintsController
@@ -410,8 +414,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/Complaints/check', 'ComplaintsController@check')->name('admin.Complaints.check');
         Route::get('/Complaints/file', 'ComplaintsController@file')->name('admin.Complaints.file.check');
         Route::get('/Complaints/filedes', 'ComplaintsController@filedes')->name('admin.Complaints.file.check.des');
-
-
 
 
     });
@@ -464,6 +466,21 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
         //BarnProductController
         Route::get('/barnproduct/list', 'BarnProductController@list')->name('admin.barnproduct.list');
+
+
+
+        Route::get('/barnproduct/listtwo', 'BarnProductController@listtwo')->name('admin.barnproduct.listtwo');
+
+
+
+
+
+
+
+
+
+
+
         Route::get('/barnproduct/receiptproduct', 'BarnProductController@receiptproduct')->name('admin.receiptproduct.list');
         Route::get('/barnproduct/receiptwizard/{id?}', 'BarnProductController@receiptwizard')->name('admin.receiptproduct.wizard');
         Route::post('/barnproduct/store', 'BarnProductController@store')->name('admin.barnproduct.store');
@@ -505,14 +522,15 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('ReportMonthly/print/exit', 'ReportMonthlyController@ExitPrint')->name('admin.CustomerStatusReport.exit.print');
 
 
+
+
+
         Route::get('/ReportMonthly/list/tolid', 'ReportMonthlyController@Tolid')->name('admin.ReportMonthly.list.tolid');
         Route::get('/ReportMonthly/list/frosh', 'ReportMonthlyController@Frosh')->name('admin.ReportMonthly.list.frosh');
         Route::get('/ReportMonthly/list/mar', 'ReportMonthlyController@Mar')->name('admin.ReportMonthly.list.mar');
 
 
-
         Route::get('/ReportMonthly/list/asnad', 'ReportMonthlyController@asnad')->name('admin.ReportMonthly.list.asnad');
-
 
 
     });
@@ -541,7 +559,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/payment/statussort/statussort', 'PaymentsController@statussort')->name('admin.payment.list.detail.statussort');
 
 
-
         //BillsController
         Route::get('/bills/list', 'BillsController@list')->name('admin.bills.list');
         Route::get('/bills/detaillist', 'BillsController@detaillist')->name('admin.bills.detaillist');
@@ -554,8 +571,18 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/PaymentDocument/paymentlist/{id?}', 'PaymentDocumentController@paymentlist')->name('admin.CustomerAccount.check.payment.list');
         Route::post('/PaymentDocument/store/payment', 'PaymentDocumentController@store')->name('admin.CustomerAccount.store.payment');
 
-    });
+        //RequestMoneyController
+        Route::get('/RequestMoney/list', 'RequestMoneyController@list')->name('admin.RequestMoney.list');
+        Route::post('/RequestMoney/store', 'RequestMoneyController@store')->name('admin.RequestMoney.store');
+        Route::post('/RequestMoney/storestatus', 'RequestMoneyController@storestatus')->name('admin.RequestMoney.store.status');
+        Route::delete('/RequestMoney/delete/{id?}', 'RequestMoneyController@delete')->name('admin.RequestMoney.delete');
+        Route::get('/RequestMoney/update/{id?}', 'RequestMoneyController@update')->name('admin.RequestMoney.update');
+        Route::get('/RequestMoney/admin/{id?}', 'RequestMoneyController@admin')->name('admin.RequestMoney.admin');
+        Route::get('RequestMoney/CustomerTransactions', 'RequestMoneyController@CustomerTransactions')->name('admin.RequestMoney.CustomerTransactions');
+        Route::get('/RequestMoney/list/select', 'RequestMoneyController@filter')->name('admin.RequestMoney.filter');
 
+
+    });
 
     Route::group(["namespace" => "Manufacturing"], function () {
 

@@ -14,9 +14,7 @@
 <script type="text/javascript">
 
     invoice_product = [];
-
     invoice_color = [];
-
         @foreach($products as $product)
 
     var invoice_products = {
@@ -25,7 +23,6 @@
         };
     invoice_product.push(invoice_products);
         @endforeach
-
         @foreach($colors as $color)
 
     var invoice_colors = {
@@ -607,6 +604,38 @@
             });
         });
 
+        $('body').on('click', '.qr', function () {
+            var id = $(this).data('id');
+            $('#id').val(id);
+            $('#ajaxqr').modal('show');
+
+
+            $('#saveqr').click(function (e) {
+                var user = $('#productlistFormqr').serialize();
+                $.ajax({
+                    type: "GET",
+                    url: "{{route('admin.returns.store.store.qr')}}?id=" + id,
+                    data: user,
+                    dataType: 'html',
+                    success: function (res) {
+
+
+                        w = window.open(window.location.href, "_blank");
+                        w.document.open();
+                        w.document.write(res);
+                        w.document.close();
+                        w.location.reload();
+
+
+                    }
+                });
+
+
+            });
+
+
+        });
+
         $('body').on('click', '.database', function () {
             var id = $(this).data('id');
             $(".invoicesa").remove();
@@ -645,6 +674,7 @@
                     if (added_inputs4_array.length >= 1)
                         for (var a in added_inputs4_array)
                             added_inputs_array_table3(added_inputs4_array[a], a);
+
                     function added_inputs_array_table3(data, a) {
                         var myNode = document.createElement('div');
                         myNode.id = 'invoiceeee' + a;
@@ -1027,6 +1057,7 @@
                 }
             });
         });
+
 
         $('#savebtnupdate').click(function (e) {
             e.preventDefault();
@@ -1411,7 +1442,6 @@
 
 
 </script>
-
 
 <script language="javascript">
 

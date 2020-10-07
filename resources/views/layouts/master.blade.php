@@ -380,11 +380,11 @@
                                                         class="fa fa-circle-o"></i>Insert های قالب </a>
                                             </li>
                                         @endcan
-                                            @can('تعریف دستگاه')
-                                                <li><a href="{{route('admin.device.list')}}"><i
-                                                            class="fa fa-circle-o"></i>تعریف دستگاه</a>
-                                                </li>
-                                            @endcan
+                                        @can('تعریف دستگاه')
+                                            <li><a href="{{route('admin.device.list')}}"><i
+                                                        class="fa fa-circle-o"></i>تعریف دستگاه</a>
+                                            </li>
+                                        @endcan
                                         @can('انتصاب محصول به قالب')
                                             <li><a href="{{route('admin.model.product.list')}}"><i
                                                         class="fa fa-circle-o"></i>انتصاب محصول به قالب</a>
@@ -429,58 +429,56 @@
                                         @endcan
 
 
-
                                     </ul>
                                 </li>
                             @endif
 
-                                <li class="treeview" id="foundation_d">
-                                    <a href="#">
-                                        <span>مواد و تامین کنندگان</span>
-                                        <span class="pull-left-container">
+                            <li class="treeview" id="foundation_d">
+                                <a href="#">
+                                    <span>مواد و تامین کنندگان</span>
+                                    <span class="pull-left-container">
               <i class="fa fa-angle-right pull-left"></i>
             </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        @can('مواد پلیمیری')
-                                            <li><a href="{{route('admin.polymeric.list')}}"><i
-                                                        class="fa fa-circle-o"></i>مواد پلیمیری</a>
-                                            </li>
-                                        @endcan
-                                        @can('تامین کنندگان')
-                                            <li><a href="{{route('admin.seller.list')}}"><i
-                                                        class="fa fa-circle-o"></i>تامین کنندگان</a>
-                                            </li>
-                                        @endcan
+                                </a>
+                                <ul class="treeview-menu">
+                                    @can('مواد پلیمیری')
+                                        <li><a href="{{route('admin.polymeric.list')}}"><i
+                                                    class="fa fa-circle-o"></i>مواد پلیمیری</a>
+                                        </li>
+                                    @endcan
+                                    @can('تامین کنندگان')
+                                        <li><a href="{{route('admin.seller.list')}}"><i
+                                                    class="fa fa-circle-o"></i>تامین کنندگان</a>
+                                        </li>
+                                    @endcan
 
 
-                                    </ul>
-                                </li>
+                                </ul>
+                            </li>
 
 
-                                <li class="treeview" id="foundation_g">
-                                    <a href="#">
-                                        <span>تعاریف دیگر</span>
-                                        <span class="pull-left-container">
+                            <li class="treeview" id="foundation_g">
+                                <a href="#">
+                                    <span>تعاریف دیگر</span>
+                                    <span class="pull-left-container">
               <i class="fa fa-angle-right pull-left"></i>
             </span>
-                                    </a>
-                                    <ul class="treeview-menu">
+                                </a>
+                                <ul class="treeview-menu">
 
-                                        @can('تعریف شهرها و مناطق')
+                                    @can('تعریف شهرها و مناطق')
 
-                                            <li><a href="{{route('admin.areas.list')}}"><i
-                                                        class="fa fa-circle-o"></i>تعریف شهرها و مناطق</a>
-                                            </li>
-                                        @endcan
+                                        <li><a href="{{route('admin.areas.list')}}"><i
+                                                    class="fa fa-circle-o"></i>تعریف شهرها و مناطق</a>
+                                        </li>
+                                    @endcan
 
 
-
-                                    </ul>
-                                </li>
-                                <li><a href="{{route('admin.information.list')}}"><i
-                                            class="fa fa-circle-o"></i>تعریف اطلاعات تولید</a>
-                                </li>
+                                </ul>
+                            </li>
+                            <li><a href="{{route('admin.information.list')}}"><i
+                                        class="fa fa-circle-o"></i>تعریف اطلاعات تولید</a>
+                            </li>
                         </ul>
                     </li>
                 @endif
@@ -644,9 +642,9 @@
                                         class="fa fa-circle-o"></i>لیست تراکنش های مشتری</a>
                             </li>
 
-                                <li><a href="#"><i
-                                            class="fa fa-circle-o"></i>درخواست وجه</a>
-                                </li>
+                            <li><a href="{{route('admin.RequestMoney.list')}}"><i
+                                        class="fa fa-circle-o"></i>درخواست وجه</a>
+                            </li>
 
                         </ul>
                     </li>
@@ -695,29 +693,29 @@
                             </li>
                         @endcan
 
-                            <li><a href="#"><i
-                                        class="fa fa-circle-o"></i>جدول خطوط تولید</a>
-                            </li>
+                        <li><a href="#"><i
+                                    class="fa fa-circle-o"></i>جدول خطوط تولید</a>
+                        </li>
 
-                            <li><a href="#"><i
-                                        class="fa fa-circle-o"></i>شارژ انبار</a>
-                            </li>
+                        <li><a href="#"><i
+                                    class="fa fa-circle-o"></i>شارژ انبار</a>
+                        </li>
 
-{{--                        @can('پلن خطوط تولید')--}}
-{{--                            <li><a href="{{route('admin.pPlanning.list')}}"><i--}}
-{{--                                        class="fa fa-circle-o"></i>پلن خطوط تولید</a>--}}
-{{--                            </li>--}}
-{{--                        @endcan--}}
-{{--                        @can('سفارش تولید')--}}
-{{--                            <li><a href="{{route('admin.productionorder.list')}}"><i--}}
-{{--                                        class="fa fa-circle-o"></i>سفارش تولید</a>--}}
-{{--                            </li>--}}
-{{--                        @endcan--}}
-{{--                        @can('برنامه ریزی تولید')--}}
-{{--                            <li><a href="{{route('admin.viewproduct.list')}}"><i--}}
-{{--                                        class="fa fa-circle-o"></i>برنامه ریزی تولید</a>--}}
-{{--                            </li>--}}
-{{--                        @endcan--}}
+                        @can('پلن خطوط تولید')
+                            <li><a href="{{route('admin.pPlanning.list')}}"><i
+                                        class="fa fa-circle-o"></i>پلن خطوط تولید</a>
+                            </li>
+                        @endcan
+                        @can('سفارش تولید')
+                            <li><a href="{{route('admin.productionorder.list')}}"><i
+                                        class="fa fa-circle-o"></i>سفارش تولید</a>
+                            </li>
+                        @endcan
+                        @can('برنامه ریزی تولید')
+                            <li><a href="{{route('admin.viewproduct.list')}}"><i
+                                        class="fa fa-circle-o"></i>برنامه ریزی تولید</a>
+                            </li>
+                        @endcan
 
                     </ul>
                 </li>
@@ -823,9 +821,15 @@
                                         @endcan
                                         @can('انبار کالاهای ساخته شده')
                                             <li><a href="{{route('admin.barnproduct.list')}}"><i
-                                                        class="fa fa-circle-o"></i>انبار کالاهای ساخته شده</a>
+                                                        class="fa fa-circle-o"></i>انبار محصولات درجه 1</a>
                                             </li>
                                         @endcan
+
+                                            <li><a href="{{route('admin.barnproduct.listtwo')}}"><i
+                                                        class="fa fa-circle-o"></i>انبار محصولات درجه 2</a>
+                                            </li>
+
+
                                         @can('انبار موقت')
                                             <li><a href="{{route('admin.barntemporary.list')}}"><i
                                                         class="fa fa-circle-o"></i>انبار موقت</a>
@@ -876,9 +880,9 @@
                                     </ul>
                                 </li>
                             @endif
-                                <li><a href="#"><i
-                                            class="fa fa-circle-o"></i>کالای امانی</a>
-                                </li>
+                            <li><a href="#"><i
+                                        class="fa fa-circle-o"></i>کالای امانی</a>
+                            </li>
 
                         </ul>
                     </li>
@@ -962,6 +966,7 @@
                         </ul>
                     </li>
                 @endif
+
             </ul>
         </section>
     </aside>

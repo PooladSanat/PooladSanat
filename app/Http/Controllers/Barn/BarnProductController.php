@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
 use Mockery\Exception;
+use Mockery\Matcher\Not;
 use Morilog\Jalali\Jalalian;
 use Yajra\DataTables\DataTables;
 
@@ -20,9 +21,14 @@ class BarnProductController extends Controller
     public function list(Request $request)
     {
         $colors = Color::all();
-        $products = Product::all();
+        $products = \DB::table('products')
+            ->where('label', 'NOT LIKE', "%D2%")
+            ->get();
         if ($request->ajax()) {
-            $data = BarnsProduct::orderBy('product_id', 'desc')->get();
+
+            $data = \DB::table('View_BarnProduct')
+                ->where('product_name', 'NOT LIKE', "%D2%")
+                ->orderBy('product_id', 'desc')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('Number', function ($row) {
@@ -32,17 +38,6 @@ class BarnProductController extends Controller
                       ' . $row->NumberSold . '
                        </a>';
                     return $btn;
-                })
-                ->addColumn('product_id', function ($row) {
-                    return $row->product->label;
-                })
-                ->addColumn('color_id', function ($row) {
-                    $color = Color::where('id', $row->color_id)->first();
-                    if (!empty($color)) {
-                        return $color->name;
-                    } else {
-                        return '';
-                    }
                 })
                 ->addColumn('true', function ($row) {
                     return abs($row->Inventory - $row->NumberSold);
@@ -59,6 +54,41 @@ class BarnProductController extends Controller
 
     }
 
+    public function listtwo(Request $request)
+    {
+        $colors = Color::all();
+        $products = \DB::table('products')
+            ->where('label', 'LIKE', "%D2%")
+            ->get();
+        if ($request->ajax()) {
+
+            $data = \DB::table('View_BarnProduct')
+                ->where('product_name', 'LIKE', "%D2%")
+                ->orderBy('product_id', 'desc')->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('Number', function ($row) {
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
+                      data-id="' . $row->id . '" data-original-title="ویرایش"
+                       class="detail-factor">
+                      ' . $row->NumberSold . '
+                       </a>';
+                    return $btn;
+                })
+                ->addColumn('true', function ($row) {
+                    return abs($row->Inventory - $row->NumberSold);
+                })
+                ->addColumn('action', function ($row) {
+                    return $this->actions($row);
+                })
+                ->rawColumns(['Number', 'action'])
+                ->make(true);
+
+        }
+        return view('barnproduct.listtwo', compact('colors', 'products'));
+
+
+    }
 
     public function ListList(Request $request)
     {
@@ -228,7 +258,6 @@ class BarnProductController extends Controller
             ]);
         return response()->json(['success' => 'success']);
     }
-
 
     public function receiptreturn(Request $request)
     {
@@ -418,7 +447,6 @@ class BarnProductController extends Controller
         }
     }
 
-
     public function receiptpolim(Request $request)
     {
         $colors = Polymeric::all();
@@ -512,7 +540,6 @@ class BarnProductController extends Controller
         }
     }
 
-
     public function actions($row)
     {
 
@@ -567,6 +594,5 @@ class BarnProductController extends Controller
         }
         return $btn;
     }
-
 
 }

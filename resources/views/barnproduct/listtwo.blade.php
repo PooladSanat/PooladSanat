@@ -7,13 +7,13 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption">
-                        لیست موجودی انبار محصولات درجه اول ساخته شده
+                        لیست موجودی انبار محصولات درجه دوم ساخته شده
                     </div>
                     <div class="tools"></div>
                 </div>
                 <div class="portlet-body">
 
-                    <table class="table table-striped table-bordered data-table" id="data-table">
+                    <table class="table table-striped table-bordered data-table" id="data-tableew">
                         <thead style="background-color: #e8ecff">
                         <tr>
                             <th style="width: 1px">ردیف</th>
@@ -35,6 +35,6 @@
             </div>
         </div>
     </div>
-    @include('barnproduct.modals.modal')
-    @include('barnproduct.scripts.script')
+    @include('barnproduct.modals.modall')
+    @include('barnproduct.scripts.scriptt')
 @endsection

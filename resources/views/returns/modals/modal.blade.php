@@ -12,19 +12,15 @@
                                 <i style="color: white" class="pull-left fa fa-close"></i>
                             </a>
                         </div>
-
                     </div>
                     <div class="portlet-body form">
                         <div class="form-body">
                             <div class="form-group">
-
                                 <form autocomplete="off" id="productForm" name="productForm">
-
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="row">
-
 
                                                 <div class="col-md-4">
                                                     <label>مشتری:</label>
@@ -1155,6 +1151,70 @@
                                                 value="ثبت">
                                             ثبت
                                         </button>
+                                        <button style="width: 130px" type="button" class="btn btn-danger"
+                                                data-dismiss="modal">
+                                            انصراف
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="ajaxqr" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption" id="caption">
+                        چاپ QR
+                    </div>
+                    <div class="caption pull-left">
+                        <a data-dismiss="modal">
+                            <i style="color: white" class="pull-left fa fa-close"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                        <div class="form-group">
+
+                            <form autocomplete="off" id="productlistFormqr" name="productlistFormqr"
+                                  class="form-horizontal"
+                                  method="get" action="{{route('admin.returns.store.store.qr')}}" target="_blank">
+                                <input type="hidden" name="product_id" id="product_id">
+                                <input type="hidden" name="commodity_id" id="commodity_id">
+                                <input type="hidden" name="id" id="id">
+                                @csrf
+                                <div class="row">
+
+                                    <div class="col-md-12">
+                                        <label>تعداد را وارد کنید
+                                            <span
+                                                style="color: red"
+                                                class="required-mark">*</span>
+                                        </label>
+                                        <input type="text" name="print" id="print" class="form-control">
+                                    </div>
+
+
+                                </div>
+                                <br/>
+                                <hr/>
+                                <div class="modal-footer">
+                                    <div class="text-left">
+
+                                        <input type="submit" class="btn btn-success col-md-3"
+                                               value="چاپ">
+
                                         <button style="width: 130px" type="button" class="btn btn-danger"
                                                 data-dismiss="modal">
                                             انصراف

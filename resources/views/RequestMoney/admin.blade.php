@@ -32,24 +32,27 @@
                             <tr>
                                 <th>{{$number++}}</th>
                                 <th>{{$requestmoney->date}}</th>
-                                <th>
-                                    @if (!empty($requestmoney->price))
-                                        {{$requestmoney->descriptionn}}
+
+                                @if(!empty($requestmoney->return_id))
+                                    <th> بستانکار بابت مرجوعی با کد {{$requestmoney->return_id}}</th>
+                                @else
+                                    @if(!empty($requestmoney->price))
+                                        <th>{{$requestmoney->descriptionn}}</th>
                                     @else
-                                        {{'بدهی بابت فاکتور' . ' ' . $requestmoney->rahkaran}}
+                                        <th> بدهی بابت فاکتور {{$requestmoney->rahkaran}}</th>
                                     @endif
-                                </th>
+                                @endif
+
                                 @if($requestmoney->sum != 0)
                                     <th style="background-color: rgba(255,0,0,0.31)">
                                         {{number_format(abs($requestmoney->sum))}}
-
                                     </th>
                                 @else
                                     <th>
                                         {{number_format(abs($requestmoney->sum))}}
-
                                     </th>
                                 @endif
+
                                 @if($requestmoney->price != 0)
                                     <th style="background-color: rgba(0,0,255,0.25)">
                                         {{number_format($requestmoney->price)}}

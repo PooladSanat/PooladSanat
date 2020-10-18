@@ -11,7 +11,6 @@
         });
 
 
-
         load_data();
 
         function load_data(from_check = '') {
@@ -50,6 +49,7 @@
                     {data: 'product_name', name: 'product_name'},
                     {data: 'color_name', name: 'color_name'},
                     {data: 'Inventory', name: 'Inventory'},
+                    {data: 'Inventor', name: 'Inventor'},
                     {data: 'Number', name: 'Number'},
                     {data: 'true', name: 'true'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
@@ -70,7 +70,7 @@
         $('#createNewProduct').click(function () {
             $('#productForm').trigger("reset");
             $('#ajaxModel').modal('show');
-            $('#caption').text('افزودن رنگ');
+            $('#caption').text('افزودن موجودی');
             $('#product_id').val('');
         });
 
@@ -83,6 +83,7 @@
                 $('#color').val(data.color_id);
                 $('#product').val(data.product_id);
                 $('#PhysicalInventory').val(data.Inventory);
+                $('#PhysicalInventor').val(data.Inventor);
                 $('#product_id').val(id);
             })
 
@@ -158,7 +159,7 @@
                     if (data.success) {
                         $('#productForm').trigger("reset");
                         $('#ajaxModel').modal('hide');
-                        table.draw();
+                        $('#data-table').DataTable().draw();
                         Swal.fire({
                             title: 'موفق',
                             text: 'موجودی انبار با موفقیت در سیستم بروزرسانی شد',

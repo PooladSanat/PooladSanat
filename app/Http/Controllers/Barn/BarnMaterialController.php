@@ -28,6 +28,20 @@ class BarnMaterialController extends Controller
                     }
 
                 })
+
+
+                ->addColumn('PhysicalInventor', function ($row) {
+                    $barncolor = BarnMaterial::where('polymeric_id', $row->id)
+                        ->first();
+                    if (!empty($barncolor->PhysicalInventor)) {
+                        return $barncolor->PhysicalInventor;
+
+                    } else {
+                        return 0;
+                    }
+
+                })
+
                 ->addColumn('name', function ($row) {
                     $name = Seller::where('id', $row->name)->first();
                     return $name->company;

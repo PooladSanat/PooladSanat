@@ -561,35 +561,36 @@
                         </ul>
                     </li>
                 @endif
-
-                <li class="treeview" id="retu">
-                    <a href="#">
-                        <i class="fa ion-arrow-return-right"></i> <span>مرجوعی ها</span>
-                        <span class="pull-left-container">
+                @can('مرجوعی')
+                    <li class="treeview" id="retu">
+                        <a href="#">
+                            <i class="fa ion-arrow-return-right"></i> <span>مرجوعی ها</span>
+                            <span class="pull-left-container">
                         <i class="fa fa-angle-right pull-left"></i>
                         </span>
-                    </a>
-                    <ul class="treeview-menu">
+                        </a>
+                        <ul class="treeview-menu">
 
-                        @can('مرجوعی')
-                            <li><a href="{{route('admin.returns.list')}}"><i
-                                        class="fa fa-circle-o"></i>لیست مرجوعی</a>
-                            </li>
-                        @endcan
-                        <li><a href="{{route('admin.returns.list.nosuccess')}}"><i
-                                    class="fa fa-circle-o"></i>مرجوعی های تایید نشده</a>
-                        </li>
-                        <li><a href="{{route('admin.returns.list.scheduling')}}"><i
-                                    class="fa fa-circle-o"></i>حواله های خروج از انبار موقت</a>
-                        </li>
-                        @can('شکایات')
-                            <li><a href="{{route('admin.Complaints.list')}}"><i
-                                        class="fa fa-circle-o"></i>لیست شکایات</a>
-                            </li>
-                        @endcan
-                    </ul>
-                </li>
+                            @can('مرجوعی')
+                                <li><a href="{{route('admin.returns.list')}}"><i
+                                            class="fa fa-circle-o"></i>لیست مرجوعی</a>
+                                </li>
+                                <li><a href="{{route('admin.returns.list.nosuccess')}}"><i
+                                            class="fa fa-circle-o"></i>مرجوعی های تایید نشده</a>
+                                </li>
+                                <li><a href="{{route('admin.returns.list.scheduling')}}"><i
+                                            class="fa fa-circle-o"></i>حواله های خروج از انبار موقت</a>
+                                </li>
+                            @endcan
 
+                            @can('شکایات')
+                                <li><a href="{{route('admin.Complaints.list')}}"><i
+                                            class="fa fa-circle-o"></i>لیست شکایات</a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endcan
                 @if(Gate::check('فاکتور های تسویه نشده') || Gate::check('صورت حساب های تسویه نشده')
                  || Gate::check('فاکتور های تسویه شده') || Gate::check('صورت حساب های تسویه شده')
                  || Gate::check('اسناد پرداختی')
@@ -677,49 +678,50 @@
                 {{--                    </li>--}}
                 {{--                @endif--}}
 
-
-                <li class="treeview" id="barnam">
-                    <a href="#">
-                        <i class="fa fa-tasks"></i> <span>برنامه ریزی</span>
-                        <span class="pull-left-container">
+                @can('صف تولید')
+                    <li class="treeview" id="barnam">
+                        <a href="#">
+                            <i class="fa fa-tasks"></i> <span>برنامه ریزی</span>
+                            <span class="pull-left-container">
                         <i class="fa fa-angle-right pull-left"></i>
                         </span>
-                    </a>
-                    <ul class="treeview-menu">
+                        </a>
+                        <ul class="treeview-menu">
 
-                        @can('صف تولید')
-                            <li><a href="{{route('admin.product.list.list')}}"><i
-                                        class="fa fa-circle-o"></i>درخواست تولید</a>
-                            </li>
-                        @endcan
+                            @can('صف تولید')
+                                <li><a href="{{route('admin.product.list.list')}}"><i
+                                            class="fa fa-circle-o"></i>درخواست تولید</a>
+                                </li>
+                                <li><a href="#"><i
+                                            class="fa fa-circle-o"></i>جدول خطوط تولید</a>
+                                </li>
 
-                        <li><a href="#"><i
-                                    class="fa fa-circle-o"></i>جدول خطوط تولید</a>
-                        </li>
+                                <li><a href="#"><i
+                                            class="fa fa-circle-o"></i>شارژ انبار</a>
+                                </li>
+                            @endcan
 
-                        <li><a href="#"><i
-                                    class="fa fa-circle-o"></i>شارژ انبار</a>
-                        </li>
 
-                        @can('پلن خطوط تولید')
-                            <li><a href="{{route('admin.pPlanning.list')}}"><i
-                                        class="fa fa-circle-o"></i>پلن خطوط تولید</a>
-                            </li>
-                        @endcan
-                        @can('سفارش تولید')
-                            <li><a href="{{route('admin.productionorder.list')}}"><i
-                                        class="fa fa-circle-o"></i>سفارش تولید</a>
-                            </li>
-                        @endcan
-                        @can('برنامه ریزی تولید')
-                            <li><a href="{{route('admin.viewproduct.list')}}"><i
-                                        class="fa fa-circle-o"></i>برنامه ریزی تولید</a>
-                            </li>
-                        @endcan
 
-                    </ul>
-                </li>
+                            @can('پلن خطوط تولید')
+                                <li><a href="{{route('admin.pPlanning.list')}}"><i
+                                            class="fa fa-circle-o"></i>پلن خطوط تولید</a>
+                                </li>
+                            @endcan
+                            @can('سفارش تولید')
+                                <li><a href="{{route('admin.productionorder.list')}}"><i
+                                            class="fa fa-circle-o"></i>سفارش تولید</a>
+                                </li>
+                            @endcan
+                            @can('برنامه ریزی تولید')
+                                <li><a href="{{route('admin.viewproduct.list')}}"><i
+                                            class="fa fa-circle-o"></i>برنامه ریزی تولید</a>
+                                </li>
+                            @endcan
 
+                        </ul>
+                    </li>
+                @endcan
 
                 @if(Gate::check('تولید') || Gate::check('صف تولید')
                 || Gate::check('پلن خطوط تولید') || Gate::check('سفارش تولید')
@@ -825,9 +827,9 @@
                                             </li>
                                         @endcan
 
-                                            <li><a href="{{route('admin.barnproduct.listtwo')}}"><i
-                                                        class="fa fa-circle-o"></i>انبار محصولات درجه 2</a>
-                                            </li>
+                                        <li><a href="{{route('admin.barnproduct.listtwo')}}"><i
+                                                    class="fa fa-circle-o"></i>انبار محصولات درجه 2</a>
+                                        </li>
 
 
                                         @can('انبار موقت')
@@ -880,8 +882,8 @@
                                     </ul>
                                 </li>
                             @endif
-                            <li><a href="#"><i
-                                        class="fa fa-circle-o"></i>کالای امانی</a>
+                            <li><a href="{{route('admin.transferbarn.list')}}"><i
+                                        class="fa fa-circle-o"></i>انتقال بین انبارها</a>
                             </li>
 
                         </ul>

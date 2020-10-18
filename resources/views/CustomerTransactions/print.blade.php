@@ -148,10 +148,15 @@
                             <tr>
                                 <th>{{$number ++}}</th>
                                 <th>{{$clearing->date}}</th>
-                                @if(!empty($clearing->price))
-                                    <th>{{$clearing->descriptionn}}</th>
+
+                                @if(!empty($clearing->return_id))
+                                    <th> بستانکار بابت مرجوعی با کد {{$clearing->return_id}}</th>
                                 @else
-                                    <th> بدهی بابت فاکتور {{$clearing->rahkaran}}</th>
+                                    @if(!empty($clearing->price))
+                                        <th>{{$clearing->descriptionn}}</th>
+                                    @else
+                                        <th> بدهی بابت فاکتور {{$clearing->rahkaran}}</th>
+                                    @endif
                                 @endif
 
                                 @if(!empty($clearing->sum))

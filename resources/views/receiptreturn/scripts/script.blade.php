@@ -39,6 +39,7 @@
                 {data: 'number', name: 'number'},
                 {data: 'created', name: 'created'},
                 {data: 'time', name: 'time'},
+                {data: 'barn', name: 'barn'},
                 {data: 'action', name: 'action'},
             ]
         });

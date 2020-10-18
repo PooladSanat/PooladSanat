@@ -116,9 +116,9 @@
                         success: function (res) {
                             $('#p').val(res);
                             if (res != null) {
-                                if (res < 0) {
+                                if (parseInt(res) < "0") {
                                     $('#hesab').css('background-color', 'rgba(255,0,0,0.39)').text(formatNumber(Math.abs(res)));
-                                } else if (res > 0) {
+                                } else if (parseInt(res) > "0") {
                                     $('#hesab').css('background-color', 'rgba(0,0,255,0.39)').text(formatNumber(Math.abs(res)));
                                 } else {
                                     $('#hesab').css('background-color', 'rgb(248,255,253)').text(res);

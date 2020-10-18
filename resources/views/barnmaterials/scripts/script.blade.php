@@ -39,6 +39,7 @@
                 {data: 'name', name: 'name'},
                 {data: 'description', name: 'description'},
                 {data: 'PhysicalInventory', name: 'PhysicalInventory'},
+                {data: 'PhysicalInventor', name: 'PhysicalInventor'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
 
             ]

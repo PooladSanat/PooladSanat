@@ -18,16 +18,15 @@
             "columnDefs": [
                 {"orderable": false, "targets": 0},
             ],
-            "order": [[ 6, "deesc" ]],
+            "order": [[7, "deesc"]],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $('td:eq(0)', nRow).css('background-color', '#e8ecff');
-                if (parseInt(aData.PhysicalInventory) <= parseInt(aData.minimum)) {
+                if (parseInt(aData.PhysicalInventory + aData.PhysicalInventor) <= parseInt(aData.minimum)) {
                     $('td', nRow).css('background-color', '#fb8000');
-                } else if (parseInt(aData.PhysicalInventory) >= parseInt(aData.maximum)) {
+                } else if (parseInt(aData.PhysicalInventory + aData.PhysicalInventor) >= parseInt(aData.maximum)) {
                     $('td', nRow).css('background-color', '#00d1fb');
-                }else{
+                } else {
                     $('td', nRow).css('background-color', 'white');
-
                 }
             },
             "language": {
@@ -47,6 +46,7 @@
                 {data: 'combination', name: 'combination'},
                 {data: 'masterbatch', name: 'masterbatch'},
                 {data: 'PhysicalInventory', name: 'PhysicalInventory'},
+                {data: 'PhysicalInventor', name: 'PhysicalInventor'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
 
             ]
@@ -67,6 +67,7 @@
                 $('#ajaxModel').modal('show');
                 $('#caption').text('افزودن موجودی');
                 $('#PhysicalInventory').val(data.PhysicalInventory);
+                $('#PhysicalInventor').val(data.PhysicalInventor);
                 $('#id').val(id);
             })
 

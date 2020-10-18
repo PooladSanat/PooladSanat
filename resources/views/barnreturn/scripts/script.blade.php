@@ -37,6 +37,7 @@
                 {data: 'product_id', name: 'product_id'},
                 {data: 'color_id', name: 'color_id'},
                 {data: 'Inventory', name: 'Inventory'},
+                {data: 'Inventor', name: 'Inventor'},
 
             ]
         });

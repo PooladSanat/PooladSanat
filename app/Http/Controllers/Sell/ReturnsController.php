@@ -454,6 +454,7 @@ class ReturnsController extends Controller
     public function barnadmin(Request $request)
     {
 
+
         $detail_returns = DB::table('detail_returns')
             ->whereNull('state')
             ->where('return_id', $request->id_m)->get();
@@ -505,6 +506,8 @@ class ReturnsController extends Controller
                         ]);
                 }
             }
+
+
             foreach ($detail_returns as $detail_return) {
 
                 $details = DB::table('invoice_product')
@@ -520,43 +523,31 @@ class ReturnsController extends Controller
                     ->where('pack_id', $pack_id->pack)
                     ->first();
 
-                if ($factor->status == 0) {
-                    DB::table('schedulings')
-                        ->where('detail_id', $details->id)
-                        ->update([
-                            'number' => $detail_return->number,
-                            'total' => $detail_return->number,
-                        ]);
-                    $sumd = DB::table('schedulings')
-                        ->where('detail_id', $details->id)
-                        ->sum('total');
-                    DB::table('factors')
-                        ->where('pack_id', $pack_id->pack)->update([
-                            'sum' => $factor->sum - $price,
-                            'total' => $sumd,
-                        ]);
-                    DB::table('barn_temporaries')
-                        ->where('return_id', $request->id_m)
-                        ->update([
-                            'status' => 1,
-                        ]);
 
-                } else {
-                    DB::table('detail_customer_payment')
-                        ->insert([
-                            'customer_id' => $factor->customer_id,
-                            'price' => $price,
-                            'return_id' => $request->id_m,
-                            'descriptionn' => 'بابت مرجوع نمودن فاکتور',
-                            'datee' => Jalalian::forge($carbon)->format('Y/m/d'),
-                        ]);
+                DB::table('returns_payment')
+                    ->insert([
+                        'return_id' => $request->id_m,
+                        'customer_id' => $factor->customer_id,
+                        'price' => $price,
+                        'number_ret' => $detail_return->number,
+                        'date' => Jalalian::forge($carbon)->format('Y/m/d'),
+                    ]);
 
-                    DB::table('barn_temporaries')
-                        ->where('return_id', $request->id_m)
-                        ->update([
-                            'status' => 1,
-                        ]);
-                }
+
+//                DB::table('detail_customer_payment')
+//                    ->insert([
+//                        'customer_id' => $factor->customer_id,
+//                        'price' => $price,
+//                        'return_id' => $request->id_m,
+//                        'descriptionn' => 'بابت مرجوع نمودن فاکتور',
+//                        'datee' => Jalalian::forge($carbon)->format('Y/m/d'),
+//                    ]);
+
+                DB::table('barn_temporaries')
+                    ->where('return_id', $request->id_m)
+                    ->update([
+                        'status' => 1,
+                    ]);
             }
         } else {
             DB::table('return_admin')

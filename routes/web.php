@@ -326,11 +326,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('invoice/trash/search', 'InvoiceController@search')->name('admin.invoice.trash.search');
         Route::get('invoice/list/time', 'InvoiceController@ListTime')->name('admin.invoice.success.list.time');
         Route::post('/invoice/cancel', 'InvoiceController@cancel')->name('admin.invoices.success.detail.cancel');
-
-
         Route::post('/invoice/savetolist', 'InvoiceController@savetolist')->name('admin.invoice.tolist.sotre.detail');
-
-
         Route::get('invoice/list/add', 'InvoiceController@ToList')->name('admin.invoice.add.tolist');
 
 
@@ -383,17 +379,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/Returns/stoore/admiin', 'ReturnsController@admiin')->name('admin.returns.store.manager.admii');
         Route::get('/Returns/chat/{id?}', 'ReturnsController@chat')->name('admin.return.check.chat');
         Route::get('/Returns/edit/update', 'ReturnsController@update')->name('admin.returns.edit.update');
-
-
-
         Route::post('/Returns/storee/update', 'ReturnsController@storeeupdate')->name('admin.returns.store.store.update');
-
-
-
         Route::get('/Returns/qr', 'ReturnsController@qr')->name('admin.returns.store.store.qr');
-
-
-
         Route::delete('/Returns/delete/{id?}', 'ReturnsController@delete')->name('admin.returns.delete');
         Route::post('/Returns/store/barn/admin', 'ReturnsController@barnadmin')->name('admin.returns.store.store.barn.admin');
         Route::get('/Returns/list/nosuccess', 'ReturnsController@nosuccess')->name('admin.returns.list.nosuccess');
@@ -466,21 +453,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
         //BarnProductController
         Route::get('/barnproduct/list', 'BarnProductController@list')->name('admin.barnproduct.list');
-
-
-
         Route::get('/barnproduct/listtwo', 'BarnProductController@listtwo')->name('admin.barnproduct.listtwo');
-
-
-
-
-
-
-
-
-
-
-
         Route::get('/barnproduct/receiptproduct', 'BarnProductController@receiptproduct')->name('admin.receiptproduct.list');
         Route::get('/barnproduct/receiptwizard/{id?}', 'BarnProductController@receiptwizard')->name('admin.receiptproduct.wizard');
         Route::post('/barnproduct/store', 'BarnProductController@store')->name('admin.barnproduct.store');
@@ -503,7 +476,23 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
         //BarnReturnsController
         Route::get('/barnreturn/list', 'BarnReturnsController@list')->name('admin.barnreturn.list');
-        Route::get('/barnreturn/list', 'BarnReturnsController@list')->name('admin.barnreturn.list');
+
+
+        //TransferBarnController
+        Route::get('/transferbarn/list', 'TransferBarnController@list')->name('admin.transferbarn.list');
+        Route::get('/transferbarn/check', 'TransferBarnController@check')->name('admin.transferbarn.check');
+        Route::post('/transferbarn/store', 'TransferBarnController@store')->name('admin.transferbarn.store');
+
+        Route::post('/transferbarn/update', 'TransferBarnController@update')->name('admin.transferbarn.update');
+
+
+        Route::get('/transferbarn/edit', 'TransferBarnController@edit')->name('admin.transferbarn.edit');
+
+
+
+
+
+
 
     });
 

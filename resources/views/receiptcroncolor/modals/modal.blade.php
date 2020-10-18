@@ -106,10 +106,6 @@
 
 
                                     </div>
-
-
-
-
                                     <div class="col-md-12">
 
                                         <label>تعداد
@@ -122,6 +118,18 @@
                                                placeholder="لطفا تعداد را وارد کنید"
                                                required>
 
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label>انبار
+                                            <span
+                                                style="color: red"
+                                                class="required-mark">*</span>
+                                        </label>
+                                        <select class="form-control" id="barn" name="barn">
+                                           <option value="1">پرند</option>
+                                           <option value="2">تهرانپارس</option>
+                                        </select>
                                     </div>
 
 

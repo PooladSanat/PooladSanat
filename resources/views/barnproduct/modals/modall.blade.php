@@ -61,12 +61,26 @@
 
                                     <div class="col-md-12">
 
-                                        <label>موجودی فیزیکی
+                                        <label>موجودی انبار پرند
                                             <span
                                                 style="color: red"
                                                 class="required-mark">*</span>
                                         </label>
                                         <input type="number" id="PhysicalInventory" name="PhysicalInventory"
+                                               class="form-control"
+                                               placeholder="لطفا موجودی فیزیکی را وارد کنید"
+                                               required>
+
+                                    </div>
+
+                                    <div class="col-md-12">
+
+                                        <label>موجودی انبار تهرانپارس
+                                            <span
+                                                style="color: red"
+                                                class="required-mark">*</span>
+                                        </label>
+                                        <input type="number" id="PhysicalInventor" name="PhysicalInventor"
                                                class="form-control"
                                                placeholder="لطفا موجودی فیزیکی را وارد کنید"
                                                required>

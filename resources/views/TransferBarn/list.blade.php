@@ -6,7 +6,7 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption">
-                        رسید به انبار کالاهای ساخته شده
+                        لیست انتقال بین انبارها
                     </div>
                     <div class="tools"></div>
                 </div>
@@ -15,23 +15,21 @@
                         <thead style="background-color: #e8ecff">
                         <tr>
                             <th style="width: 1px">ردیف</th>
-                            <th>محصول</th>
-                            <th>رنگ</th>
-                            <th>تعداد</th>
+                            <th>کد</th>
+                            <th>از انبار</th>
+                            <th>به انبار</th>
                             <th>تاریخ</th>
-                            <th>ساعت</th>
-                            <th>انبار</th>
                             <th>عملیات</th>
                         </tr>
                         </thead>
                         <tbody>
                         </tbody>
                     </table>
-                    <a class="btn btn-primary" href="javascript:void(0)" id="createNewProduct">رسید جدید</a>
+                    <a class="btn btn-primary" href="javascript:void(0)" id="createNewProduct">انتقال بین انبارها</a>
                 </div>
             </div>
         </div>
     </div>
-    @include('receiptproduct.modals.modal')
-    @include('receiptproduct.scripts.script')
+    @include('TransferBarn.modals.modal')
+    @include('TransferBarn.scripts.script')
 @endsection

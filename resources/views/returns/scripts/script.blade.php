@@ -1058,7 +1058,6 @@
             });
         });
 
-
         $('#savebtnupdate').click(function (e) {
             e.preventDefault();
             $('#savebtnupdate').text('در حال ثبت اطلاعات...');
@@ -1344,6 +1343,7 @@
                             }
                         });
                     }).change();
+
                     $('#invoicee_' + a + '').change(function () {
                         var products = [];
                         var product = data.invoice_id;
@@ -1373,6 +1373,7 @@
                             }
                         });
                     }).change();
+
                     $('#productt_' + a + ',#invoicee_' + a + '').change(function () {
                         var colors = [];
                         var color = null;
@@ -1409,6 +1410,7 @@
                             }
                         });
                     }).change();
+
                     $('#productt_' + a + ',#invoicee_' + a + ',#colorr_' + a + '')
                         .change(function () {
                             var color = null;
@@ -1435,6 +1437,7 @@
                             });
                         }).change();
                 }
+
             }
         });
 

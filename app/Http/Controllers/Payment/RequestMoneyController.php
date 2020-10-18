@@ -12,6 +12,7 @@ use Yajra\DataTables\DataTables;
 
 class RequestMoneyController extends Controller
 {
+
     public function list(Request $request)
     {
         $customers = Customer::all();
@@ -107,7 +108,7 @@ class RequestMoneyController extends Controller
             ->where('customer_id', $request->id)
             ->sum('sum');
         if (!empty($price)) {
-            $data = $sum - $price;
+            $data = $price - $sum;
         } else {
             $data = 0;
         }

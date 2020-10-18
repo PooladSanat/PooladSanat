@@ -25,6 +25,15 @@ class BarnColorController extends Controller
                         return 0;
                     }
                 })
+                ->addColumn('PhysicalInventor', function ($row) {
+                    $barncolor = BarnColor::where('color_id', $row->id)
+                        ->first();
+                    if (!empty($barncolor->PhysicalInventor)) {
+                        return $barncolor->PhysicalInventor;
+                    } else {
+                        return 0;
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
                 })
@@ -49,6 +58,7 @@ class BarnColorController extends Controller
             [
                 'color_id' => $request->id,
                 'PhysicalInventory' => $request->PhysicalInventory,
+                'PhysicalInventor' => $request->PhysicalInventor,
             ]);
         return response()->json(['success' => 'Product saved successfully.']);
 

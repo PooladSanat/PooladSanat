@@ -6,7 +6,7 @@
             <div class="portlet box blue">
                 <div class="portlet-title">
                     <div class="caption">
-                        لیست موجودی انبار رنگ
+                        انبار مستربچ
                     </div>
                     <div class="tools"></div>
                 </div>
@@ -19,7 +19,8 @@
                             <th>نام سازنده</th>
                             <th>درصد ترکیب</th>
                             <th>کد مستربچ</th>
-                            <th>موجودی فزیکی</th>
+                            <th>موجودی پرند</th>
+                            <th>موجودی تهرانپارس</th>
                             <th>عملیات</th>
                         </tr>
                         </thead>
@@ -31,6 +32,7 @@
                             <td id="d"></td>
                             <td id="e"></td>
                             <td id="p"></td>
+                            <td id="r"></td>
                             <td id="f"></td>
                         </tr>
                         </tbody>

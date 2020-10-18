@@ -22,7 +22,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
 
-                                                <label>موجودی فزیکی
+                                                <label>موجودی انبار پرند
                                                     <span
                                                         style="color: red"
                                                         class="required-mark">*</span>
@@ -33,6 +33,18 @@
 
                                         </div>
 
+                                        <div class="col-md-12">
+
+                                            <label>موجودی انبار تهرانپارس
+                                                <span
+                                                    style="color: red"
+                                                    class="required-mark">*</span>
+                                            </label>
+                                            <input type="number" id="PhysicalInventor" name="PhysicalInventor" class="form-control"
+                                                   placeholder="لطفا موجودی فزیکی را وارد کنید"
+                                                   required>
+
+                                        </div>
 
 
 

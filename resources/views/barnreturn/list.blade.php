@@ -17,7 +17,8 @@
                             <th style="width: 1px">ردیف</th>
                             <th>محصول</th>
                             <th>رنگ</th>
-                            <th>موجودی</th>
+                            <th>موجودی پرند</th>
+                            <th>موجودی تهرانپارس</th>
                         </tr>
                         </thead>
                         <tbody>

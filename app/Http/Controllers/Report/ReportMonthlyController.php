@@ -265,11 +265,18 @@ class ReportMonthlyController extends Controller
                     return number_format($row->sum);
                 })
                 ->addColumn('description', function ($row) {
-                    if (!empty($row->price)) {
-                        return $row->descriptionn;
+
+                    if (!empty($row->return_id)) {
+                        return 'بستانکار بابت مرجوعی با کد' . ' ' . $row->return_id;
                     } else {
-                        return 'بدهی بابت فاکتور' . ' ' . $row->rahkaran;
+                        if (!empty($row->price)) {
+                            return $row->descriptionn;
+                        } else {
+                            return 'بدهی بابت فاکتور' . ' ' . $row->rahkaran;
+                        }
                     }
+
+
                 })
                 ->rawColumns([])
                 ->make(true);

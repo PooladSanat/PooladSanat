@@ -7,6 +7,7 @@ use App\Color;
 use App\Http\Controllers\Controller;
 use App\Polymeric;
 use App\Product;
+use App\SelectStore;
 use App\StoreColor;
 use Carbon\Carbon;
 use Hekmatinasser\Verta\Verta;
@@ -32,15 +33,21 @@ class BarnProductController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('Number', function ($row) {
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
+                    if (!empty($row->NumberSold)) {
+                        $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->id . '" data-original-title="ویرایش"
                        class="detail-factor">
                       ' . $row->NumberSold . '
                        </a>';
-                    return $btn;
+                        return $btn;
+                    } else {
+                        return '0';
+                    }
+
                 })
                 ->addColumn('true', function ($row) {
-                    return abs($row->Inventory - $row->NumberSold);
+                    $sum = $row->Inventory + $row->Inventor;
+                    return abs($sum - $row->NumberSold);
                 })
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
@@ -68,15 +75,21 @@ class BarnProductController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('Number', function ($row) {
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
+                    if (!empty($row->NumberSold)) {
+                        $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
                       data-id="' . $row->id . '" data-original-title="ویرایش"
                        class="detail-factor">
                       ' . $row->NumberSold . '
                        </a>';
-                    return $btn;
+                        return $btn;
+                    } else {
+                        return '0';
+                    }
+
                 })
                 ->addColumn('true', function ($row) {
-                    return abs($row->Inventory - $row->NumberSold);
+                    $sum = $row->Inventory + $row->Inventor;
+                    return abs($sum - $row->NumberSold);
                 })
                 ->addColumn('action', function ($row) {
                     return $this->actions($row);
@@ -86,8 +99,6 @@ class BarnProductController extends Controller
 
         }
         return view('barnproduct.listtwo', compact('colors', 'products'));
-
-
     }
 
     public function ListList(Request $request)
@@ -125,6 +136,7 @@ class BarnProductController extends Controller
                     'product_id' => $request->product,
                     'color_id' => $request->color,
                     'Inventory' => $request->PhysicalInventory,
+                    'Inventor' => $request->PhysicalInventor,
                 ]);
             return response()->json(['success' => 'Product saved successfully.']);
 
@@ -133,6 +145,7 @@ class BarnProductController extends Controller
                 BarnsProduct::find($barn->id)->update(
                     [
                         'Inventory' => $barn->Inventory + $request->PhysicalInventory,
+                        'Inventor' => $barn->Inventor + $request->PhysicalInventor,
                     ]);
                 return response()->json(['success' => 'Product saved successfully.']);
 
@@ -142,6 +155,7 @@ class BarnProductController extends Controller
                         'product_id' => $request->product,
                         'color_id' => $request->color,
                         'Inventory' => $request->PhysicalInventory,
+                        'Inventor' => $request->PhysicalInventor,
                     ]);
                 return response()->json(['success' => 'Product saved successfully.']);
 
@@ -160,6 +174,7 @@ class BarnProductController extends Controller
 
     public function receiptproduct(Request $request)
     {
+        $barns = SelectStore::all();
         $colors = Color::all();
         $products = Product::all();
         if ($request->ajax()) {
@@ -176,6 +191,14 @@ class BarnProductController extends Controller
                     $name = Color::where('id', $row->color_id)->first();
                     return $name->name;
                 })
+                ->addColumn('barn', function ($row) {
+
+                    if ($row->barn_id == 1 or $row->barn_id == null) {
+                        return 'پرند';
+                    } else {
+                        return 'تهرانپارس';
+                    }
+                })
                 ->addColumn('created', function ($row) {
                     $created = Jalalian::forge($row->created_at)->format('Y/m/d');
                     return $created;
@@ -191,7 +214,7 @@ class BarnProductController extends Controller
                 ->make(true);
 
         }
-        return view('receiptproduct.list', compact('products', 'colors'));
+        return view('receiptproduct.list', compact('products', 'colors', 'barns'));
 
 
     }
@@ -199,24 +222,71 @@ class BarnProductController extends Controller
     public function receiptwizard($id)
     {
 
+
         $barn = \DB::table('receiptproduct')
             ->where('id', $id)->first();
+
         $check = \DB::table('barns_products')
             ->where('product_id', $barn->product_id)
             ->where('color_id', $barn->color_id)
             ->first();
-        if ($check) {
+
+
+        if (!empty($barn->transfer_id)) {
+            \DB::table('transfer_barns')
+                ->where('id', $barn->transfer_id)
+                ->update([
+                    'status' => 1,
+                ]);
+        }
+
+
+        if (!empty($check)) {
             \DB::beginTransaction();
             try {
-                \DB::table('barns_products')
-                    ->where('id', $check->id)
-                    ->update([
-                        'Inventory' => $check->Inventory + $barn->number,
-                        'NumberSold' => $check->NumberSold,
-                    ]);
+                if (!empty($barn->transfer_id)) {
+                    $transfer = \DB::table('transfer_barns')
+                        ->where('id', $barn->transfer_id)
+                        ->first();
+                    if ($transfer->in_barn == 1) {
+                        \DB::table('barns_products')
+                            ->where('product_id', $barn->product_id)
+                            ->where('color_id', $barn->color_id)
+                            ->update([
+                                'Inventory' => $check->Inventory - $barn->number,
+                                'Inventor' => $check->Inventor + $barn->number,
+                            ]);
+                    } else {
+                        \DB::table('barns_products')
+                            ->where('product_id', $barn->product_id)
+                            ->where('color_id', $barn->color_id)
+                            ->update([
+                                'Inventory' => $check->Inventory + $barn->number,
+                                'Inventor' => $check->Inventor - $barn->number,
+                            ]);
+                    }
+                } else {
+                    if ($barn->barn_id == 1) {
+                        \DB::table('barns_products')
+                            ->where('id', $check->id)
+                            ->update([
+                                'Inventory' => $check->Inventory + $barn->number,
+                                'NumberSold' => $check->NumberSold,
+                            ]);
+
+                    } else {
+                        \DB::table('barns_products')
+                            ->where('id', $check->id)
+                            ->update([
+                                'Inventor' => $check->Inventor + $barn->number,
+                                'NumberSold' => $check->NumberSold,
+                            ]);
+                    }
+                }
                 \DB::table('receiptproduct')
                     ->where('id', $id)
                     ->update(['status' => 1]);
+
                 \DB::commit();
                 return response()->json(['success' => 'success']);
             } catch (Exception $exception) {
@@ -224,13 +294,25 @@ class BarnProductController extends Controller
             }
         } else {
             try {
-                \DB::table('barns_products')
-                    ->insert([
-                        'order_id' => $barn->order_id,
-                        'product_id' => $barn->product_id,
-                        'color_id' => $barn->color_id,
-                        'Inventory' => $barn->number,
-                    ]);
+                if ($barn->barn_id == 1) {
+                    \DB::table('barns_products')
+                        ->insert([
+                            'order_id' => $barn->order_id,
+                            'product_id' => $barn->product_id,
+                            'color_id' => $barn->color_id,
+                            'Inventory' => $barn->number,
+                        ]);
+                } else {
+                    \DB::table('barns_products')
+                        ->insert([
+                            'order_id' => $barn->order_id,
+                            'product_id' => $barn->product_id,
+                            'color_id' => $barn->color_id,
+                            'Inventor' => $barn->number,
+                        ]);
+                }
+
+
                 \DB::table('receiptproduct')
                     ->where('id', $id)
                     ->update(['status' => 1]);
@@ -250,6 +332,7 @@ class BarnProductController extends Controller
             ->insert([
                 'product_id' => $request->product,
                 'color_id' => $request->color,
+                'barn_id' => $request->barn,
                 'number' => $request->PhysicalInventory,
                 'date' => Jalalian::forge($carbon)->format('Y/m/d'),
                 'created_at' => $carbon,
@@ -275,6 +358,13 @@ class BarnProductController extends Controller
                 ->addColumn('color_id', function ($row) {
                     $name = Color::where('id', $row->color_id)->first();
                     return $name->name;
+                })
+                ->addColumn('barn', function ($row) {
+                    if ($row->barn_id == 1) {
+                        return 'پرند';
+                    } else {
+                        return 'تهرانپارس';
+                    }
                 })
                 ->addColumn('created', function ($row) {
                     $created = Jalalian::forge($row->created_at)->format('Y/m/d');
@@ -304,6 +394,7 @@ class BarnProductController extends Controller
                 'product_id' => $request->product,
                 'color_id' => $request->color,
                 'number' => $request->PhysicalInventory,
+                'barn_id' => $request->barn,
                 'date' => Jalalian::forge($carbon)->format('Y/m/d'),
                 'created_at' => $carbon,
             ]);
@@ -319,14 +410,55 @@ class BarnProductController extends Controller
             ->where('product_id', $barn->product_id)
             ->where('color_id', $barn->color_id)
             ->first();
+
+        if (!empty($barn->transfer_id)) {
+            \DB::table('transfer_barns')
+                ->where('id', $barn->transfer_id)
+                ->update([
+                    'status' => 1,
+                ]);
+        }
+
         if ($check) {
             \DB::beginTransaction();
             try {
-                \DB::table('barn_returns')
-                    ->where('id', $check->id)
-                    ->update([
-                        'Inventory' => $check->Inventory + $barn->number,
-                    ]);
+                if (!empty($barn->transfer_id)) {
+                    $transfer = \DB::table('transfer_barns')
+                        ->where('id', $barn->transfer_id)
+                        ->first();
+                    if ($transfer->in_barn == 1) {
+                        \DB::table('barn_returns')
+                            ->where('product_id', $barn->product_id)
+                            ->where('color_id', $barn->color_id)
+                            ->update([
+                                'Inventory' => $check->Inventory - $barn->number,
+                                'Inventor' => $check->Inventor + $barn->number,
+                            ]);
+                    } else {
+                        \DB::table('barn_returns')
+                            ->where('product_id', $barn->product_id)
+                            ->where('color_id', $barn->color_id)
+                            ->update([
+                                'Inventory' => $check->Inventory + $barn->number,
+                                'Inventor' => $check->Inventor - $barn->number,
+                            ]);
+                    }
+                } else {
+                    if ($barn->barn_id == 1) {
+                        \DB::table('barn_returns')
+                            ->where('id', $check->id)
+                            ->update([
+                                'Inventory' => $check->Inventory + $barn->number,
+                            ]);
+                    } else {
+                        \DB::table('barn_returns')
+                            ->where('id', $check->id)
+                            ->update([
+                                'Inventor' => $check->Inventor + $barn->number,
+                            ]);
+                    }
+                }
+
                 \DB::table('receiptreturn')
                     ->where('id', $id)
                     ->update(['status' => 1]);
@@ -337,12 +469,22 @@ class BarnProductController extends Controller
             }
         } else {
             try {
-                \DB::table('barn_returns')
-                    ->insert([
-                        'product_id' => $barn->product_id,
-                        'color_id' => $barn->color_id,
-                        'Inventory' => $barn->number,
-                    ]);
+                if ($barn->barn_id == 1) {
+                    \DB::table('barn_returns')
+                        ->insert([
+                            'product_id' => $barn->product_id,
+                            'color_id' => $barn->color_id,
+                            'Inventory' => $barn->number,
+                        ]);
+                } else {
+                    \DB::table('barn_returns')
+                        ->insert([
+                            'product_id' => $barn->product_id,
+                            'color_id' => $barn->color_id,
+                            'Inventor' => $barn->number,
+                        ]);
+                }
+
                 \DB::table('receiptreturn')
                     ->where('id', $id)
                     ->update(['status' => 1]);
@@ -375,6 +517,13 @@ class BarnProductController extends Controller
                     $created = Jalalian::forge($row->created_at)->format('Y/m/d');
                     return $created;
                 })
+                ->addColumn('barn', function ($row) {
+                    if ($row->barn_id == 1) {
+                        return 'پرند';
+                    } else {
+                        return 'تهرانپارس';
+                    }
+                })
                 ->addColumn('time', function ($row) {
                     $created = Carbon::make($row->created_at)->format('H:i:s');
                     return $created;
@@ -397,6 +546,7 @@ class BarnProductController extends Controller
         \DB::table('receiptcarncolor')
             ->insert([
                 'croncolor_id' => $request->product,
+                'barn_id' => $request->barn,
                 'color_id' => null,
                 'number' => $request->PhysicalInventory,
                 'date' => Jalalian::forge($carbon)->format('Y/m/d'),
@@ -413,14 +563,56 @@ class BarnProductController extends Controller
         $check = \DB::table('barn_colors')
             ->where('color_id', $barn->croncolor_id)
             ->first();
+
+
+        if (!empty($barn->transfer_id)) {
+            \DB::table('transfer_barns')
+                ->where('id', $barn->transfer_id)
+                ->update([
+                    'status' => 1,
+                ]);
+        }
+
         if ($check) {
             \DB::beginTransaction();
             try {
-                \DB::table('barn_colors')
-                    ->where('id', $check->id)
-                    ->update([
-                        'PhysicalInventory' => $check->PhysicalInventory + $barn->number,
-                    ]);
+
+                if (!empty($barn->transfer_id)) {
+                    $transfer = \DB::table('transfer_barns')
+                        ->where('id', $barn->transfer_id)
+                        ->first();
+                    if ($transfer->in_barn == 1) {
+                        \DB::table('barn_colors')
+                            ->where('id', $check->id)
+                            ->update([
+                                'PhysicalInventory' => $check->PhysicalInventory - $barn->number,
+                                'PhysicalInventor' => $check->PhysicalInventor + $barn->number,
+                            ]);
+                    } else {
+                        \DB::table('barn_colors')
+                            ->where('id', $check->id)
+                            ->update([
+                                'PhysicalInventory' => $check->PhysicalInventory + $barn->number,
+                                'PhysicalInventor' => $check->PhysicalInventor - $barn->number,
+                            ]);
+                    }
+                } else {
+                    if ($barn->barn_id == 1) {
+                        \DB::table('barn_colors')
+                            ->where('id', $check->id)
+                            ->update([
+                                'PhysicalInventory' => $check->PhysicalInventory + $barn->number,
+                            ]);
+                    } else {
+                        \DB::table('barn_colors')
+                            ->where('id', $check->id)
+                            ->update([
+                                'PhysicalInventor' => $check->PhysicalInventor + $barn->number,
+                            ]);
+                    }
+                }
+
+
                 \DB::table('receiptcarncolor')
                     ->where('id', $id)
                     ->update(['status' => 1]);
@@ -431,11 +623,20 @@ class BarnProductController extends Controller
             }
         } else {
             try {
-                \DB::table('barn_colors')
-                    ->insert([
-                        'color_id' => $barn->croncolor_id,
-                        'PhysicalInventory' => $barn->number,
-                    ]);
+                if ($barn->barn_id == 1) {
+                    \DB::table('barn_colors')
+                        ->insert([
+                            'color_id' => $barn->croncolor_id,
+                            'PhysicalInventory' => $barn->number,
+                        ]);
+                } else {
+                    \DB::table('barn_colors')
+                        ->insert([
+                            'color_id' => $barn->croncolor_id,
+                            'PhysicalInventor' => $barn->number,
+                        ]);
+                }
+
                 \DB::table('receiptcarncolor')
                     ->where('id', $id)
                     ->update(['status' => 1]);
@@ -472,6 +673,13 @@ class BarnProductController extends Controller
                     $created = Carbon::make($row->created_at)->format('H:i:s');
                     return $created;
                 })
+                ->addColumn('barn', function ($row) {
+                    if ($row->barn_id == 1) {
+                        return 'پرند';
+                    } else {
+                        return 'تهرانپارس';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     return $this->actionnn($row);
                 })
@@ -490,6 +698,7 @@ class BarnProductController extends Controller
         \DB::table('receiptpolim')
             ->insert([
                 'polim_id' => $request->product,
+                'barn_id' => $request->barn,
                 'color_id' => null,
                 'number' => $request->PhysicalInventory,
                 'date' => Jalalian::forge($carbon)->format('Y/m/d'),
@@ -506,14 +715,56 @@ class BarnProductController extends Controller
         $check = \DB::table('barn_materials')
             ->where('polymeric_id', $barn->polim_id)
             ->first();
+
+        if (!empty($barn->transfer_id)) {
+            \DB::table('transfer_barns')
+                ->where('id', $barn->transfer_id)
+                ->update([
+                    'status' => 1,
+                ]);
+        }
+
+
         if ($check) {
             \DB::beginTransaction();
             try {
-                \DB::table('barn_materials')
-                    ->where('id', $check->id)
-                    ->update([
-                        'PhysicalInventory' => $check->PhysicalInventory + $barn->number,
-                    ]);
+
+
+                if (!empty($barn->transfer_id)) {
+                    $transfer = \DB::table('transfer_barns')
+                        ->where('id', $barn->transfer_id)
+                        ->first();
+                    if ($transfer->in_barn == 1) {
+                        \DB::table('barn_materials')
+                            ->where('id', $check->id)
+                            ->update([
+                                'PhysicalInventory' => $check->PhysicalInventory - $barn->number,
+                                'PhysicalInventor' => $check->PhysicalInventor + $barn->number,
+                            ]);
+                    } else {
+                        \DB::table('barn_materials')
+                            ->where('id', $check->id)
+                            ->update([
+                                'PhysicalInventory' => $check->PhysicalInventory + $barn->number,
+                                'PhysicalInventor' => $check->PhysicalInventor - $barn->number,
+                            ]);
+                    }
+                }
+
+                if ($barn->barn_id == 1) {
+                    \DB::table('barn_materials')
+                        ->where('id', $check->id)
+                        ->update([
+                            'PhysicalInventory' => $check->PhysicalInventory + $barn->number,
+                        ]);
+                } else {
+                    \DB::table('barn_materials')
+                        ->where('id', $check->id)
+                        ->update([
+                            'PhysicalInventor' => $check->PhysicalInventor + $barn->number,
+                        ]);
+                }
+
                 \DB::table('receiptpolim')
                     ->where('id', $id)
                     ->update(['status' => 1]);
@@ -524,11 +775,20 @@ class BarnProductController extends Controller
             }
         } else {
             try {
-                \DB::table('barn_materials')
-                    ->insert([
-                        'polymeric_id' => $barn->polim_id,
-                        'PhysicalInventory' => $barn->number,
-                    ]);
+                if ($barn->barn_id == 1) {
+                    \DB::table('barn_materials')
+                        ->insert([
+                            'polymeric_id' => $barn->polim_id,
+                            'PhysicalInventory' => $barn->number,
+                        ]);
+                } else {
+                    \DB::table('barn_materials')
+                        ->insert([
+                            'polymeric_id' => $barn->polim_id,
+                            'PhysicalInventor' => $barn->number,
+                        ]);
+                }
+
                 \DB::table('receiptpolim')
                     ->where('id', $id)
                     ->update(['status' => 1]);
@@ -542,7 +802,6 @@ class BarnProductController extends Controller
 
     public function actions($row)
     {
-
         $btn = null;
         if (\Gate::check('ویرایش موجودی انبار')) {
             $btn = '<a href="javascript:void(0)" data-toggle="tooltip"
@@ -551,9 +810,7 @@ class BarnProductController extends Controller
                        <i class="fa fa-edit fa-lg" title="ویرایش"></i>
                        </a>&nbsp;&nbsp;';
         }
-
         return $btn;
-
     }
 
     public function action($row)
